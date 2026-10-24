@@ -100,6 +100,33 @@ def test_rules_parser_reads_the_journey_j3_sentence():
     )
 
 
+@pytest.mark.parametrize(
+    ("target", "application"),
+    [
+        ("Protein Isolate", "beverage"),
+        ("Protein Rich Flour", "extruded_snack"),
+        ("Protein Concentrate", "meat_analogue"),
+        ("bakery", "extruded_snack"),
+    ],
+)
+def test_new_target_names_create_reviewable_requests(target, application):
+    out = service.parse_text(
+        f"Groundnut cake, 48% protein, to make {target}",
+        None,
+        LLMClient("template", cache_dir=None),
+        main.DATASET,
+    )
+    assert out["payload"]["byproduct"] == "groundnut_cake"
+    assert out["payload"]["application"] == application
+    assert out["payload"]["batch"]["protein_pct"]["value"] == 48
+    assert "verdict" not in out
+
+
+def test_source_isolate_does_not_override_the_requested_target():
+    assert rules.parse("Pea protein isolate for Protein Concentrate")["application"] == "meat_analogue"
+    assert rules.parse("Pea protein isolate to make Protein Rich Flour")["application"] == "extruded_snack"
+
+
 def test_llm_parse_with_invented_number_falls_back_to_rules():
     fake = FakeLLM(['{"byproduct": "groundnut_cake", "application": "beverage", "batch.protein_pct": 55}'])
     out = service.parse_text("groundnut cake, 48% protein, for a drink", None, fake, main.DATASET)

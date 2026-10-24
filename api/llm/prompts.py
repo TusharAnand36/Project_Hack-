@@ -39,7 +39,9 @@ PARSE = (
     "targets.min_protein_pct, targets.max_cost_inr_per_kg_protein, batch.protein_pct, batch.moisture_pct, "
     "batch.afb1_ppb, batch.ffa_pct, batch.phytate_pct, process.oil_route (cold_pressed, expeller or "
     "solvent), process.stabilised (true/false), process.hours_since_milling, constraints.no_solvents "
-    "(true/false). Use dotted keys. Leave out anything not stated. Do not guess."
+    "(true/false). The displayed targets map to existing application IDs: Protein Isolate = beverage; "
+    "Protein Rich Flour (formerly bakery/snack) = extruded_snack; Protein Concentrate = meat_analogue. "
+    "Use dotted keys. Leave out anything not stated. Do not guess."
 )
 
 RETRY = "Your previous answer used numbers that are not in the JSON: {bad}. Rewrite it using only numbers from the JSON."

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import type { AnalyzeResponse, Range, Value } from "@/api/client";
-import { useSources } from "@/api/hooks";
+import { useDataFile, useSources } from "@/api/hooks";
 import { WorkflowDimensions } from "@/components/WorkflowDimensions";
 import { Num } from "@/components/Num";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,10 @@ export function MemoScreen({ data }: { data: AnalyzeResponse }) {
   const request = useStore((s) => s.request);
   const setScreen = useStore((s) => s.setScreen);
   const sources = useSources();
+  const applications = useDataFile<{ applications: { id: string; name: string }[] }>("applications");
+  const applicationName = applications.data?.applications.find(
+    (app) => app.id === request?.application,
+  )?.name;
   const v = data.verdict;
   const top = data.chains[0];
   const rec = data.voi?.tests.find((x) => x.test_id === data.voi?.recommended_test);
@@ -87,8 +91,8 @@ export function MemoScreen({ data }: { data: AnalyzeResponse }) {
         <p>
           {data.case_id && <>Case {data.case_id} · </>}
           {request?.batch?.lot_id && <>Lot {request.batch.lot_id} · </>}
-          {request?.byproduct.replace(/_/g, " ")} → {request?.application.replace(/_/g, " ")} (
-          {request?.market ?? "domestic"})
+          {request?.byproduct.replace(/_/g, " ")} →{" "}
+          {applicationName ?? request?.application.replace(/_/g, " ")} ({request?.market ?? "domestic"})
         </p>
       </section>
       <section className="flex flex-wrap items-center gap-3">

@@ -2,7 +2,7 @@
   "presets": [
     {
       "id": "sunflower_snack",
-      "title": "Sunflower cake → high-protein / fibre snack",
+      "title": "Sunflower cake → Protein Rich Flour",
       "story": "Preferred pilot hypothesis from the supplied research plan. Review ranges are reference evidence; supply lot, route, assays and process costs before a pilot decision.",
       "payload": {
         "byproduct": "sunflower_cake",
@@ -14,7 +14,7 @@
     },
     {
       "id": "groundnut_beverage",
-      "title": "Groundnut cake → beverage protein",
+      "title": "Groundnut cake → Protein Isolate",
       "story": "Checks the B1 and total-aflatoxin project thresholds and evidence needed for candidate routes. Batch protein and moisture are synthetic demo values (source plan §8.3 example), not measurements.",
       "payload": {
         "byproduct": "groundnut_cake",
@@ -51,7 +51,7 @@
     },
     {
       "id": "soybean_meat",
-      "title": "Soybean cake → meat analogue",
+      "title": "Soybean cake → Protein Concentrate",
       "story": "Explore protein enrichment and the published extrusion evidence for trypsin inhibitors. Soy allergen labelling and a supplier quote are required.",
       "payload": {
         "byproduct": "soybean_cake",
@@ -63,7 +63,7 @@
     },
     {
       "id": "almond_meat",
-      "title": "Almond cake → meat analogue",
+      "title": "Almond cake → Protein Concentrate",
       "story": "Explore the evidence gaps for almond cake, including allergen labelling, functional assays and a supplier quote. Missing compound data do not establish that no treatment is needed.",
       "payload": {
         "byproduct": "almond_cake",
@@ -75,7 +75,7 @@
     },
     {
       "id": "pea_beverage",
-      "title": "Pea protein isolate → beverage protein",
+      "title": "Pea protein isolate → Protein Isolate",
       "story": "Research reference: 80.2% protein (Qi et al., 2025). Uses the same landed pea price as every comparison. Gellan gum / salt findings guide lab validation; no cake extraction is simulated.",
       "payload": {
         "byproduct": "pea_protein_isolate",

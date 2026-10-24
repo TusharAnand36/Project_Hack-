@@ -18,6 +18,9 @@ BYPRODUCT = [
     (r"almond|badam|बादाम", "almond_cake"),
 ]
 APPLICATION = [
+    (r"protein[-\s]+isolate", "beverage"),
+    (r"protein[-\s]+rich[-\s]+flour|\bbakery\b", "extruded_snack"),
+    (r"protein[-\s]+concentrate", "meat_analogue"),
     (r"drink|beverage|shake|smoothie|पेय", "beverage"),
     (r"snack|puff|extrud|chips|namkeen|नमकीन", "extruded_snack"),
     (r"meat|analogu|analog|textur|\btvp\b|patty|nugget", "meat_analogue"),
@@ -36,8 +39,10 @@ def parse(text: str) -> dict[str, Any]:
         if re.search(pat, t):
             out["byproduct"] = val
             break
+    # The source ingredient can also contain "protein isolate"; prefer its stated target clause.
+    target_text = re.split(r"\b(?:for|to make)\b", t)[-1]
     for pat, val in APPLICATION:
-        if re.search(pat, t):
+        if re.search(pat, target_text):
             out["application"] = val
             break
     m = re.search(rf"{_F}\s*%\s*(?:of\s+)?protein|protein[^0-9%]{{0,20}}{_F}\s*%", t)

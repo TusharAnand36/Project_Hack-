@@ -22,6 +22,11 @@ Both the public pages and the tool support English and Hindi. Design and image-s
 
 The five presets are **sunflower cake** (first), groundnut cake, soybean cake, almond cake,
 and pea protein isolate. Rice bran is no longer offered as an analysable material.
+The displayed target names are **Protein Isolate**, **Protein Rich Flour** and
+**Protein Concentrate**, replacing Beverage, Bakery/snack and Meat analogue respectively.
+Preset cards, the target selector, homepage example and memo use these names.
+Existing application IDs and scientific profiles remain unchanged for compatibility;
+selecting a target does not certify that the resulting ingredient meets that classification.
 Sunflower and soybean composition is cited to the team's final oilseed review; missing
 purchase prices remain blank for a supplier quote.
 

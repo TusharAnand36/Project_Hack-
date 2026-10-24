@@ -26,7 +26,7 @@
   "applications": [
     {
       "id": "beverage",
-      "name": "Beverage",
+      "name": "Protein Isolate",
       "preferred_tiers": [
         "concentrate",
         "isolate"
@@ -73,7 +73,7 @@
     },
     {
       "id": "extruded_snack",
-      "name": "Extruded snack / puffed product",
+      "name": "Protein Rich Flour",
       "preferred_tiers": [
         "flour",
         "treated_flour",
@@ -132,7 +132,7 @@
     },
     {
       "id": "meat_analogue",
-      "name": "Meat analogue (textured protein)",
+      "name": "Protein Concentrate",
       "preferred_tiers": [
         "concentrate",
         "isolate"
