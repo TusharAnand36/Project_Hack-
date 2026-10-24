@@ -3,7 +3,7 @@
 For one food by-product batch and one target use, Upcycle Compass answers **Go / No-go / Test-first**. It also says which treatment chain to use, what a kg of protein costs compared with imported pea isolate, and which single lab test to buy first. Every number carries a provenance tag: `measured`, `published`, `assumed` or `synthetic`.
 
 > **Proof of concept, Hack the Fork 2026 (Problem Statement 2).** Decision support only. Not a regulatory approval. Confirm FSSAI classification and limits.
-> **Phase 0 status:** the `/analyze` endpoint is a **stub**. All of its numbers are placeholders tagged `synthetic`.
+> **Status:** Phases 0–4 done: dataset, engine (gates, diagnosis, chains, Monte Carlo, cost vs pea), `/analyze` API and the core screens. See `docs/PHASES.md`.
 
 ## Layout (source plan §10.2)
 
@@ -35,7 +35,9 @@ cp .env.example .env
 make api          # http://localhost:8000  (docs at /docs)
 make web          # http://localhost:5173  (shows "API: ok")
 make types        # regenerate web/src/api/types.ts (API must be running)
-make test         # pytest + web build
+make test         # pytest + vitest + web build
+make e2e          # Playwright journey + axe accessibility scan (API and web running)
+make bench        # engine timing check
 make lint
 make data         # dataset report: counts by tag/grade, missing inputs per preset
 make todo         # regenerate DATA_TODO.md and data/schema/

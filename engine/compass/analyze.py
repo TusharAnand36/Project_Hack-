@@ -78,7 +78,10 @@ def build_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sample
             "bp.moisture", req.batch.moisture_pct.value, "%", _measured_prov(req.batch.moisture_pct.tag)
         )
     s.add("nf", ds.byproduct_defaults["n_factor"])
-    s.add("bp.price", bp.price_inr_per_kg)
+    if req.raw_price_inr_per_kg is not None:
+        s.add_value("bp.price", req.raw_price_inr_per_kg, "INR/kg", USER)
+    else:
+        s.add("bp.price", bp.price_inr_per_kg)
     # compound levels (batch measurement overrides the dataset)
     for cid, p in bp.compounds.items():
         if cid == "phytic_acid" and req.batch.phytate_pct is not None:

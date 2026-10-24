@@ -2,7 +2,7 @@
 PY      ?= .venv/bin/python
 API_URL ?= http://localhost:8000
 
-.PHONY: setup api web test types snapshots lint data todo bench
+.PHONY: setup api web test types snapshots lint data todo bench e2e
 
 setup:
 	python3 -m venv .venv
@@ -17,7 +17,10 @@ web:
 
 test:
 	$(PY) -m pytest -q
-	cd web && npm run build
+	cd web && npm test && npm run build
+
+e2e:  # needs `make api` and `make web` running
+	cd web && npm run e2e
 
 types:
 	API_URL=$(API_URL) ./scripts/gen_types.sh

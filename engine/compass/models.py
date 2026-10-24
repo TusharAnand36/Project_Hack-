@@ -31,7 +31,9 @@ class Grade(str, Enum):
 
 
 class _Strict(BaseModel):
-    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    model_config = ConfigDict(
+        extra="forbid", populate_by_name=True, json_schema_serialization_defaults_required=True
+    )
 
 
 Conditions = dict[str, str | float | int | bool | None]

@@ -2,43 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design tokens (light). Dark set below. Expanded in Phase 4. */
+/* Design tokens. Colour is never the only signal: tags carry letters, verdicts and gates carry icons and text. */
 :root {
   --background: 0 0% 100%;
+  --surface: 210 40% 98%;
   --foreground: 222 47% 11%;
   --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 40%;
+  --muted-foreground: 215 19% 35%;
   --primary: 160 84% 24%;
   --primary-foreground: 0 0% 100%;
-  --border: 214 32% 88%;
-  --ok: 142 72% 29%;
-  --warn: 32 95% 38%;
-  --bad: 0 72% 45%;
+  --border: 214 32% 85%;
+  --ring: 221 83% 45%;
+  --ok: 142 72% 26%;
+  --warn: 30 95% 33%;
+  --bad: 0 72% 42%;
+  --tag-m: 221 83% 40%;
+  --tag-p: 160 84% 24%;
+  --tag-a: 30 95% 33%;
+  --tag-s: 280 60% 42%;
   --radius: 0.5rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
     --background: 222 47% 8%;
+    --surface: 222 40% 11%;
     --foreground: 210 40% 96%;
     --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 70%;
+    --muted-foreground: 215 20% 72%;
     --primary: 158 64% 52%;
     --primary-foreground: 222 47% 8%;
-    --border: 217 33% 24%;
+    --border: 217 33% 26%;
+    --ring: 213 94% 68%;
     --ok: 142 69% 58%;
     --warn: 38 92% 60%;
     --bad: 0 91% 71%;
+    --tag-m: 213 94% 72%;
+    --tag-p: 158 64% 55%;
+    --tag-a: 38 92% 62%;
+    --tag-s: 280 70% 75%;
   }
+}
+
+html {
+  scroll-padding-top: 5rem; /* focus never hidden behind the sticky header (WCAG 2.2) */
 }
 
 body {
   @apply bg-background text-foreground antialiased;
 }
 
+:focus-visible {
+  outline: 3px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+@media print {
+  nav,
+  .no-print {
+    display: none !important;
   }
 }

@@ -221,3 +221,56 @@ The gate, verdict and pea-parity paths have their inputs. The cost model and the
 **Known limits**
 - The literature backtest of limiting compounds (§15) is not done yet. It needs non-core cakes and their compounds in `/data`.
 - GO is reachable only when every stop gate passes; with G5 unknown in all presets, they are TEST-FIRST.
+
+## Phase 4: Frontend core and design system
+
+**Implemented**
+- **Design tokens:** light and dark colours as CSS variables, a visible focus ring, reduced-motion support, and focus never hidden behind the sticky header. M/P/A/S tag chips use letter plus colour, with the full word as the accessible name. Verdicts and gates use icon plus text (✓ GO, ✕ NO-GO, ⚑ TEST-FIRST, ℹ FLAG).
+- **`<Num/>`:** the only way numbers are rendered.
+  - Shows en-IN formatting chosen by unit (₹ grouping 1,00,000, %, probability), the P10–P90 range, the tag chip, and a "transferred" badge when α < 0.7.
+  - Hover or keyboard focus shows a preview; click, tap or Enter pins it open (value, range, tag, grade, α, linked source citations); Escape closes it.
+  - The global "Show sources" toggle prints source ids inline.
+- **Layout:** top bar (title, API status, show sources, language switch), a desktop stepper over 6 screens, a mobile bottom tab bar (Input, Verdict, Chains, Cost, Next), a skip link, focus moved to the new screen, an "Analysis updated" live region, and a footer with disclaimer, PoC note, privacy note and limitations link.
+- **Input:**
+  - The 3 presets (Analyse, or edit in the form).
+  - react-hook-form + Zod, with every message an i18n key. Fields: by-product, use, market, scale, price in ₹/kg, ₹/quintal or ₹/tonne (converted to ₹/kg), targets per kg protein, no-solvents, equipment and exclusions.
+  - A collapsible "Own batch data" section; values entered are tagged M. Process context uses Yes / No / Not known.
+  - Each field shows its tag, or "default" when empty. Data-completeness meter from `/data/report`.
+- **Verdict + gates:** a large verdict card (grade, P(GO) with its "≤ upper bound" note, reasons, actions, disclaimer) and gate cards (state, prior, measured value, limit, required test, what flips it, reasons and flags).
+- **Diagnosis:** a bar chart of level ÷ tolerance with P10–P90 whiskers and the tolerance line at 1, a text summary, a "show as table" toggle, and the table (role, level, tolerance or "no limit available", P(exceed), limiting badge) plus issue chips.
+- **Chains:** a sortable table (rank, retained, protein %, ₹/kg protein, P(spec)) using `aria-sort`. A row opens the before/after panel (raw cake vs chain), spec criteria with P(pass), transferred evidence, inputs with no data, and missing cost parts.
+- **Cost vs pea:**
+  - Stacked bars of our cost breakdown vs the pea landed split (base, freight, duty), with a lower-bound warning, margin, P(margin > 0), break-even and the Indian B2B cross-check.
+  - Accessible Radix sliders (pea base, USD/INR, freight, scale), a duty-mode select, a GST-credit toggle, reset, and shock-scenario buttons.
+  - Slider changes re-call `/analyze` with a 400 ms debounce.
+- **Next:** the tests the gates require, plus the full limitations list. The EVPPI ranking comes in Phase 5.
+- **States:** loading skeletons, error card with retry, "needs input" card. If `/analyze` fails or times out (8 s) for an unmodified preset, the app loads `/snapshots/<preset>.<lang>.json` with the "Demo snapshot (offline)" badge. The snapshot files are produced in Phase 8.
+- **Engine/API:**
+  - New `raw_price_inr_per_kg` request field (makes almond cost computable).
+  - Response models now mark defaulted fields as required (`json_schema_serialization_defaults_required`).
+  - Types are generated with `--default-non-nullable false`, so request defaults stay optional.
+- **Libraries added** (pinned; all in plan §8.1): zustand, react-hook-form, zod, @hookform/resolvers, Radix popover and slider. Dev: Testing Library, jsdom, axe-core.
+- **Charts are plain SVG instead of Recharts.** Reasons: bundle budget (NFR-02), and the plan's own risk note about Recharts error bars and accessibility. Every chart has a text summary or table.
+
+**Tested**
+- Vitest, 9 passing:
+  - `<Num/>` formats ₹1,00,000 and always shows a chip; shows P10–P90 and the transferred badge; opens on click and closes with Escape.
+  - The form rejects protein > 100, needs by-product and use, converts ₹/quintal → ₹/kg, flags protein + moisture > 100, and round-trips a preset.
+  - Indian formatting, including lakh and crore.
+- Playwright (`npm run e2e`, all checks pass):
+  - Preset 1 → TEST-FIRST, with G1 prior 53%.
+  - Cost screen: the pea-base slider (keyboard) changes landed cost ₹489 → ₹614.
+  - Keyboard-only: Tab to the preset, Enter runs it, stepper navigation by keyboard.
+  - A chain row opens its detail; diagnosis marks the trypsin inhibitor as limiting.
+  - axe-core (WCAG 2.0/2.1/2.2 A and AA): 0 serious or critical issues on Input, Verdict, Chains, Cost and Next at 360 px, and on Diagnosis, Chains and Cost at 1280 px.
+  - No horizontal scroll at 1280 px; every rendered number has a chip.
+- Screenshots at 360 px and 1280 px are in `docs/screenshots/`.
+- Build: initial JS 143 KB gzipped (budget 250 KB). pytest: 69 passing.
+
+**Exit gate: met.** J1 runs up to the cost screen on the real API.
+
+**Known limits**
+- Hindi strings arrive in Phase 7; the language switch exists, and Hindi falls back to English.
+- The preset 1 batch values are synthetic (as the source plan §8.3 example), so every derived number in that preset is correctly tagged S.
+- The chains table shows all chains (up to 60); there is no paging.
+- Lighthouse mobile has not been run yet (Phase 8).

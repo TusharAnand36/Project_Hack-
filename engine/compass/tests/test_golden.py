@@ -124,3 +124,10 @@ def test_measured_phytate_is_used_and_tagged(ds):
     r = run(ds, byproduct="groundnut_cake", application="beverage", batch={"phytate_pct": {"value": 2.0}})
     d = next(x for x in r.diagnosis if x.compound == "phytic_acid")
     assert d.level.p50 == pytest.approx(2.0) and d.level.tag.value == "measured" and d.p_exceed.value == 1.0
+
+
+def test_user_price_makes_almond_cost_computable(ds):
+    r = run(ds, byproduct="almond_cake", application="meat_analogue", raw_price_inr_per_kg=60)
+    top = r.chains[0]
+    assert top.cost_inr_per_kg_protein is not None and "cost_not_computable" not in top.badges
+    assert r.pea.break_even_base_usd_per_kg is not None

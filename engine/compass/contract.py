@@ -16,7 +16,8 @@ from compass.models import Range, Tag, Value
 
 
 class _Strict(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    # in responses every field is always present, so the generated TS types mark them required
+    model_config = ConfigDict(extra="forbid", json_schema_serialization_defaults_required=True)
 
 
 def _pct():
@@ -115,6 +116,11 @@ class AnalyzeRequest(_Strict):
     process: Process = Field(default_factory=Process)
     claims: list[str] = Field(default_factory=list, description='e.g. ["allergen_free"] (gate G6)')
     pea: PeaInputs = Field(default_factory=PeaInputs)
+    raw_price_inr_per_kg: float | None = Field(
+        default=None,
+        gt=0,
+        description="By-product price; overrides the dataset default (convert ₹/quintal or ₹/t first)",
+    )
     co_product_credit_inr_per_kg_protein: float | None = Field(default=None, ge=0)
     seed: int | None = None
     n_draws: int | None = Field(default=None, ge=256, le=16384)
