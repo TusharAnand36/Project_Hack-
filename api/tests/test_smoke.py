@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 
-from api.main import app
+from api.main import DATASET, app
+from api.schemas import AnalyzeRequest
 
 client = TestClient(app)
 
@@ -24,63 +25,53 @@ EXAMPLE = {
         "duty_mode": "bcd_only_igst_credited_22",
         "usd_inr": None,
     },
+    "n_draws": 1024,
 }
 
 
-def _numeric_leaves(node, path=""):
-    """Yield (path, dict) for every Value/Range-like dict in a response."""
-    if isinstance(node, dict):
-        if "p50" in node or ("value" in node and isinstance(node["value"], int | float)):
-            yield path, node
-        for k, v in node.items():
-            yield from _numeric_leaves(v, f"{path}.{k}")
-    elif isinstance(node, list):
-        for i, v in enumerate(node):
-            yield from _numeric_leaves(v, f"{path}[{i}]")
+def test_health_reports_versions():
+    body = client.get("/health").json()
+    assert body["status"] == "ok" and body["dataset_version"] == DATASET.version
 
 
-def test_health_ok():
-    r = client.get("/health")
-    assert r.status_code == 200
-    assert r.json()["status"] == "ok"
-
-
-def test_analyze_accepts_source_plan_example():
+def test_analyze_source_plan_example():
     r = client.post("/analyze", json=EXAMPLE)
     assert r.status_code == 200, r.text
     body = r.json()
-    assert body["meta"]["is_stub"] is True
-    for key in ("meta", "verdict", "gates", "diagnosis", "chains", "pea", "voi", "plan", "limitations"):
+    assert body["meta"]["is_stub"] is False
+    for key in ("meta", "verdict", "gates", "diagnosis", "issues", "chains", "pea", "limitations"):
         assert key in body
     assert body["pea"]["duty_mode"] == "bcd_only_igst_credited_22"
+    assert body["verdict"]["label"] == "TEST-FIRST"
 
 
-def test_every_numeric_leaf_is_tagged_synthetic_in_stub():
-    leaves = list(_numeric_leaves(client.post("/analyze", json=EXAMPLE).json()))
-    assert leaves
-    for path, leaf in leaves:
-        assert leaf.get("tag") == "synthetic", path
-
-
-def test_analyze_rejects_unknown_fields():
+def test_invalid_payloads_give_readable_422():
     r = client.post("/analyze", json={**EXAMPLE, "bogus": 1})
-    assert r.status_code == 422
+    assert r.status_code == 422 and "bogus" in r.text
+    r = client.post("/analyze", json={**EXAMPLE, "batch": {"protein_pct": {"value": 120}}})
+    assert r.status_code == 422 and "less than or equal to 100" in r.text
+    r = client.post("/analyze", json={**EXAMPLE, "byproduct": "unobtainium"})
+    assert r.status_code == 422 and "unknown by-product" in r.json()["detail"]
+    r = client.post("/analyze", json={**EXAMPLE, "constraints": {"exclude_treatments": ["magic"]}})
+    assert r.status_code == 422 and "magic" in r.json()["detail"]
 
 
-def test_analyze_rejects_impossible_protein():
-    bad = {**EXAMPLE, "batch": {"protein_pct": {"value": 120}}}
-    assert client.post("/analyze", json=bad).status_code == 422
+def test_body_size_limit():
+    r = client.post(
+        "/analyze", content=b"{" + b" " * 70_000 + b"}", headers={"Content-Type": "application/json"}
+    )
+    assert r.status_code == 413
 
 
-def test_presets_are_valid_requests():
-    from api.main import DATASET
-    from api.schemas import AnalyzeRequest
+def test_presets_endpoint_and_payloads_valid():
+    presets = client.get("/presets").json()
+    assert [p["id"] for p in presets] == list(DATASET.presets)
+    for p in presets:
+        AnalyzeRequest.model_validate(p["payload"])
 
-    for preset in DATASET.presets.values():
-        AnalyzeRequest.model_validate(preset.payload)
 
-
-def test_health_reports_dataset_version():
-    from api.main import DATASET
-
-    assert client.get("/health").json()["dataset_version"] == DATASET.version
+def test_data_files_are_allow_listed():
+    assert client.get("/data/sources").status_code == 200
+    assert client.get("/data/report").json()["dataset_version"] == DATASET.version
+    assert client.get("/data/..%2F.env").status_code == 404
+    assert client.get("/data/secrets").status_code == 404

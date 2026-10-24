@@ -145,3 +145,79 @@ The gate, verdict and pea-parity paths have their inputs. The cost model and the
 **Known limits**
 - Inputs are independent (identity correlation), as in §12.9; this is listed as a limitation.
 - A point value with α < 1 has no range to widen, so it stays constant; the moist-heat TIA value has α = 1 anyway.
+
+## Phase 3: Gates, diagnosis, chains and `/analyze`
+
+**Implemented**
+- `compass/contract.py`: the §8.3 request and §14.2 result as engine-side Pydantic models; `api/schemas.py` re-exports them.
+  - Additions to §14.2:
+    - gate `kind`, `reasons`, `measured`/`limit`, and a `FLAG` state for G6/G7;
+    - diagnosis `role`/`severity`/`limiting`, plus `issues` chips;
+    - per-chain `criteria` with P(pass), `cost_missing`, `margin_vs_pea`, `no_data_inputs`;
+    - pea `inputs`, the B2B cross-check and the break-even note.
+  - Request additions: `constraints.no_solvents` and `n_draws`.
+  - `voi` and `plan` stay null until Phase 5.
+- `gates.py`: G1–G7 per §12.1.
+  - G1 uses measured thresholds (≤ 0.5·L / ≤ L / > L), or the prior P(fail) 0.53 with the sorted-supply odds multiplier.
+  - G2 covers FFA, the 6 h window and stabilisation. G3 handles a null limit as TEST-FIRST, "no limit available". G4 checks solvent route and certificate. G5 checks provenance.
+  - G6/G7 are flags; an allergen-free claim fails G6.
+  - Every gate gives its reasons, required test and what flips it. Treatments never clear a gate.
+- `diagnosis.py`: gate compounds are listed first. Each tunable compound gets exceedance ratio, P(exceed), severity and rank, and the top one with P(exceed) > 0 is marked limiting. A compound without a tolerance shows "no limit available (qualitative)".
+  - Chips: protein density gap, amino-acid limitation ("blend, not treatment"), functionality caveat, allergen, "no treatment needed", and "diagnosis blocked" when compound data are missing.
+- `chains.py`: candidates are filtered by exclusions, no-solvents, equipment and relevance (a treatment with no listed effect on the by-product is skipped unless it fractionates or extrudes). DFS then applies every §12.4 rule:
+  - stabilise first for rice bran, and before wet steps;
+  - phytase before AE-IEP; never phytase → moist heat;
+  - SSF and soak/germinate are mutually exclusive;
+  - one fractionation step, which ends the chain (extrude after it only for meat analogue);
+  - extrude only first or last; length ≤ 4.
+  - Raw flour is always included; the cap is 60 chains.
+- `flavour.py`: the off-flavour index per §12.6. It returns "not computable" while the dataset has no sensory baselines.
+- `montecarlo.py`: all chains are evaluated on the same draws. Per draw it computes final protein %, retention, compound concentrations (mass-tracked), OFI, cost (§12.7), margin vs pea, and the joint spec indicator over the criteria that can be evaluated.
+- `analyze.py`:
+  - Normalisation: dry basis, true protein = N × f.
+  - Batch measurements override dataset values and are tagged measured, grade A.
+  - Pea block with 3 shocks, the B2B cross-check and break-even.
+  - Pruning rule 8a: P10 cost above the cap.
+  - Ranking by P(spec), then P50 cost. Badges: highest P(spec), cheapest viable, transferred, cost lower bound, cost not computable, not recommended.
+  - Verdict per §12.14 rules 1–10.
+  - P(GO) = P(gates pass) × P(spec), labelled an upper bound when a TEST-FIRST gate has no prior.
+- API:
+  - `POST /analyze` (422 with readable messages for unknown ids);
+  - `GET /presets`; `GET /data/{file}` (allow-listed) and `/data/report`;
+  - 64 KB request body limit.
+- `web/src/api/types.ts` regenerated; the web app builds against it. Engine version 0.2.0.
+
+**Decisions (one line each)**
+- A process step with no yield and no retention data keeps protein % unchanged (§7.3 "treated flour ~ protein as-is"); only the loss is uncertain, U(0, 1).
+- A missing compound floor is 0. Compound concentrations are tracked as mass per kg raw, divided by product mass.
+- Empty `equipment` means "not stated" (no filter). The rice-bran and almond presets no longer restrict equipment.
+- An unknown oil route defaults to the by-product's first listed route (groundnut: cold-pressed), and the response says so.
+- Ruff no longer checks line length (black owns it; long user-facing strings stay unwrapped).
+
+**Tested**
+- pytest: 68 passing.
+- GT1–GT6:
+  - GT1: TEST-FIRST, prior 0.53 shown, never GO.
+  - GT2: NO-GO, no chains, "divert to feed or re-source".
+  - GT3: G2 FAIL.
+  - GT4: G2 PASS, protein gap flagged, raw flour P(spec) = 0, only AE-IEP chains viable.
+  - GT5: "no treatment needed", allergen flag, price flag, chains shown.
+  - GT6: no ethanol_wash.
+- Also tested:
+  - every numeric leaf tagged; same seed → identical result;
+  - G1 pass at 10 ppb; an allergen-free claim fails;
+  - a measured phytate is used and tagged;
+  - chain rules hold for every by-product × application; exclusions never add chains; equipment and no-solvents filters work;
+  - API: §8.3 example, readable 422s, 413 for oversized bodies, presets, data allow-list.
+- Timing: all three presets < 3 s (groundnut 0.3 s at 8,192 draws; 0.27 s over HTTP).
+
+**Preset results now (all costs are lower bounds; process-cost data missing)**
+- Groundnut → beverage: TEST-FIRST (G1 prior 0.53, G5). P(GO) ≤ 0.32. Limiting compound: trypsin inhibitor. Top chain: moist_heat + ae_iep, isolate, P(spec) 0.68, transferred evidence. Pea landed ≈ ₹489/kg protein.
+- Rice bran → snack: TEST-FIRST (G2–G5). Protein gap flagged; diagnosis blocked (no phytate data). Only stabilise + ae_iep chains meet spec.
+- Almond → meat analogue: TEST-FIRST (G5). No treatment needed; allergen flag; cost not computable (price missing). Only ae_iep chains reach 55% protein.
+
+**Exit gate:** GT1–GT6 pass; all three presets return valid JSON in < 3 s; types regenerated and compile. "Preset 1 renders end-to-end in the UI" needs Phase 4.
+
+**Known limits**
+- The literature backtest of limiting compounds (§15) is not done yet. It needs non-core cakes and their compounds in `/data`.
+- GO is reachable only when every stop gate passes; with G5 unknown in all presets, they are TEST-FIRST.

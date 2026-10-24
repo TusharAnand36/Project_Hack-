@@ -50,11 +50,7 @@
         "application": "extruded_snack",
         "market": "domestic",
         "scale_kg_day": 500,
-        "constraints": {
-          "equipment": [
-            "extruder"
-          ]
-        },
+        "constraints": {},
         "process": {
           "solvent_extracted": true
         }
@@ -69,11 +65,7 @@
         "application": "meat_analogue",
         "market": "domestic",
         "scale_kg_day": 500,
-        "constraints": {
-          "equipment": [
-            "extruder"
-          ]
-        }
+        "constraints": {}
       }
     }
   ]

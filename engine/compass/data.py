@@ -352,8 +352,19 @@ def _index(items: list[M], name: str) -> dict[str, M]:
     return out
 
 
+def _data_dir(data_dir: Path | str | None = None) -> Path:
+    return Path(data_dir or os.getenv("COMPASS_DATA_DIR") or DEFAULT_DATA_DIR)
+
+
+def read_raw(name: str, data_dir: Path | str | None = None) -> dict[str, Any]:
+    """One dataset file as raw JSON (for the provenance UI and the open data pack)."""
+    if name not in FILES:
+        raise DataError(f"{name}: not a dataset file")
+    return _read(_data_dir(data_dir), name)
+
+
 def load_dataset(data_dir: Path | str | None = None) -> Dataset:
-    data_dir = Path(data_dir or os.getenv("COMPASS_DATA_DIR") or DEFAULT_DATA_DIR)
+    data_dir = _data_dir(data_dir)
     raw = {n: _read(data_dir, n) for n in FILES}
 
     src = _validate(SourcesFile, raw["sources"], "sources")

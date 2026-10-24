@@ -21,6 +21,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/presets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Presets */
+        get: operations["presets_presets_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/data/{name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Data File */
+        get: operations["data_file_data__name__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/analyze": {
         parameters: {
             query?: never;
@@ -30,10 +64,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Analyze
-         * @description STUB. Validates the §8.3 payload and returns the §14.2 shape filled with placeholders.
-         */
+        /** Analyze */
         post: operations["analyze_analyze_post"];
         delete?: never;
         options?: never;
@@ -63,19 +94,18 @@ export interface components {
             constraints?: components["schemas"]["Constraints"];
             batch?: components["schemas"]["Batch"];
             process?: components["schemas"]["Process"];
-            /** Claims */
+            /**
+             * Claims
+             * @description e.g. ["allergen_free"] (gate G6)
+             */
             claims?: string[];
             pea?: components["schemas"]["PeaInputs"];
-            /**
-             * Co Product Credit Inr Per Kg Protein
-             * @default 0
-             */
-            co_product_credit_inr_per_kg_protein: number;
-            /**
-             * Seed
-             * @default 42
-             */
-            seed: number;
+            /** Co Product Credit Inr Per Kg Protein */
+            co_product_credit_inr_per_kg_protein?: number | null;
+            /** Seed */
+            seed?: number | null;
+            /** N Draws */
+            n_draws?: number | null;
         };
         /** AnalyzeResponse */
         AnalyzeResponse: {
@@ -85,11 +115,13 @@ export interface components {
             gates: components["schemas"]["Gate"][];
             /** Diagnosis */
             diagnosis: components["schemas"]["Diagnosis"][];
+            /** Issues */
+            issues?: components["schemas"]["Issue"][];
             /** Chains */
             chains: components["schemas"]["Chain"][];
             pea: components["schemas"]["Pea"];
-            voi: components["schemas"]["Voi"];
-            plan: components["schemas"]["Plan"];
+            voi?: components["schemas"]["Voi"] | null;
+            plan?: components["schemas"]["Plan"] | null;
             /** Limitations */
             limitations: string[];
             /** Disclaimer */
@@ -105,6 +137,7 @@ export interface components {
             fat_pct?: components["schemas"]["PctMeasurement"] | null;
             ffa_pct?: components["schemas"]["PctMeasurement"] | null;
             ash_pct?: components["schemas"]["PctMeasurement"] | null;
+            /** @description % dry basis */
             phytate_pct?: components["schemas"]["PctMeasurement"] | null;
             afb1_ppb?: components["schemas"]["Measurement"] | null;
             tia?: components["schemas"]["Measurement"] | null;
@@ -114,10 +147,12 @@ export interface components {
         /** Budget */
         Budget: {
             /** Low */
-            low: number;
+            low: number | null;
             /** High */
-            high: number;
+            high: number | null;
             tag: components["schemas"]["Tag"];
+            /** Note */
+            note?: string | null;
         };
         /** Chain */
         Chain: {
@@ -130,16 +165,37 @@ export interface components {
              * @enum {string}
              */
             tier: "flour" | "treated_flour" | "concentrate" | "isolate";
+            /** Rank */
+            rank: number;
             protein_retained: components["schemas"]["Range"];
             protein_pct_final: components["schemas"]["Range"];
-            ofi: components["schemas"]["Range"];
-            cost_inr_per_kg_protein: components["schemas"]["Range"];
-            kwh_per_kg_protein: components["schemas"]["Range"];
-            l_water_per_kg_protein: components["schemas"]["Range"];
+            ofi?: components["schemas"]["Range"] | null;
+            phytate_pct_final?: components["schemas"]["Range"] | null;
+            tia_pct_raw_final?: components["schemas"]["Range"] | null;
+            cost_inr_per_kg_protein?: components["schemas"]["Range"] | null;
+            /**
+             * Cost Complete
+             * @default false
+             */
+            cost_complete: boolean;
+            /** Cost Missing */
+            cost_missing?: string[];
+            /** Cost Breakdown */
+            cost_breakdown?: {
+                [key: string]: components["schemas"]["Range"];
+            };
+            kwh_per_kg_protein?: components["schemas"]["Range"] | null;
+            l_water_per_kg_protein?: components["schemas"]["Range"] | null;
+            margin_vs_pea?: components["schemas"]["Range"] | null;
+            p_margin_positive?: components["schemas"]["Value"] | null;
             p_spec: components["schemas"]["Value"];
-            e_utility: components["schemas"]["Value"];
+            /** Criteria */
+            criteria?: components["schemas"]["Criterion"][];
+            e_utility?: components["schemas"]["Value"] | null;
             /** Transferred */
             transferred?: string[];
+            /** No Data Inputs */
+            no_data_inputs?: string[];
             /**
              * Pareto
              * @default false
@@ -152,7 +208,15 @@ export interface components {
         Constraints: {
             /** Exclude Treatments */
             exclude_treatments?: string[];
-            /** Equipment */
+            /**
+             * No Solvents
+             * @default false
+             */
+            no_solvents: boolean;
+            /**
+             * Equipment
+             * @description Available equipment. Empty = not stated (no equipment filter).
+             */
             equipment?: string[];
             /** Electricity Inr Per Kwh */
             electricity_inr_per_kwh?: number | null;
@@ -160,6 +224,20 @@ export interface components {
             water_inr_per_m3?: number | null;
             /** Labour Inr Per H */
             labour_inr_per_h?: number | null;
+        };
+        /** Criterion */
+        Criterion: {
+            /**
+             * Id
+             * @enum {string}
+             */
+            id: "protein" | "phytate" | "tia" | "ofi" | "cost";
+            target: components["schemas"]["Value"];
+            /** Evaluated */
+            evaluated: boolean;
+            p_pass?: components["schemas"]["Value"] | null;
+            /** Note */
+            note?: string | null;
         };
         /**
          * DecisionGrade
@@ -170,11 +248,27 @@ export interface components {
         Diagnosis: {
             /** Compound */
             compound: string;
+            /** Name */
+            name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "gate" | "tunable";
+            level: components["schemas"]["Range"] | null;
             tolerance: components["schemas"]["Value"] | null;
-            level: components["schemas"]["Range"];
             p_exceed: components["schemas"]["Value"] | null;
+            /** Severity */
+            severity?: number | null;
             /** Rank */
             rank: number;
+            /**
+             * Limiting
+             * @default false
+             */
+            limiting: boolean;
+            /** Note */
+            note?: string | null;
         };
         /**
          * DutyMode
@@ -199,7 +293,16 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "stop" | "flag";
             state: components["schemas"]["GateState"];
+            /** Reasons */
+            reasons?: string[];
+            measured?: components["schemas"]["Value"] | null;
+            limit?: components["schemas"]["Value"] | null;
             prior_p_fail?: components["schemas"]["Value"] | null;
             /** Required Test */
             required_test?: string | null;
@@ -212,7 +315,7 @@ export interface components {
          * GateState
          * @enum {string}
          */
-        GateState: "PASS" | "TEST-FIRST" | "FAIL";
+        GateState: "PASS" | "TEST-FIRST" | "FAIL" | "FLAG";
         /**
          * Grade
          * @description Evidence grade, A (strongest) to D (weakest).
@@ -234,15 +337,32 @@ export interface components {
             dataset_version: string;
         };
         /**
+         * Issue
+         * @description A diagnosis chip that is not a compound-removal problem (source plan §12.3).
+         */
+        Issue: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "protein_density_gap" | "amino_acid_limitation" | "functionality" | "allergen" | "no_treatment_needed" | "diagnosis_blocked";
+            /** Message */
+            message: string;
+            value?: components["schemas"]["Range"] | null;
+        };
+        /**
          * Measurement
-         * @description A user-entered batch measurement. Defaults to tag `measured`.
+         * @description A batch measurement on the material as received. Defaults to tag `measured`.
          */
         Measurement: {
             /** Value */
             value: number;
             /** @default measured */
             tag: components["schemas"]["Tag"];
-            /** N Factor */
+            /**
+             * N Factor
+             * @description Protein only: N-to-protein factor used
+             */
             n_factor?: number | null;
         };
         /** Meta */
@@ -256,6 +376,26 @@ export interface components {
             /** Dataset Version */
             dataset_version: string;
             /**
+             * Elapsed Ms
+             * @default 0
+             */
+            elapsed_ms: number;
+            /**
+             * Chains Total
+             * @default 0
+             */
+            chains_total: number;
+            /**
+             * Chains Shown
+             * @default 0
+             */
+            chains_shown: number;
+            /**
+             * Chains Capped
+             * @default false
+             */
+            chains_capped: boolean;
+            /**
              * Is Stub
              * @default false
              */
@@ -267,20 +407,31 @@ export interface components {
             value: number;
             /** @default measured */
             tag: components["schemas"]["Tag"];
-            /** N Factor */
+            /**
+             * N Factor
+             * @description Protein only: N-to-protein factor used
+             */
             n_factor?: number | null;
         };
         /** Pea */
         Pea: {
             duty_mode: components["schemas"]["DutyMode"];
+            /** Inputs */
+            inputs: {
+                [key: string]: components["schemas"]["Range"];
+            };
+            landed_inr_per_kg_product: components["schemas"]["Range"];
             landed_inr_per_kg_protein: components["schemas"]["Range"];
-            break_even_base_usd_per_kg: components["schemas"]["Range"];
+            b2b_cross_check_inr_per_kg_protein?: components["schemas"]["Range"] | null;
+            break_even_base_usd_per_kg?: components["schemas"]["Range"] | null;
+            /** Break Even Note */
+            break_even_note?: string | null;
             /** Scenarios */
             scenarios: components["schemas"]["Scenario"][];
         };
         /**
          * PeaInputs
-         * @description Imported pea isolate parameters. null = dataset default (labelled).
+         * @description Imported pea isolate parameters. Null = dataset default (labelled).
          */
         PeaInputs: {
             /** Base Usd Per Kg */
@@ -319,8 +470,8 @@ export interface components {
             method: string;
             /** Replicates */
             replicates: number;
-            cost_inr: components["schemas"]["Range"];
-            turnaround_days: components["schemas"]["Range"];
+            cost_inr: components["schemas"]["Range"] | null;
+            turnaround_days: components["schemas"]["Range"] | null;
             /** Acceptance */
             acceptance: string;
         };
@@ -365,6 +516,8 @@ export interface components {
         };
         /** Scenario */
         Scenario: {
+            /** Id */
+            id: string;
             /** Name */
             name: string;
             landed: components["schemas"]["Range"];
@@ -375,7 +528,10 @@ export interface components {
          * @enum {string}
          */
         Tag: "measured" | "published" | "assumed" | "synthetic";
-        /** Targets */
+        /**
+         * Targets
+         * @description Targets per kg protein. Null = the application's default tolerance.
+         */
         Targets: {
             /** Min Protein Pct */
             min_protein_pct?: number | null;
@@ -415,9 +571,13 @@ export interface components {
         Verdict: {
             label: components["schemas"]["VerdictLabel"];
             grade: components["schemas"]["DecisionGrade"];
-            p_go: components["schemas"]["Value"];
+            p_go: components["schemas"]["Value"] | null;
+            /** P Go Note */
+            p_go_note?: string | null;
             /** Reasons */
             reasons: string[];
+            /** Actions */
+            actions?: string[];
         };
         /**
          * VerdictLabel
@@ -462,6 +622,57 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Health"];
+                };
+            };
+        };
+    };
+    presets_presets_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>[];
+                };
+            };
+        };
+    };
+    data_file_data__name__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

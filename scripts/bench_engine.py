@@ -38,8 +38,8 @@ def main(n: int = 8192) -> int:
     s.add("nf", ds.byproduct_defaults["n_factor"])
     s.add("price", gnc.price_inr_per_kg)
     phy, iep = ds.treatments["phytase"], ds.treatments["ae_iep"]
-    s.add("phy.m", phy.mass_yield)
-    s.add("phy.rho", phy.protein_retention)
+    s.add("phy.m", phy.mass_yield, missing="full_range")
+    s.add("phy.rho", phy.protein_retention, missing="full_range")
     s.add("iep.pi", iep.purity)
     s.add("iep.rec", iep.recovery)
     for name, p in ds.costs.pea.items():

@@ -4,9 +4,10 @@
   that one Sobol (or Latin-hypercube) point set drives every uncertain input.
 - Extrapolation penalty: a row applied with applicability alpha < 1 has its range widened
   around the mode by w = 1 + k * (1 - alpha), then clipped to the unit's physical bounds.
-- Missing data policy (stated on screen): a missing fraction or probability is sampled from
-  its full feasible range U(0, 1), tagged `assumed` grade D ("no data"). Any other missing
-  quantity is *not computable*; callers must report it instead of guessing a number.
+- Missing data policy (stated on screen): a missing *process* fraction (yield, retention,
+  reduction, purity, recovery) is sampled from its full feasible range U(0, 1), tagged
+  `assumed` grade D ("no data"); callers opt in with `missing="full_range"`. Any other
+  missing quantity is *not computable*; callers must report it instead of guessing a number.
 """
 
 from __future__ import annotations
@@ -165,9 +166,18 @@ class Sampler:
         self._specs: dict[str, _Spec] = {}
 
     def add(
-        self, key: str, param: Param | None, *, unit: str | None = None, alpha: float | None = None
+        self,
+        key: str,
+        param: Param | None,
+        *,
+        unit: str | None = None,
+        alpha: float | None = None,
+        missing: Literal["full_range", "none"] = "none",
     ) -> None:
-        """Register `param` under `key`. `alpha` overrides the row's applicability."""
+        """Register `param` under `key`. `alpha` overrides the row's applicability.
+
+        `missing="full_range"`: if the row has no data and is a fraction, sample U(0, 1).
+        """
         if key in self._specs:
             return
         unit = unit or (param.unit if param else "")
@@ -178,7 +188,7 @@ class Sampler:
             spec.const, spec.prov = param.value, Provenance.of(param)
         elif param is not None and param.dist is not None:
             spec.dist, spec.prov = widen(param.dist, a, self.k, bounds), Provenance.of(param)
-        elif bounds == (0.0, 1.0):
+        elif missing == "full_range" and bounds == (0.0, 1.0):
             spec.dist, spec.prov = Dist(type="uniform", low=0.0, high=1.0), NO_DATA
         if spec.prov is not NO_DATA and a is not None:
             spec.prov = Provenance(spec.prov.tag, spec.prov.grade, spec.prov.source_ids, a)

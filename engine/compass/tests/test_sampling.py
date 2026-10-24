@@ -72,9 +72,11 @@ def test_same_seed_same_draws_and_different_seed_differs():
 
 def test_missing_fraction_gets_full_range_and_other_missing_is_not_computable():
     s = Sampler(256, 1)
-    s.add("yield", Param(unit="fraction", tag="assumed"))
-    s.add("kwh", Param(unit="kWh/kg input", tag="assumed"))
+    s.add("yield", Param(unit="fraction", tag="assumed"), missing="full_range")
+    s.add("kwh", Param(unit="kWh/kg input", tag="assumed"), missing="full_range")
+    s.add("overhead", Param(unit="fraction", tag="assumed"))  # not a process fraction: no full range
     out = s.sample()
+    assert out["overhead"].missing
     assert out["yield"].prov is NO_DATA and 0 <= out["yield"].values.min() and out["yield"].values.max() <= 1
     assert out["kwh"].missing
 
