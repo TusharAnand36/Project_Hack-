@@ -16,3 +16,5 @@ node_modules/
 web/dist/
 *.log
 .DS_Store
+# local git bundles (push fallback)
+*.bundle
