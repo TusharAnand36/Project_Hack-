@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import { useHealth } from "@/api/hooks";
+import { CompassMark } from "@/components/Brand";
 import { cn } from "@/lib/utils";
 import { SCREENS, useStore, type Screen } from "@/store";
 
@@ -33,12 +34,21 @@ export function TopBar() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-2">
         <div className="me-auto">
-          <h1 className="text-lg font-semibold leading-tight">
-            <span aria-hidden="true">🧭 </span>
-            {t("app.title")}
+          <h1>
+            <a
+              href="#/"
+              className="flex items-center gap-2 text-lg font-semibold leading-tight"
+              aria-label={t("site.homeLabel")}
+            >
+              <CompassMark className="h-7 w-7" />
+              {t("app.title")}
+            </a>
           </h1>
           <p className="text-xs text-muted-foreground">{t("app.tagline")}</p>
         </div>
+        <a href="#/" className="inline-flex min-h-11 items-center text-sm underline">
+          {t("site.backHome")}
+        </a>
         <span
           role="status"
           className={cn("text-xs", ok ? "text-ok" : health.isPending ? "text-muted-foreground" : "text-bad")}

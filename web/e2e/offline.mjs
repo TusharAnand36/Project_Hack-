@@ -10,7 +10,7 @@ const { chromium } = require("playwright");
 const here = path.dirname(fileURLToPath(import.meta.url));
 const SHOTS = path.join(here, "..", "..", "docs", "screenshots");
 const PORT = 4179;
-const URL = `http://localhost:${PORT}`;
+const URL = `http://localhost:${PORT}/#/compass`;
 
 const failures = [];
 const check = (ok, msg) => {

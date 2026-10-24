@@ -12,6 +12,11 @@ Every number carries a provenance tag: `measured`, `published`, `assumed` or `sy
 
 **Status:** Phases 0–8 done. Progress and test results for each phase are in `docs/PHASES.md`.
 
+The website opens on a public home page with About us, Our mission, and How it works pages.
+Choose **Open Compass** to enter the decision tool, or open `/#/compass` directly.
+Both the public pages and the tool support English and Hindi. Design and image-source notes are in
+[`docs/WEBSITE.md`](docs/WEBSITE.md).
+
 ## What it does
 
 | Screen | Answers |

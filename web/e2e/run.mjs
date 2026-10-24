@@ -10,7 +10,7 @@ const { chromium } = require("playwright");
 const here = path.dirname(fileURLToPath(import.meta.url));
 const AXE = path.join(here, "..", "node_modules", "axe-core", "axe.min.js");
 const SHOTS = process.env.SHOTS ?? path.join(here, "..", "..", "docs", "screenshots");
-const URL = process.env.WEB_URL ?? "http://localhost:5173";
+const URL = process.env.WEB_URL ?? "http://localhost:5173/#/compass";
 mkdirSync(SHOTS, { recursive: true });
 
 const failures = [];
