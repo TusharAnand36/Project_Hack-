@@ -3,18 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useHealth } from "@/api/hooks";
 import { CompassMark } from "@/components/Brand";
 import { cn } from "@/lib/utils";
-import { SCREENS, useStore, type Screen } from "@/store";
-
-const MOBILE: Screen[] = ["input", "verdict", "chains", "cost", "next"];
-const ICON: Record<Screen, string> = {
-  input: "✎",
-  verdict: "⚑",
-  diagnosis: "⚗",
-  chains: "⛓",
-  cost: "₹",
-  next: "→",
-  memo: "🖨",
-};
+import { SCREENS, useStore } from "@/store";
 
 export function TopBar() {
   const { t, i18n } = useTranslation();
@@ -31,47 +20,50 @@ export function TopBar() {
     }
   };
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-2">
-        <div className="me-auto">
+    <header className="workspace-header no-print">
+      <div className="workspace-header-inner">
+        <div>
           <h1>
-            <a
-              href="#/"
-              className="flex items-center gap-2 text-lg font-semibold leading-tight"
-              aria-label={t("site.homeLabel")}
-            >
-              <CompassMark className="h-7 w-7" />
-              {t("app.title")}
+            <a href="#/" className="site-brand" aria-label={t("site.homeLabel")}>
+              <CompassMark />
+              <span>
+                upcycle<span className="brand-second">compass</span>
+              </span>
             </a>
           </h1>
-          <p className="text-xs text-muted-foreground">{t("app.tagline")}</p>
         </div>
-        <a href="#/" className="inline-flex min-h-11 items-center text-sm underline">
+        <a href="#/" className="workspace-home-link">
+          <span aria-hidden="true">↖</span>
           {t("site.backHome")}
         </a>
-        <span
-          role="status"
-          className={cn("text-xs", ok ? "text-ok" : health.isPending ? "text-muted-foreground" : "text-bad")}
-          data-testid="health"
-        >
-          {t("health.label")}: {t(health.isPending ? "health.checking" : ok ? "health.ok" : "health.down")}
-        </span>
-        <label className="flex min-h-11 items-center gap-2 text-sm">
-          <input type="checkbox" className="h-5 w-5" checked={showSources} onChange={toggle} />
-          {t("app.showSources")}
-        </label>
-        <label className="text-sm">
-          <span className="sr-only">{t("app.language")}</span>
-          <select
-            className="min-h-11 rounded-md border border-border bg-background px-2"
-            value={i18n.language}
-            onChange={(e) => setLang(e.target.value)}
-            aria-label={t("app.language")}
+        <div className="workspace-tools">
+          <span
+            role="status"
+            className={cn(
+              "workspace-health",
+              ok ? "text-ok" : health.isPending ? "text-muted-foreground" : "text-bad",
+            )}
+            data-testid="health"
           >
-            <option value="en">English</option>
-            <option value="hi">हिन्दी</option>
-          </select>
-        </label>
+            {t("health.label")}: {t(health.isPending ? "health.checking" : ok ? "health.ok" : "health.down")}
+          </span>
+          <label className="workspace-source-toggle">
+            <input type="checkbox" className="h-5 w-5" checked={showSources} onChange={toggle} />
+            {t("app.showSources")}
+          </label>
+          <label className="workspace-language">
+            <span className="sr-only">{t("app.language")}</span>
+            <select
+              className="min-h-11 rounded-md border border-border bg-background px-2"
+              value={i18n.language}
+              onChange={(e) => setLang(e.target.value)}
+              aria-label={t("app.language")}
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+            </select>
+          </label>
+        </div>
       </div>
     </header>
   );
@@ -93,8 +85,8 @@ export function Stepper({ disabled }: { disabled: boolean }) {
   const screen = useStore((s) => s.screen);
   const setScreen = useStore((s) => s.setScreen);
   return (
-    <nav aria-label={t("nav.label")} className="hidden border-b border-border md:block">
-      <ol className="mx-auto flex max-w-6xl gap-1 px-4">
+    <nav aria-label={t("nav.label")} className="workspace-stepper hidden md:block">
+      <ol>
         {SCREENS.map((s, i) => (
           <li key={s}>
             <button
@@ -102,13 +94,13 @@ export function Stepper({ disabled }: { disabled: boolean }) {
               onClick={() => setScreen(s)}
               disabled={disabled && s !== "input"}
               aria-current={screen === s ? "page" : undefined}
-              className={cn(
-                "min-h-11 border-b-2 px-3 text-sm disabled:opacity-40",
-                screen === s ? "border-primary font-semibold" : "border-transparent hover:border-border",
-              )}
+              className="workspace-step"
               data-testid={`nav-${s}`}
             >
-              {i + 1}. {t(`nav.${s}`)}
+              <span className="workspace-step-number" aria-hidden="true">
+                0{i + 1}
+              </span>
+              {t(`nav.${s}`)}
             </button>
           </li>
         ))}
@@ -124,24 +116,21 @@ export function BottomBar({ disabled }: { disabled: boolean }) {
   return (
     <nav
       aria-label={t("nav.label")}
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background md:hidden"
+      className="workspace-bottom-nav fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background md:hidden"
     >
-      <ul className="grid grid-cols-5">
-        {MOBILE.map((s) => (
+      <ul className="grid grid-cols-6">
+        {SCREENS.map((s, i) => (
           <li key={s}>
             <button
               type="button"
               onClick={() => setScreen(s)}
               disabled={disabled && s !== "input"}
               aria-current={screen === s ? "page" : undefined}
-              className={cn(
-                "flex min-h-14 w-full flex-col items-center justify-center text-xs disabled:opacity-40",
-                screen === s ? "font-semibold text-primary" : "text-muted-foreground",
-              )}
+              className="workspace-mobile-step"
               data-testid={`tab-${s}`}
             >
-              <span aria-hidden="true" className="text-base">
-                {ICON[s]}
+              <span aria-hidden="true" className="workspace-step-number">
+                {i + 1}
               </span>
               {t(`nav.${s}`)}
             </button>
@@ -156,7 +145,7 @@ export function Footer() {
   const { t } = useTranslation();
   const setScreen = useStore((s) => s.setScreen);
   return (
-    <footer className="mx-auto max-w-6xl border-t border-border px-4 pb-24 pt-4 text-sm text-muted-foreground md:pb-6">
+    <footer className="workspace-footer text-muted-foreground">
       <p>{t("footer.disclaimer")}</p>
       <p>{t("footer.poc")}</p>
       <p>{t("footer.privacy")}</p>

@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card";
 import { InputScreen } from "@/screens/InputScreen";
 import { VerdictScreen } from "@/screens/VerdictScreen";
 import { useStore } from "@/store";
+import "./workspace.css";
 
 // screens with charts and tables load on first use (bundle budget, website plan Phase 8)
 const named = <K extends string>(
@@ -33,7 +34,8 @@ export default function App() {
 
   // move focus to the new screen and announce updates (WCAG: live regions, focus management)
   useEffect(() => {
-    mainRef.current?.focus();
+    window.scrollTo({ top: 0, behavior: "instant" });
+    mainRef.current?.focus({ preventScroll: true });
   }, [screen]);
   useEffect(() => {
     if (analysis.data) setAnnounce(t("app.analysisUpdated"));
@@ -67,9 +69,13 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="compass-app min-h-screen">
       <a
         href="#main"
+        onClick={(event) => {
+          event.preventDefault();
+          mainRef.current?.focus();
+        }}
         className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-background focus:p-2"
       >
         {t("app.skip")}
@@ -77,7 +83,7 @@ export default function App() {
       <TopBar />
       <Stepper disabled={!request} />
       <SafetyNote />
-      <main id="main" ref={mainRef} tabIndex={-1} className="mx-auto max-w-6xl px-4 py-6 outline-none">
+      <main id="main" ref={mainRef} tabIndex={-1} className="workspace-main outline-none">
         {result?.offline && screen !== "input" && (
           <p
             role="status"

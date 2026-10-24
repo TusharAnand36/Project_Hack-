@@ -1,10 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
+  future: { hoverOnlyWhenSupported: true },
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      fontFamily: { sans: ['"Noto Sans"', '"Noto Sans Devanagari"', "system-ui", "sans-serif"] },
+      fontFamily: { sans: ["Arial", '"Noto Sans Devanagari"', "Helvetica", "sans-serif"] },
       colors: {
         border: "hsl(var(--border) / <alpha-value>)",
         background: "hsl(var(--background) / <alpha-value>)",
@@ -17,8 +18,14 @@ export default {
           synthetic: "hsl(var(--tag-s) / <alpha-value>)",
         },
         foreground: "hsl(var(--foreground) / <alpha-value>)",
-        muted: { DEFAULT: "hsl(var(--muted) / <alpha-value>)", foreground: "hsl(var(--muted-foreground) / <alpha-value>)" },
-        primary: { DEFAULT: "hsl(var(--primary) / <alpha-value>)", foreground: "hsl(var(--primary-foreground) / <alpha-value>)" },
+        muted: {
+          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+          foreground: "hsl(var(--muted-foreground) / <alpha-value>)",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+          foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
+        },
         ok: "hsl(var(--ok) / <alpha-value>)",
         warn: "hsl(var(--warn) / <alpha-value>)",
         bad: "hsl(var(--bad) / <alpha-value>)",

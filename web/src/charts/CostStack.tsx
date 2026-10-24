@@ -8,15 +8,15 @@ export interface Part {
 }
 
 const COLOURS = [
-  "#0f766e",
-  "#2563eb",
-  "#d97706",
-  "#7c3aed",
-  "#db2777",
-  "#475569",
-  "#65a30d",
-  "#0891b2",
-  "#b45309",
+  "#243f32",
+  "#78905e",
+  "#e17b54",
+  "#a78b5a",
+  "#587e78",
+  "#7b697a",
+  "#a5b47b",
+  "#b88c7b",
+  "#686c53",
 ];
 
 /** Two horizontal stacked bars (ours vs pea) on one ₹/kg-protein axis, with a legend. */

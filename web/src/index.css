@@ -4,15 +4,22 @@
 
 /* Design tokens. Colour is never the only signal: tags carry letters, verdicts and gates carry icons and text. */
 :root {
-  --background: 0 0% 100%;
-  --surface: 210 40% 98%;
-  --foreground: 222 47% 11%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 19% 35%;
-  --primary: 160 84% 24%;
+  color-scheme: light;
+  --brand-paper: #f7f6f0;
+  --brand-ink: #243f32;
+  --brand-muted: #5e6b61;
+  --brand-line: #d7dcd1;
+  --brand-orange: #f37b51;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --background: 51.43 30.43% 95.49%;
+  --surface: 48 100% 99.02%;
+  --foreground: 151.11 27.27% 19.41%;
+  --muted: 71.25 32% 90.2%;
+  --muted-foreground: 133.85 6.47% 39.41%;
+  --primary: 151.11 27.27% 19.41%;
   --primary-foreground: 0 0% 100%;
-  --border: 214 32% 85%;
-  --ring: 221 83% 45%;
+  --border: 87.27 13.58% 84.12%;
+  --ring: 13.81 72.02% 37.84%;
   --ok: 142 72% 26%;
   --warn: 30 95% 33%;
   --bad: 0 72% 42%;
@@ -23,33 +30,17 @@
   --radius: 0.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --background: 222 47% 8%;
-    --surface: 222 40% 11%;
-    --foreground: 210 40% 96%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 72%;
-    --primary: 158 64% 52%;
-    --primary-foreground: 222 47% 8%;
-    --border: 217 33% 26%;
-    --ring: 213 94% 68%;
-    --ok: 142 69% 58%;
-    --warn: 38 92% 60%;
-    --bad: 0 91% 71%;
-    --tag-m: 213 94% 72%;
-    --tag-p: 158 64% 55%;
-    --tag-a: 38 92% 62%;
-    --tag-s: 280 70% 75%;
-  }
-}
-
 html {
   scroll-padding-top: 5rem; /* focus never hidden behind the sticky header (WCAG 2.2) */
 }
 
 body {
   @apply bg-background text-foreground antialiased;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html[lang="hi"] body {
+  font-family: "Noto Sans Devanagari", Arial, sans-serif;
 }
 
 :focus-visible {

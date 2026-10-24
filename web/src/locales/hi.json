@@ -1,4 +1,11 @@
 {
+  "workspace": {
+    "eyebrow": "COMPASS · आपकी सामग्री की यात्रा",
+    "inputTitle": "थोड़ी जिज्ञासा।",
+    "inputAccent": "एक स्पष्ट अगला कदम",
+    "sample": "शुरुआती उदाहरण",
+    "yourWords": "या अपनी सामग्री से शुरुआत करें"
+  },
   "site": {
     "pageTitle": "Upcycle Compass · खाद्य उप-उत्पादों की नई संभावनाएँ",
     "homeLabel": "Upcycle Compass का मुख्य पृष्ठ",

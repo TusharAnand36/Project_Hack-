@@ -1,0 +1,807 @@
+.compass-app {
+  background: var(--brand-paper);
+  color: var(--brand-ink);
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+}
+.workspace-header {
+  background: var(--brand-paper);
+  border-bottom: 1px solid var(--brand-line);
+}
+.workspace-header-inner {
+  width: min(1240px, calc(100% - 112px));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding-block: 25px;
+}
+.workspace-home-link {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+  min-height: 44px;
+  margin-inline-start: 35px;
+}
+.workspace-home-link > span {
+  font-size: 20px;
+}
+.workspace-tools {
+  display: flex;
+  align-items: center;
+  gap: 23px;
+  margin-inline-start: auto;
+}
+.workspace-health {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.workspace-health::before {
+  content: "";
+  height: 5px;
+  width: 5px;
+  background: currentColor;
+  border-radius: 50%;
+}
+.workspace-source-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  min-height: 44px;
+}
+.compass-app input[type="checkbox"] {
+  accent-color: var(--brand-ink);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.workspace-language select {
+  font-size: 12px;
+  min-height: 44px;
+  background: transparent;
+  border: 1px solid var(--brand-line);
+  border-radius: 5px;
+  padding-inline: 12px;
+}
+.workspace-stepper {
+  border-bottom: 1px solid var(--brand-line);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--brand-paper);
+}
+.workspace-stepper ol {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  width: min(1240px, calc(100% - 112px));
+  margin-inline: auto;
+  padding-block: 18px;
+  gap: 10px;
+}
+.workspace-step {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 11px 13px;
+  width: 100%;
+  min-height: 50px;
+  border-radius: 5px;
+  font-size: 12px;
+  text-align: start;
+  transition: background-color 160ms ease;
+}
+.workspace-step-number {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 1px solid #b9c5b4;
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  flex-shrink: 0;
+}
+.workspace-step:disabled {
+  color: #707b71;
+  cursor: not-allowed;
+}
+.workspace-step[aria-current="page"] {
+  background: #e6eadb;
+  font-weight: 600;
+}
+.workspace-step[aria-current="page"] .workspace-step-number {
+  background: var(--brand-ink);
+  color: white;
+  border-color: var(--brand-ink);
+}
+.workspace-main {
+  width: min(1240px, calc(100% - 112px));
+  margin-inline: auto;
+  padding-block: 48px 65px;
+}
+.workspace-main:focus {
+  outline: none;
+}
+.workspace-main section,
+.workspace-main form,
+.workspace-main fieldset,
+.workspace-main .grid > * {
+  min-width: 0;
+}
+.workspace-main h3 {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.45px;
+}
+.workspace-main h4 {
+  font-size: 15px;
+}
+.workspace-eyebrow {
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  line-height: 1.7;
+}
+.workspace-screen-header {
+  margin-bottom: 32px;
+}
+.workspace-screen-header h2 {
+  font-size: clamp(34px, 4vw, 50px);
+  font-weight: 400;
+  letter-spacing: -1.8px;
+  line-height: 1.12;
+}
+.workspace-screen-header em {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+.workspace-screen-header > .workspace-eyebrow {
+  margin-bottom: 20px;
+}
+.workspace-summary {
+  color: var(--brand-muted);
+  font-size: 14px;
+  line-height: 1.85;
+  max-width: 740px;
+  margin-top: 17px;
+}
+.workspace-dot {
+  color: var(--brand-orange);
+}
+.workspace-input-intro {
+  display: grid;
+  grid-template-columns: 1fr 275px;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 42px;
+}
+.workspace-input-intro .workspace-screen-header {
+  margin-bottom: 0;
+}
+.workspace-input-intro .workspace-summary {
+  max-width: 560px;
+}
+.workspace-intro-photo {
+  position: relative;
+  height: 225px;
+  overflow: hidden;
+  border-radius: 75px 6px 6px 6px;
+}
+.workspace-intro-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 66%;
+}
+.workspace-intro-photo figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  background: linear-gradient(transparent, #1f281ac9);
+  color: #fff;
+  padding: 32px 18px 15px;
+  font-size: 8px;
+  font-family: "Courier New", monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.workspace-section-title {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 19px;
+}
+.workspace-section-number {
+  font-size: 10px;
+  font-family: "Courier New", monospace;
+  color: #596b4c;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #b9c5b4;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.compass-app .compass-card {
+  padding: 24px;
+  border-radius: 7px;
+  box-shadow: 0 3px 10px #243f3203;
+}
+.workspace-presets {
+  align-items: stretch;
+}
+.compass-app .workspace-preset {
+  padding: 24px;
+  background: #fffefa;
+  justify-content: initial;
+}
+.workspace-preset > div:last-child {
+  margin-top: auto;
+}
+.workspace-preset-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--brand-line);
+  color: #596b4c;
+}
+.workspace-preset-top > span:last-child {
+  font-size: 22px;
+  font-weight: 400;
+}
+.workspace-preset h4 {
+  font-size: 21px;
+  line-height: 1.35;
+  letter-spacing: -0.5px;
+  font-weight: 400;
+  max-width: 290px;
+}
+.workspace-preset-story {
+  color: var(--brand-muted);
+  font-size: 12px;
+  line-height: 1.85;
+  margin-top: 12px;
+}
+.compass-app .compass-button {
+  border-radius: 5px;
+  padding-inline: 20px;
+  min-height: 45px;
+  font-weight: 500;
+  font-size: 12px;
+  touch-action: manipulation;
+  user-select: none;
+  transition:
+    transform 160ms var(--ease-out),
+    background-color 160ms ease,
+    opacity 160ms ease;
+}
+.compass-app .compass-button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.compass-app .compass-button:disabled {
+  cursor: not-allowed;
+}
+.compass-app .workspace-describe {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 50px;
+  background: #ebeede;
+  margin-block: 32px 44px;
+  padding: 32px;
+  border-color: #dce2cc;
+  box-shadow: none;
+}
+.workspace-describe-intro .workspace-eyebrow {
+  margin-bottom: 16px;
+}
+.compass-app .workspace-describe-title {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.7px;
+  max-width: 300px;
+}
+.workspace-describe-intro > p:last-child {
+  font-size: 12px;
+  line-height: 1.85;
+  margin-top: 16px;
+  max-width: 330px;
+}
+.workspace-describe textarea {
+  margin-top: 0;
+  min-height: 108px;
+}
+.workspace-describe [data-testid="voice"] {
+  margin-top: 10px;
+}
+.workspace-describe [data-testid="voice-status"]:empty,
+.workspace-describe [data-testid="parse-message"]:empty {
+  display: none;
+}
+.workspace-describe [data-testid="voice"] .text-xs {
+  font-size: 10px;
+  max-width: 330px;
+  line-height: 1.7;
+}
+.workspace-describe [data-testid="fill-form"] {
+  margin-top: 12px;
+}
+.compass-app .workspace-input-panel {
+  background: #fffefa;
+  border: 1px solid var(--brand-line);
+  border-radius: 7px;
+  padding: 28px;
+}
+.workspace-input-panel legend {
+  font-size: 16px;
+  font-weight: 400;
+  padding-inline: 9px;
+  margin-inline-start: -9px;
+  background: var(--brand-paper);
+  border-radius: 4px;
+}
+.workspace-form {
+  margin-top: 0;
+}
+.workspace-form > h3 {
+  padding-bottom: 5px;
+}
+.compass-app input:not([type="checkbox"]):not([type="range"]),
+.compass-app select,
+.compass-app textarea {
+  background-color: #fffefa;
+  border: 1px solid #cbd3c2;
+  border-radius: 5px;
+  color: var(--brand-ink);
+  min-height: 48px;
+  font-size: 14px;
+  transition: border-color 160ms ease;
+}
+.compass-app textarea {
+  line-height: 1.7;
+}
+.compass-app input::placeholder,
+.compass-app textarea::placeholder {
+  color: #737e71;
+}
+.compass-app input[aria-invalid="true"] {
+  border-color: hsl(var(--bad));
+}
+.compass-app label {
+  font-weight: 400;
+  font-size: 12px;
+}
+.compass-app label > .rounded {
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  background: #f1f2e8;
+  border-color: var(--brand-line);
+  padding: 2px 5px;
+}
+.workspace-input-panel summary {
+  font-size: 17px;
+  font-weight: 400;
+}
+.compass-app .workspace-analyse {
+  background: var(--brand-orange);
+  color: #202e23;
+  gap: 35px;
+  padding-inline: 27px;
+  min-height: 52px;
+  font-size: 14px;
+}
+.workspace-analyse > span {
+  font-size: 21px;
+}
+.compass-app .workspace-completeness {
+  background: transparent;
+  border-inline: 0;
+  border-bottom: 0;
+  padding-inline: 0;
+  padding-top: 26px;
+  box-shadow: none;
+}
+.workspace-completeness meter {
+  accent-color: var(--brand-ink);
+}
+.workspace-footer {
+  width: min(1240px, calc(100% - 112px));
+  margin-inline: auto;
+  border-top: 1px solid var(--brand-line);
+  padding-block: 25px 35px;
+  font-size: 11px;
+  line-height: 1.85;
+}
+.workspace-footer > p {
+  max-width: 900px;
+}
+.workspace-footer > div {
+  margin-top: 8px;
+}
+.workspace-footer button,
+.workspace-footer a {
+  font-size: 11px;
+}
+.workspace-bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.workspace-mobile-step {
+  display: flex;
+  min-height: 66px;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 9px;
+  color: var(--brand-muted);
+}
+.workspace-mobile-step[aria-current="page"] {
+  color: var(--brand-ink);
+  font-weight: 600;
+  background: #e6eadb;
+}
+.workspace-mobile-step[aria-current="page"] .workspace-step-number {
+  background: var(--brand-ink);
+  color: white;
+  border-color: var(--brand-ink);
+}
+.workspace-mobile-step:disabled {
+  opacity: 0.55;
+}
+.compass-app [data-testid="verdict-card"] {
+  padding: 30px;
+}
+.compass-app [data-testid="verdict-card"] > div:first-child {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--brand-line);
+  gap: 18px;
+}
+.compass-app [data-testid="verdict-label"] {
+  font-weight: 500;
+  letter-spacing: -0.4px;
+  border-width: 1px;
+}
+.compass-app [data-testid="verdict-card"] li {
+  font-size: 14px;
+  line-height: 1.9;
+}
+.compass-app [data-testid^="gate-"] {
+  box-shadow: none;
+}
+.compass-app [data-testid^="gate-"] li {
+  line-height: 1.8;
+}
+.compass-app table {
+  border-collapse: collapse;
+  background: #fffefa;
+}
+.compass-app th,
+.compass-app td {
+  padding: 13px 12px;
+  vertical-align: top;
+}
+.compass-app thead {
+  background: #e9eddf;
+}
+.compass-app table .compass-button {
+  min-height: 36px;
+}
+.compass-app .relative.overflow-x-auto {
+  border: 1px solid var(--brand-line);
+  border-radius: 6px;
+}
+.compass-app figure figcaption {
+  line-height: 1.7;
+}
+.compass-app .memo {
+  background: #fffefa;
+  overflow-wrap: anywhere;
+  padding: 28px;
+  border: 1px solid var(--brand-line);
+  border-radius: 7px;
+}
+html[lang="hi"] .workspace-screen-header h2 {
+  line-height: 1.35;
+  letter-spacing: -0.5px;
+}
+html[lang="hi"] .workspace-screen-header em,
+html[lang="hi"] .workspace-describe-title {
+  font-family: inherit;
+}
+@media (hover: hover) and (pointer: fine) {
+  .workspace-step:not(:disabled):hover {
+    background: #ebeede;
+  }
+  .workspace-home-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .compass-app .workspace-analyse:hover {
+    background: #f6a07f;
+  }
+}
+@media (max-width: 1100px) {
+  .workspace-main,
+  .workspace-header-inner,
+  .workspace-stepper ol,
+  .workspace-footer {
+    width: calc(100% - 64px);
+  }
+  .workspace-header-inner {
+    gap: 20px;
+  }
+  .workspace-home-link {
+    margin-inline-start: 10px;
+  }
+  .workspace-tools {
+    gap: 15px;
+  }
+  .workspace-step {
+    padding-inline: 9px;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .workspace-step-number {
+    width: 23px;
+    height: 23px;
+  }
+  .workspace-input-intro {
+    grid-template-columns: 1fr 230px;
+    gap: 40px;
+  }
+  .workspace-intro-photo {
+    height: 220px;
+  }
+  .workspace-presets {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .compass-app .workspace-preset {
+    padding: 20px;
+  }
+  .workspace-preset h4 {
+    font-size: 19px;
+  }
+  .compass-app .workspace-describe {
+    gap: 35px;
+  }
+}
+@media (max-width: 800px) {
+  .workspace-header-inner {
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding-block: 18px;
+  }
+  .workspace-header-inner > div:first-child {
+    margin-inline-end: auto;
+  }
+  .workspace-tools {
+    margin-inline-start: 0;
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 8px;
+  }
+  .workspace-home-link {
+    margin-inline-start: 0;
+  }
+  .workspace-main {
+    padding-top: 32px;
+  }
+  .workspace-stepper ol {
+    gap: 4px;
+  }
+  .workspace-step {
+    padding-inline: 5px;
+    font-size: 10px;
+    gap: 5px;
+  }
+  .workspace-input-intro {
+    grid-template-columns: 1fr 185px;
+    gap: 25px;
+  }
+  .workspace-intro-photo {
+    height: 210px;
+  }
+  .workspace-screen-header h2 {
+    font-size: 40px;
+  }
+  .workspace-summary {
+    font-size: 13px;
+  }
+  .workspace-presets {
+    grid-template-columns: 1fr;
+  }
+  .workspace-preset h4 {
+    max-width: none;
+    font-size: 23px;
+  }
+  .workspace-preset-story {
+    font-size: 13px;
+  }
+  .workspace-preset {
+    gap: 16px;
+  }
+  .workspace-preset-top {
+    padding-bottom: 12px;
+  }
+  .workspace-main {
+    padding-bottom: 45px;
+  }
+  .workspace-footer {
+    padding-bottom: 105px;
+  }
+}
+@media (max-width: 600px) {
+  .workspace-main,
+  .workspace-header-inner,
+  .workspace-footer {
+    width: calc(100% - 40px);
+  }
+  .workspace-main {
+    padding-top: 30px;
+  }
+  .workspace-header-inner .site-brand > span {
+    font-size: 20px;
+  }
+  .workspace-header-inner .site-brand > svg {
+    width: 31px;
+    height: 31px;
+  }
+  .workspace-home-link {
+    font-size: 10px;
+    gap: 7px;
+  }
+  .workspace-home-link > span {
+    font-size: 17px;
+  }
+  .workspace-tools {
+    padding-top: 6px;
+  }
+  .workspace-source-toggle {
+    font-size: 11px;
+  }
+  .workspace-health {
+    font-size: 9px;
+  }
+  .workspace-language select {
+    font-size: 12px;
+    padding-inline: 7px;
+    min-height: 42px;
+  }
+  .workspace-input-intro {
+    grid-template-columns: 1fr;
+    margin-bottom: 30px;
+  }
+  .workspace-intro-photo {
+    display: none;
+  }
+  .workspace-screen-header h2 {
+    font-size: clamp(34px, 9.5vw, 42px);
+    letter-spacing: -1.4px;
+  }
+  .workspace-summary {
+    font-size: 13px;
+    line-height: 1.8;
+    margin-top: 17px;
+  }
+  .workspace-screen-header > .workspace-eyebrow {
+    margin-bottom: 17px;
+  }
+  .workspace-main h3 {
+    font-size: 20px;
+  }
+  .workspace-section-title {
+    gap: 11px;
+    margin-bottom: 16px;
+  }
+  .workspace-section-number {
+    width: 27px;
+    height: 27px;
+    font-size: 9px;
+  }
+  .compass-app .compass-card {
+    padding: 21px;
+  }
+  .workspace-preset h4 {
+    font-size: 22px;
+  }
+  .workspace-preset-story {
+    font-size: 12px;
+  }
+  .compass-app .workspace-describe {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 23px;
+    margin-block: 28px 35px;
+  }
+  .workspace-describe-title {
+    font-size: 30px;
+  }
+  .workspace-describe-intro > p:last-child {
+    font-size: 12px;
+    margin-top: 13px;
+  }
+  .workspace-describe textarea {
+    min-height: 130px;
+  }
+  .compass-app .workspace-input-panel {
+    padding: 21px;
+  }
+  .workspace-input-panel legend {
+    font-size: 15px;
+  }
+  .workspace-form > .workspace-input-panel {
+    gap: 21px;
+  }
+  .compass-app input:not([type="checkbox"]):not([type="range"]),
+  .compass-app select,
+  .compass-app textarea {
+    font-size: 16px;
+  }
+  .compass-app label {
+    font-size: 12px;
+  }
+  .compass-app [data-testid="verdict-card"] {
+    padding: 22px;
+  }
+  .compass-app [data-testid="verdict-card"] li {
+    font-size: 13px;
+  }
+  .compass-app [data-testid="verdict-card"] > div:first-child {
+    gap: 12px;
+  }
+  .compass-app th,
+  .compass-app td {
+    padding: 11px 9px;
+  }
+  .compass-app .memo {
+    padding: 18px;
+  }
+  .workspace-footer {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .compass-app .compass-button:active:not(:disabled) {
+    transform: none;
+  }
+}
+@media print {
+  .compass-app {
+    min-height: 0;
+  }
+  .compass-app,
+  .compass-app .memo {
+    background: white;
+    color: black;
+  }
+  .workspace-main {
+    width: 100%;
+  }
+  .compass-app .memo {
+    padding: 0;
+    border: 0;
+  }
+  .compass-app th,
+  .compass-app td {
+    padding: 2px;
+  }
+  .workspace-footer,
+  .workspace-bottom-nav,
+  .workspace-stepper {
+    display: none;
+  }
+}

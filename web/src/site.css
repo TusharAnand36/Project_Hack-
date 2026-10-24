@@ -1,10 +1,4 @@
 .marketing-site {
-  --brand-paper: #f7f6f0;
-  --brand-ink: #243f32;
-  --brand-muted: #5e6b61;
-  --brand-line: #d7dcd1;
-  --brand-orange: #f37b51;
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   background: var(--brand-paper);
   color: var(--brand-ink);

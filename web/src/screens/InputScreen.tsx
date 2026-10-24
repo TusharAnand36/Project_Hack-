@@ -215,19 +215,39 @@ export function InputScreen() {
   );
 
   return (
-    <section aria-labelledby="input-title">
-      <ScreenHeader title={t("nav.input")} summary={t("input.summary")} />
+    <section className="workspace-input" aria-labelledby="input-title">
+      <div className="workspace-input-intro">
+        <ScreenHeader
+          eyebrow={t("workspace.eyebrow")}
+          title={t("workspace.inputTitle")}
+          accent={t("workspace.inputAccent")}
+          summary={t("input.summary")}
+        />
+        <figure className="workspace-intro-photo" aria-hidden="true">
+          <img src="/images/circular-ingredients.webp" alt="" width="1122" height="1402" />
+          <figcaption>{t("site.photoCaption")}</figcaption>
+        </figure>
+      </div>
 
-      <h3 id="input-title" className="mb-2 font-medium">
+      <h3 id="input-title" className="workspace-section-title">
+        <span className="workspace-section-number" aria-hidden="true">
+          01
+        </span>
         {t("input.presets")}
       </h3>
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="workspace-presets grid gap-4 lg:grid-cols-3">
         {presets.isPending && [0, 1, 2].map((i) => <Skeleton key={i} className="h-28" />)}
-        {presets.data?.map((p) => (
-          <Card key={p.id} className="flex flex-col justify-between gap-2">
+        {presets.data?.map((p, i) => (
+          <Card key={p.id} className="workspace-preset flex flex-col justify-between gap-5">
+            <div className="workspace-preset-top">
+              <span className="workspace-eyebrow">
+                {t("workspace.sample")} 0{i + 1}
+              </span>
+              <span aria-hidden="true">↗</span>
+            </div>
             <div>
-              <p className="font-medium">{p.title}</p>
-              <p className="text-sm text-muted-foreground">{p.story}</p>
+              <h4>{p.title}</h4>
+              <p className="workspace-preset-story">{p.story}</p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Button data-testid={`preset-${p.id}`} onClick={() => runRequest(p.payload, p.id)}>
@@ -241,54 +261,61 @@ export function InputScreen() {
         ))}
       </div>
 
-      <Card className="mt-6">
-        <label htmlFor="describe" className="font-medium">
-          {t("ai.describe")}
-        </label>
-        <p id="describe-hint" className="text-sm text-muted-foreground">
-          {t("ai.describeHint")}
-        </p>
-        <textarea
-          id="describe"
-          rows={3}
-          maxLength={2000}
-          className="mt-2 block w-full rounded-md border border-border bg-background p-3"
-          aria-describedby="describe-hint"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          data-testid="describe"
-        />
-        <VoiceInput
-          onTranscript={(said) => setText((prev) => (prev.trim() ? `${prev.trim()} ${said}` : said))}
-          onTypeInstead={() => document.getElementById("describe")?.focus()}
-        />
-        <Button
-          type="button"
-          variant="outline"
-          className="mt-2"
-          disabled={text.trim().length < 3 || parse.isPending}
-          onClick={() => parse.mutate()}
-          data-testid="fill-form"
-        >
-          {parse.isPending ? t("ai.filling") : t("ai.fill")}
-        </Button>
-        <p role="status" aria-live="polite" className="mt-2 text-sm" data-testid="parse-message">
-          {parse.data?.payload && t("ai.filled", { provider: parse.data.provider })}
-          {parse.data && !parse.data.payload && <span className="text-warn">{parse.data.message}</span>}
-          {parse.isError && <span className="text-warn">{t("ai.failed")}</span>}
-        </p>
+      <Card className="workspace-describe">
+        <div className="workspace-describe-intro">
+          <p className="workspace-eyebrow">{t("workspace.yourWords")}</p>
+          <label htmlFor="describe" className="workspace-describe-title">
+            {t("ai.describe")}
+          </label>
+          <p id="describe-hint" className="text-sm text-muted-foreground">
+            {t("ai.describeHint")}
+          </p>
+        </div>
+        <div>
+          <textarea
+            id="describe"
+            rows={3}
+            maxLength={2000}
+            className="mt-2 block w-full rounded-md border border-border bg-background p-3"
+            aria-describedby="describe-hint"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            data-testid="describe"
+          />
+          <VoiceInput
+            onTranscript={(said) => setText((prev) => (prev.trim() ? `${prev.trim()} ${said}` : said))}
+            onTypeInstead={() => document.getElementById("describe")?.focus()}
+          />
+          <Button
+            type="button"
+            className="mt-2"
+            disabled={text.trim().length < 3 || parse.isPending}
+            onClick={() => parse.mutate()}
+            data-testid="fill-form"
+          >
+            {parse.isPending ? t("ai.filling") : t("ai.fill")}
+          </Button>
+          <p role="status" aria-live="polite" className="mt-2 text-sm" data-testid="parse-message">
+            {parse.data?.payload && t("ai.filled", { provider: parse.data.provider })}
+            {parse.data && !parse.data.payload && <span className="text-warn">{parse.data.message}</span>}
+            {parse.isError && <span className="text-warn">{t("ai.failed")}</span>}
+          </p>
+        </div>
       </Card>
 
       <form
-        className="mt-6 space-y-6"
+        className="workspace-form space-y-6"
         noValidate
         onSubmit={handleSubmit((v) => runRequest(toRequest(v)))}
         aria-labelledby="form-title"
       >
-        <h3 id="form-title" className="font-medium">
+        <h3 id="form-title" className="workspace-section-title">
+          <span className="workspace-section-number" aria-hidden="true">
+            02
+          </span>
           {t("input.form")}
         </h3>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="workspace-input-panel grid gap-6 sm:grid-cols-2">
           <Labelled id="byproduct" label={t("input.byproduct")} error={errs.byproduct?.message}>
             <select id="byproduct" className={cn(field, hl("byproduct") && HL)} {...register("byproduct")}>
               <option value="">{t("input.choose")}</option>
@@ -332,7 +359,7 @@ export function InputScreen() {
           </div>
         </div>
 
-        <fieldset className="grid gap-4 sm:grid-cols-2">
+        <fieldset className="workspace-input-panel grid gap-6 sm:grid-cols-2">
           <legend className="mb-2 font-medium">{t("input.targets")}</legend>
           {num("minProtein", t("input.minProtein"))}
           {num("maxCost", t("input.maxCost"))}
@@ -340,7 +367,7 @@ export function InputScreen() {
           {num("maxPhytate", t("input.maxPhytate"))}
         </fieldset>
 
-        <fieldset>
+        <fieldset className="workspace-input-panel">
           <legend className="mb-2 font-medium">{t("input.constraints")}</legend>
           <label className="flex min-h-11 items-center gap-2">
             <input
@@ -370,7 +397,7 @@ export function InputScreen() {
         </fieldset>
 
         <details
-          className="rounded-lg border border-border p-4"
+          className="workspace-input-panel"
           open={batchOpen}
           onToggle={(e) => setBatchOpen((e.target as HTMLDetailsElement).open)}
         >
@@ -428,13 +455,14 @@ export function InputScreen() {
           </div>
         </details>
 
-        <Button type="submit" data-testid="submit">
+        <Button type="submit" className="workspace-analyse" data-testid="submit">
           {t("input.submit")}
+          <span aria-hidden="true">↗</span>
         </Button>
       </form>
 
       {report.data && (
-        <Card className="mt-6">
+        <Card className="workspace-completeness mt-6">
           <p className="text-sm font-medium">{t("input.completeness")}</p>
           <meter
             className="mt-2 h-3 w-full"

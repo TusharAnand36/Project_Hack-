@@ -14,6 +14,14 @@ It uses the existing React, CSS/Tailwind, and i18next setup with no added depend
 Hash navigation supports direct links on static hosting without extra server routes.
 The original decision workflow, engine, data, and API contract are unchanged.
 
+The decision workspace shares the homepage's ivory/forest-green tokens and Arial/serif
+typography. Its header, numbered navigation, presets, forms, result cards, tables,
+chart palette, evidence popovers, and memo follow the same visual system. The light
+brand appearance is consistent even when the operating system uses dark mode.
+All six core screens are available in the mobile bottom navigation; desktop navigation
+stays available while scrolling. Changing screens returns to the top and moves focus
+to the main content. The print memo retains its compact A4 styling.
+
 English and Hindi content live in `web/src/locales/en.json` and `hi.json` under `site`.
 Hindi content is a draft and still needs human language review. Existing safety text review rules remain in place.
 Team members, credentials, partnerships, and measured environmental impact have not been invented.

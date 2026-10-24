@@ -30,11 +30,31 @@ export function ErrorCard({ message, onRetry }: { message: string; onRetry?: () 
   );
 }
 
-export function ScreenHeader({ title, summary }: { title: string; summary: string }) {
+export function ScreenHeader({
+  title,
+  summary,
+  eyebrow,
+  accent,
+}: {
+  title: string;
+  summary: string;
+  eyebrow?: string;
+  accent?: string;
+}) {
   return (
-    <header className="mb-4">
-      <h2 className="text-lg font-semibold">{title}</h2>
-      <p className="text-muted-foreground">{summary}</p>
+    <header className="workspace-screen-header">
+      {eyebrow && <p className="workspace-eyebrow">{eyebrow}</p>}
+      <h2>
+        {title}
+        {accent && (
+          <>
+            <br />
+            <em>{accent}</em>
+            <span className="workspace-dot">.</span>
+          </>
+        )}
+      </h2>
+      <p className="workspace-summary">{summary}</p>
     </header>
   );
 }
