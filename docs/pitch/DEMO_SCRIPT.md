@@ -72,7 +72,7 @@ Then run a Q&A drill: one person reads 8 random questions from `QA.md`, and the 
 
 ## D. Submission checklist
 
-- [ ] Content from `SLIDES.md` copied into the **official template**; the slide order follows the template.
+- [ ] `Upcycle_Compass_Pitch.pptx` (already on the official template): TEAM and MEMBERS filled in on slide 1; video attached on slide 5.
 - [ ] References slide from `REFERENCES.md`; the Bedrock **model id** filled in; organiser datasets labelled "listed, no values drawn yet".
 - [ ] Every link in the **exported PDF** clicked once.
 - [ ] Repository link: the repo is **private**. Make it public before submission, or remove the link (the jury cannot open a private repo).
