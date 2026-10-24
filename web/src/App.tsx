@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAnalysis } from "@/api/hooks";
-import { BottomBar, Footer, Stepper, TopBar } from "@/components/Layout";
+import { BottomBar, Footer, SafetyNote, Stepper, TopBar } from "@/components/Layout";
 import { ErrorCard, LoadingScreen } from "@/components/States";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -67,6 +67,7 @@ export default function App() {
       </a>
       <TopBar />
       <Stepper disabled={!request} />
+      <SafetyNote />
       <main id="main" ref={mainRef} tabIndex={-1} className="mx-auto max-w-6xl px-4 py-6 outline-none">
         {result?.offline && screen !== "input" && (
           <p

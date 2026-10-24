@@ -66,6 +66,17 @@ export function TopBar() {
   );
 }
 
+/** Shown in Hindi: safety wording stays in English until a Hindi reader has reviewed it. */
+export function SafetyNote() {
+  const { t, i18n } = useTranslation();
+  if (i18n.language !== "hi") return null;
+  return (
+    <p className="mx-auto max-w-6xl px-4 pt-2 text-xs text-muted-foreground" data-testid="safety-note">
+      {t("app.safetyEnglish")}
+    </p>
+  );
+}
+
 export function Stepper({ disabled }: { disabled: boolean }) {
   const { t } = useTranslation();
   const screen = useStore((s) => s.screen);

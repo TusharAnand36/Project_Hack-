@@ -75,3 +75,38 @@ def plan_paragraph(r: AnalyzeResponse) -> str:
         f"{first[0].replicates} replicates each. Acceptance criteria. {crit} "
         f"Then re-run the engine with the measured values."
     )
+
+
+TIER_HI = {"flour": "आटा", "treated_flour": "उपचारित आटा", "concentrate": "कंसन्ट्रेट", "isolate": "आइसोलेट"}
+
+
+def explain_hi(r: AnalyzeResponse) -> str:
+    """Hindi template. Engine reasons stay in English (safety wording is not machine-translated)."""
+    v = r.verdict
+    parts = [f"फ़ैसला: {v.label.value} ({v.grade.value})।"]
+    if v.reasons:
+        parts.append("कारण (अंग्रेज़ी में): " + " ".join(x.rstrip(".") + "." for x in v.reasons[:2]))
+    top = r.chains[0] if r.chains else None
+    if top:
+        steps = " फिर ".join(s.replace("_", " ") for s in top.steps) or "कोई उपचार नहीं (कच्चा आटा)"
+        parts.append(
+            f"सबसे आगे की प्रक्रिया-श्रृंखला {steps} है, जिससे लगभग {top.protein_pct_final.p50:.1f}% प्रोटीन वाला "
+            f"{TIER_HI.get(top.tier, top.tier)} बनता है; आपकी विशिष्टता पूरी होने की संभावना {pct(top.p_spec.value)} है।"
+        )
+        if top.cost_inr_per_kg_protein:
+            lb = (
+                " (यह निचली सीमा है, क्योंकि प्रक्रिया की कुछ लागतों का डेटा अभी नहीं है)"
+                if not top.cost_complete
+                else ""
+            )
+            parts.append(
+                f"हमारी लागत लगभग ₹{inr(top.cost_inr_per_kg_protein.p50)} प्रति किलो प्रोटीन है{lb}, जबकि भारत में "
+                f"पहुँचे आयातित मटर आइसोलेट की लागत ₹{inr(r.pea.landed_inr_per_kg_protein.p50)} है।"
+            )
+        else:
+            parts.append("उप-उत्पाद का भाव न होने से हमारी प्रति किलो प्रोटीन लागत उपलब्ध नहीं है।")
+    if r.voi and r.voi.recommended_test:
+        t = next(x for x in r.voi.tests if x.test_id == r.voi.recommended_test)
+        parts.append(f"सबसे पहले खरीदने लायक टेस्ट {t.name} है, जिसका मूल्य लगभग ₹{inr(t.evsi.value)} प्रति फ़ैसला है।")
+    parts.append("Decision support only; confirm FSSAI classification.")
+    return " ".join(parts)

@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import type { Gate } from "@/api/client";
+import { gloss } from "@/lib/glossary";
 import { cn } from "@/lib/utils";
 
 import { Num } from "./Num";
@@ -38,13 +39,13 @@ export function VerdictLabel({ label, large = false }: { label: string; large?: 
 }
 
 export function GateCard({ gate }: { gate: Gate }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const s = GATE_STYLE[gate.state];
   return (
     <Card className={cn("border-s-4", s.cls.split(" ")[0])} data-testid={`gate-${gate.id}`}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h4 className="font-medium text-foreground">
-          {gate.id} · {gate.name}
+          {gate.id} · {gloss(gate.name, i18n.language)}
         </h4>
         <span
           className={cn("inline-flex items-center gap-1 rounded border px-2 text-sm font-semibold", s.cls)}

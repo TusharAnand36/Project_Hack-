@@ -34,6 +34,8 @@ class AiText(_Api):
     provider: str
     verifier_passed: bool
     note: str | None = None
+    lang: str = "en"
+    machine_translated: bool = False  # Hindi text is machine-written: show a badge and an English toggle
 
 
 class ParseRequest(_Api):

@@ -8,7 +8,8 @@
     "offline": "Demo snapshot (offline)",
     "analysisUpdated": "Analysis updated",
     "needInput": "Choose a preset or fill the form first.",
-    "goToInput": "Go to input"
+    "goToInput": "Go to input",
+    "safetyEnglish": "Safety wording (verdict labels, gate states, disclaimers) stays in English until a Hindi-reading reviewer has checked it."
   },
   "nav": {
     "label": "Screens",
@@ -337,7 +338,10 @@
     "filling": "Reading…",
     "filled": "Filled by {{provider}}. Check the highlighted fields, then press Analyse.",
     "failed": "Could not read this automatically; please fill the form.",
-    "changed": "changed"
+    "changed": "changed",
+    "showEnglish": "Show English",
+    "showOriginal": "Show Hindi",
+    "badgeTranslated": "Machine-written Hindi; numbers checked against the engine"
   },
   "lab": {
     "title": "Enter your lab result",
@@ -372,5 +376,25 @@
     "g1Label": "aflatoxin B1 of this lot (G1)",
     "proteinLabel": "protein content of the cake",
     "baseline": "baseline"
+  },
+  "voice": {
+    "speak": "Speak",
+    "stop": "Stop",
+    "requesting": "Allow the microphone in your browser…",
+    "listening": "Listening… press Stop when you are done.",
+    "processing": "Finishing…",
+    "ready": "Transcript ready: check and edit it, then press Fill the form.",
+    "denied": "The microphone is blocked. Allow it in the browser's site settings, or type instead.",
+    "noSpeech": "No speech was heard. Try again or type instead.",
+    "network": "The browser's speech service could not be reached. Try again or type instead.",
+    "aborted": "Recording stopped early.",
+    "failed": "Voice input failed.",
+    "tryAgain": "Try again",
+    "typeInstead": "Type instead",
+    "privacy": "Your browser's speech service processes the audio (Chrome: Google; Safari: Apple). Do not say personal details."
+  },
+  "readAloud": {
+    "play": "Read aloud",
+    "stop": "Stop reading"
   }
 }

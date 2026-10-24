@@ -31,8 +31,12 @@ class Found:
     scale: float  # 1, 1e5 or 1e7
 
 
+_DEVANAGARI_DIGITS = str.maketrans("०१२३४५६७८९", "0123456789")
+
+
 def extract(text: str) -> list[Found]:
     out = []
+    text = text.translate(_DEVANAGARI_DIGITS)  # Hindi text may use Devanagari digits
     for m in _NUM.finditer(text):
         sign, whole, frac, mult = m.group(1), m.group(2), m.group(3) or "", (m.group(4) or "").strip().lower()
         v = float(whole.replace(",", "") + frac)

@@ -377,3 +377,52 @@ The gate, verdict and pea-parity paths have their inputs. The cost model and the
 **Not done / needs the team**
 - Live Bedrock was not exercised: no AWS credentials or model id in this environment. On the demo laptop, set `AWS_PROFILE`, `LLM_PROVIDER=bedrock` and `BEDROCK_MODEL_ID` from the console and check the badge says "AI-written".
 - Hindi explanations and voice input are Phase 7.
+
+## Phase 7: Hindi and voice input
+
+**Implemented**
+- **`web/src/locales/hi.json`:** 330 Hindi strings covering every screen, form, error message, chart summary, AI, lab-result and voice text.
+  - Safety wording is **not** in the Hindi file, so it falls back to English until a Hindi-reading reviewer writes and checks it (plan §7.2: never machine-translate safety strings silently). That covers verdict labels GO / NO-GO / TEST-FIRST, gate states, the disclaimers and the M/P/A/S letters.
+  - In Hindi a note under the header says so.
+  - Engine-generated reasons, limitations and acceptance criteria also stay in English.
+- **`locales/review.json`:** review status. Reviewer: none yet; `ui_strings_reviewed: false`; the 14 keys kept in English are listed.
+- **`scripts/check-locales.mjs`** (part of `npm test`): every English key exists in Hindi unless it is kept in English; no stale Hindi keys; `{{placeholders}}` match.
+- **`locales/glossary.hi.json` + `gloss()`:** technical terms stay in English with a Hindi gloss, e.g. "Aflatoxin B1 (एफ्लाटॉक्सिन)", in diagnosis rows and gate cards.
+- **Language handling:** Noto Sans Devanagari loads from Google Fonts (`display=swap`) only when Hindi is selected; `<html lang>` follows the language; the choice is stored in `localStorage` (try/catch); numbers stay `en-IN` (₹ grouping unchanged).
+- **`/explain` with `lang=hi`:**
+  - The Bedrock prompt asks for simple Hindi with Latin digits, English verdict labels and English technical terms with a Hindi gloss.
+  - The Hindi template keeps engine reasons and the disclaimer in English.
+  - The verifier converts Devanagari digits (०–९) before checking, so an invented "₹७७७" is caught.
+  - The response carries `lang` and `machine_translated`. The UI shows a "machine-written Hindi; numbers checked" badge and a "Show English" toggle.
+- **Voice (`useSpeechInput`):**
+  - Detects `SpeechRecognition` or `webkitSpeechRecognition`; locale `en-IN` or `hi-IN` follows the UI.
+  - States: requesting → listening (pulsing mic, live interim transcript) → processing → ready.
+  - Errors: blocked microphone, no speech, network, stopped early, failure; each offers Try again and Type instead.
+  - Privacy note next to the mic. The transcript is appended to the editable text box; nothing is submitted. The mic is hidden when unsupported (Firefox).
+- **Read-aloud (`useReadAloud`, Tier 3):** reads the summary with `speechSynthesis`, offered only when a voice for the language exists (exact `-IN` voice preferred), with a stop button.
+- **Docs:** `docs/voice-tests.md` lists the automated results and a manual-test table for rehearsal.
+
+**Tested**
+- vitest: 14 passing (5 new).
+  - Voice states with a mocked recognizer: hi-IN, interim, final transcript handed over.
+  - Error mapping (denied, no speech); mic hidden without the API.
+  - Read-aloud only with a matching voice; glossary.
+- Locale check: 330 strings ok, 14 kept in English.
+- pytest: 102 passing, including the Hindi template passing its verifier with the disclaimer kept in English, and Devanagari 777 rejected.
+- e2e: all checks pass.
+  - Mic offered in Chromium.
+  - Hindi: `html lang=hi`, font loaded on demand, Hindi navigation, verdict label kept in English, safety note shown.
+  - Hindi summary with machine-written badge; the "Show English" toggle works; ₹ formatting unchanged.
+  - axe: 0 serious/critical on the Hindi verdict screen.
+- Visual check: Devanagari renders correctly (`document.fonts.check` true).
+
+**Exit gate: partly met.**
+- J6 (Hindi user) works.
+- J3 by text works everywhere, and the voice path is unit-tested.
+- The plan asks for "J3 works by voice on at least one browser". That needs a real microphone and was not tested here; see `docs/voice-tests.md`.
+- "Reviewed flag true for all safety strings" is not met by design: no Hindi reviewer was available, so safety strings stay in English, as the plan instructs in that case.
+
+**Not done / needs the team**
+- A Hindi-reading teammate should review `hi.json` (all UI strings were drafted by the coding assistant). They should then write the 14 safety strings, add them to `hi.json` and set `reviewed` in `review.json`.
+- Manual voice tests on Chrome desktop, Chrome Android and Safari iOS, in quiet and noisy rooms.
+- Hindi snapshots (`<preset>.hi.json`) are produced by the Phase 8 snapshot script.

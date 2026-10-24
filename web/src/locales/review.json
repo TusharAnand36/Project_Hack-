@@ -1,0 +1,25 @@
+{
+  "about": "Translation review status (website plan §7.2, Phase 7). Safety, legal and allergen wording is never machine-translated: those keys stay in English until a Hindi-reading reviewer writes or checks them and sets reviewed=true. The rest of hi.json was drafted by the coding assistant and also needs a reviewer pass.",
+  "hi": {
+    "reviewer": null,
+    "reviewed_on": null,
+    "ui_strings_reviewed": false,
+    "english_until_reviewed": [
+      "verdict.GO",
+      "verdict.NO-GO",
+      "verdict.TEST-FIRST",
+      "verdict.gateState.PASS",
+      "verdict.gateState.TEST-FIRST",
+      "verdict.gateState.FAIL",
+      "verdict.gateState.FLAG",
+      "verdict.disclaimer",
+      "footer.disclaimer",
+      "footer.poc",
+      "tag.letter.measured",
+      "tag.letter.published",
+      "tag.letter.assumed",
+      "tag.letter.synthetic"
+    ],
+    "server_text_in_english": "Gate reasons, verdict reasons, limitations and plan acceptance criteria come from the engine in English and are shown in English (safety wording)."
+  }
+}

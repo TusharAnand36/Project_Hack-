@@ -9,8 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write src",
-    "test": "vitest run --passWithNoTests",
-    "e2e": "node e2e/run.mjs"
+    "test": "vitest run --passWithNoTests && node scripts/check-locales.mjs",
+    "e2e": "node e2e/run.mjs",
+    "locales": "node scripts/check-locales.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "3.9.1",

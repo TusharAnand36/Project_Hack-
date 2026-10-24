@@ -7,9 +7,10 @@ import { Num } from "@/components/Num";
 import { ScreenHeader } from "@/components/States";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { gloss } from "@/lib/glossary";
 
 export function DiagnosisScreen({ data }: { data: AnalyzeResponse }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [table, setTable] = useState(false);
   const rows = data.diagnosis;
   const limiting = rows.find((d) => d.limiting)?.name ?? t("diagnosis.none");
@@ -62,7 +63,7 @@ export function DiagnosisScreen({ data }: { data: AnalyzeResponse }) {
               >
                 <td className="py-2">{d.rank}</td>
                 <td>
-                  {d.name}
+                  {gloss(d.name, i18n.language)}
                   {d.limiting && (
                     <span className="ms-2 rounded bg-bad/15 px-1 text-xs text-bad">
                       {t("diagnosis.limiting")}

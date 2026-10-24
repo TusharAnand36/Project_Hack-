@@ -61,8 +61,18 @@ def _facts(r: AnalyzeResponse) -> dict[str, Any]:
     }
 
 
-def _result(text: str, llm_used: bool, provider: str, ok: bool, note: str | None = None) -> dict[str, Any]:
-    return {"text": text, "llm_used": llm_used, "provider": provider, "verifier_passed": ok, "note": note}
+def _result(
+    text: str, llm_used: bool, provider: str, ok: bool, note: str | None = None, lang: str = "en"
+) -> dict[str, Any]:
+    return {
+        "text": text,
+        "llm_used": llm_used,
+        "provider": provider,
+        "verifier_passed": ok,
+        "note": note,
+        "lang": lang,
+        "machine_translated": lang != "en",
+    }
 
 
 def _verified_completion(
@@ -89,7 +99,7 @@ def _verified_completion(
         log.info("llm endpoint=%s provider=%s verifier_passed=%s", endpoint, c.provider, v.ok)
         if v.ok:
             return _result(
-                c.text, True, c.provider, True, "AI-written summary; numbers checked against the engine."
+                c.text, True, c.provider, True, "AI-written summary; numbers checked against the engine.", lang
             )
         return None
     except LLMUnavailable:
@@ -100,9 +110,9 @@ def explain(
     r: AnalyzeResponse, req: AnalyzeRequest, client: LLMClient, sources: set[str], lang: str = "en"
 ) -> dict:
     facts = _facts(r)
-    got = _verified_completion(
-        client, "explain", prompts.EXPLAIN, facts, numbers_in(req.model_dump()), sources, lang
-    )
+    lang = "hi" if lang == "hi" else "en"
+    task = prompts.EXPLAIN_HI if lang == "hi" else prompts.EXPLAIN
+    got = _verified_completion(client, "explain", task, facts, numbers_in(req.model_dump()), sources, lang)
     if got:
         return got
     note = (
@@ -110,7 +120,8 @@ def explain(
         if not client.enabled
         else "AI text failed the number check; template text shown instead."
     )
-    return _result(template.explain(r), False, "template", True, note)
+    text = template.explain_hi(r) if lang == "hi" else template.explain(r)
+    return _result(text, False, "template", True, note, lang)
 
 
 def plan_paragraph(r: AnalyzeResponse, client: LLMClient, sources: set[str], lang: str = "en") -> dict:

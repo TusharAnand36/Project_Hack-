@@ -3,7 +3,7 @@
 For one food by-product batch and one target use, Upcycle Compass answers **Go / No-go / Test-first**. It also says which treatment chain to use, what a kg of protein costs compared with imported pea isolate, and which single lab test to buy first. Every number carries a provenance tag: `measured`, `published`, `assumed` or `synthetic`.
 
 > **Proof of concept, Hack the Fork 2026 (Problem Statement 2).** Decision support only. Not a regulatory approval. Confirm FSSAI classification and limits.
-> **Status:** Phases 0–6 done (AI layer: see `docs/AI.md`): dataset, engine (gates, diagnosis, chains, Monte Carlo, cost vs pea, value of information, Pareto, readiness, validation plan), `/analyze` API and the screens. See `docs/PHASES.md`.
+> **Status:** Phases 0–7 done (AI layer: `docs/AI.md`; Hindi and voice: `docs/voice-tests.md`): dataset, engine (gates, diagnosis, chains, Monte Carlo, cost vs pea, value of information, Pareto, readiness, validation plan), `/analyze` API and the screens. See `docs/PHASES.md`.
 
 ## Layout (source plan §10.2)
 

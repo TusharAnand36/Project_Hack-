@@ -156,6 +156,16 @@ export interface components {
             verifier_passed: boolean;
             /** Note */
             note: string | null;
+            /**
+             * Lang
+             * @default en
+             */
+            lang: string;
+            /**
+             * Machine Translated
+             * @default false
+             */
+            machine_translated: boolean;
         };
         /** AnalyzeRequest */
         "AnalyzeRequest-Input": {

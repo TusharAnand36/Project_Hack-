@@ -8,6 +8,7 @@ import { api } from "@/api/client";
 import { useDataFile, useDataReport, usePresets } from "@/api/hooks";
 import { ScreenHeader } from "@/components/States";
 import { TagChip } from "@/components/TagChip";
+import { VoiceInput } from "@/components/VoiceInput";
 import { Button } from "@/components/ui/button";
 import { Card, Skeleton } from "@/components/ui/card";
 import {
@@ -256,6 +257,10 @@ export function InputScreen() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           data-testid="describe"
+        />
+        <VoiceInput
+          onTranscript={(said) => setText((prev) => (prev.trim() ? `${prev.trim()} ${said}` : said))}
+          onTypeInstead={() => document.getElementById("describe")?.focus()}
         />
         <Button
           type="button"

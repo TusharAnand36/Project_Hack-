@@ -19,6 +19,14 @@ EXPLAIN = (
     "End with: Decision support only; confirm FSSAI classification."
 )
 
+EXPLAIN_HI = (
+    EXPLAIN.replace("End with: Decision support only; confirm FSSAI classification.", "")
+    + " Write it in simple Hindi (Devanagari script). Keep every number in Latin digits exactly as in the JSON, "
+    "keep the verdict labels GO / NO-GO / TEST-FIRST in English, and keep technical terms such as aflatoxin "
+    "or phytate in English followed by the Hindi word in brackets. End with the English sentence: "
+    "Decision support only; confirm FSSAI classification."
+)
+
 PLAN = (
     "Write one short paragraph (60 to 100 words) describing the next experiment: which tests, why (their "
     "expected value), and their acceptance criteria, using only the plan and value-of-information JSON."

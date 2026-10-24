@@ -4,7 +4,7 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      fontFamily: { sans: ['"Noto Sans"', "system-ui", "sans-serif"] },
+      fontFamily: { sans: ['"Noto Sans"', '"Noto Sans Devanagari"', "system-ui", "sans-serif"] },
       colors: {
         border: "hsl(var(--border) / <alpha-value>)",
         background: "hsl(var(--background) / <alpha-value>)",

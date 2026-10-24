@@ -148,6 +148,33 @@ try {
   await d.getByTestId("verdict-card").waitFor({ timeout: 20000 });
   check(true, "J3: Analyse runs the filled request");
 
+  // J3 by voice: Chromium exposes webkitSpeechRecognition, so the mic is offered (Firefox hides it: unit test)
+  await d.getByTestId("nav-input").click();
+  check(await d.getByTestId("mic").isVisible(), "voice: mic offered where the browser supports speech recognition");
+
+  // J6: Hindi user
+  await d.getByLabel("Language").selectOption("hi");
+  await d.waitForFunction(() => document.documentElement.lang === "hi");
+  check(await d.evaluate(() => !!document.getElementById("font-devanagari")), "hindi: Devanagari font loaded on demand");
+  await d.getByTestId("nav-verdict").click();
+  const nav = await d.getByTestId("nav-verdict").innerText();
+  check(nav.includes("फ़ैसला"), `hindi: navigation in Hindi (${nav})`);
+  const vl = await d.getByTestId("verdict-label").first().innerText();
+  check(vl.includes("TEST-FIRST"), "hindi: verdict label kept in English (safety wording, not reviewed)");
+  check(await d.getByTestId("safety-note").isVisible(), "hindi: safety-wording note shown");
+  await d.getByTestId("ai-text").filter({ hasText: "फ़ैसला" }).waitFor({ timeout: 20000 });
+  const hb = await d.getByTestId("ai-badge").innerText();
+  check(hb.includes("मशीन"), `hindi: summary in Hindi with machine-written badge (${hb})`);
+  await d.getByTestId("show-english").click();
+  await d.getByTestId("ai-text").filter({ hasText: "Verdict:" }).waitFor({ timeout: 20000 });
+  check(true, "hindi: 'show English' toggle shows the English summary");
+  await axe(d, "verdict in Hindi (1280)");
+  await d.screenshot({ path: `${SHOTS}/1280-verdict-hi.png`, fullPage: true });
+  await d.getByTestId("nav-cost").click();
+  const landedHi = await d.getByTestId("pea-landed").innerText();
+  check(/₹[\d,]+/.test(landedHi), `hindi: ₹ formatting unchanged (${landedHi.split("\n")[0]})`);
+  await d.getByLabel("भाषा").selectOption("en");
+
   const overflow = await d.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   check(!overflow, "no horizontal page scroll at 1280 px");
   await dctx.close();
