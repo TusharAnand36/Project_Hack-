@@ -1,5 +1,5 @@
 {
-  "dataset_version": "2026-10-24.2",
+  "dataset_version": "2026-10-24.3",
   "sources": [
     {
       "id": "user_review_draft",
@@ -199,55 +199,68 @@
       "notes": "Second listing: https://www.tradeindia.com/manufacturers/pea-protein.html. Cross-check only."
     },
     {
-      "id": "fssai_cts_2015",
-      "citation": "FSSAI Contaminants, Toxins and Residues (Amendment) Regulations 2015, as tabulated by ChemLinked",
-      "url": "https://food.chemlinked.com/news/food-news/india-fssai-revised-limits-contaminants",
-      "kind": "regulatory",
-      "accessed": "2026-10-24 (agent desk research)",
+      "id": "faostat",
+      "citation": "FAOSTAT (FAO statistical database)",
+      "url": "https://www.fao.org/faostat/en/#home",
+      "kind": "web",
       "verified_by_team": false,
-      "notes": "Secondary reproduction; check the consolidated FSSAI text."
+      "notes": "Hack the Fork 2026 organiser resource list"
     },
     {
-      "id": "eu_2023_915",
-      "citation": "Commission Regulation (EU) 2023/915 on maximum levels for certain contaminants in food (consolidated)",
-      "url": "https://eur-lex.europa.eu/eli/reg/2023/915",
-      "kind": "regulatory",
-      "accessed": "2026-10-24 (agent desk research)",
-      "verified_by_team": false
-    },
-    {
-      "id": "arcc_dr1277",
-      "citation": "Full-fat vs defatted rice bran composition. Asian J. Dairy Food Res. 37(1):77-80 (2018), DR-1277",
-      "url": "https://arccjournals.com/journal/asian-journal-of-dairy-and-food-research/DR-1277",
-      "doi": "10.18805/ajdfr.DR-1277",
+      "id": "ifct2017",
+      "citation": "Indian Food Composition Tables 2017 (NIN), via @nodef/ifct2017",
+      "url": "https://jsr.io/@nodef/ifct2017",
       "kind": "peer_reviewed",
-      "accessed": "2026-10-24 (agent desk research)",
-      "verified_by_team": false
+      "verified_by_team": false,
+      "notes": "Hack the Fork 2026 organiser resource list"
     },
     {
-      "id": "bvsalud_dephytinised",
-      "citation": "Utilization of dephytinised rice bran for production of biscuits (EMR-97553)",
-      "url": "https://search.bvsalud.org/gim/resource/en/emr-97553",
-      "kind": "peer_reviewed",
-      "accessed": "2026-10-24 (agent desk research)",
-      "verified_by_team": false
+      "id": "usda_fdc",
+      "citation": "USDA FoodData Central",
+      "url": "https://fdc.nal.usda.gov",
+      "kind": "web",
+      "verified_by_team": false,
+      "notes": "Hack the Fork 2026 organiser resource list; datasets: https://fdc.nal.usda.gov/download-datasets"
     },
     {
-      "id": "spkx_2010_peanut",
-      "citation": "Optimisation of alkali extraction / acid precipitation of peanut protein isolate. Food Science 31(20):196-201 (2010)",
-      "url": "https://www.spkx.net.cn/EN/Y2010/V31/I20/196",
-      "doi": "10.7506/spkx1002-6630-201020040",
-      "kind": "peer_reviewed",
-      "accessed": "2026-10-24 (agent desk research)",
-      "verified_by_team": false
+      "id": "foodb",
+      "citation": "FooDB (compounds in foods)",
+      "url": "https://foodb.ca",
+      "kind": "web",
+      "verified_by_team": false,
+      "notes": "Hack the Fork 2026 organiser resource list"
     },
     {
-      "id": "sun_2008_bran_as",
-      "citation": "Sun, Meharg et al. 2008. Inorganic arsenic in rice bran and its products. Environ. Sci. Technol.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/18939599",
-      "kind": "peer_reviewed",
-      "accessed": "2026-10-24 (agent desk research)",
-      "verified_by_team": false
+      "id": "openfoodfacts",
+      "citation": "Open Food Facts",
+      "url": "https://world.openfoodfacts.org",
+      "kind": "web",
+      "verified_by_team": false,
+      "notes": "Hack the Fork 2026 organiser resource list"
+    },
+    {
+      "id": "agmarknet",
+      "citation": "AGMARKNET (Directorate of Marketing & Inspection), mandi prices",
+      "url": "https://agmarknet.gov.in/home",
+      "kind": "web",
+      "verified_by_team": false,
+      "notes": "Hack the Fork 2026 organiser resource list"
+    },
+    {
+      "id": "datagov_mandi_daily",
+      "citation": "data.gov.in: Current daily price of various commodities from various markets (mandi)",
+      "url": "https://www.data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi",
+      "kind": "web",
+      "verified_by_team": false,
+      "notes": "Hack the Fork 2026 organiser resource list"
+    },
+    {
+      "id": "datagov_mandi_variety",
+      "citation": "data.gov.in: Variety-wise daily market prices data of commodity",
+      "url": "https://www.data.gov.in/resource/variety-wise-daily-market-prices-data-commodity",
+      "kind": "web",
+      "verified_by_team": false,
+      "notes": "Hack the Fork 2026 organiser resource list"
     }
   ]
 }

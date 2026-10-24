@@ -628,7 +628,7 @@
           "pH": "8.5-10.5 extraction, 4.2-4.5 precipitation",
           "table": "final review Table 11"
         },
-        "notes": "Generic oilseed-cake range, not groundnut- or rice-bran-specific (alpha 0.4). Replaces the source plan's assumed 0.75-0.90. Peanut candidate (95%) in _staging; confirmed in the final review draft; verify against the cited primary paper"
+        "notes": "Generic oilseed-cake range, not groundnut- or rice-bran-specific (alpha 0.4). Replaces the source plan's assumed 0.75-0.90. confirmed in the final review draft; verify against the cited primary paper"
       },
       "recovery": {
         "unit": "fraction",
@@ -646,7 +646,7 @@
           "measured_on": "oilseed cakes (general)",
           "table": "final review Table 11"
         },
-        "notes": "'Yield' in the review; generic range (alpha 0.4). Replaces the source plan's assumed 0.40-0.70. Peanut candidate (71%) in _staging; confirmed in the final review draft; verify against the cited primary paper"
+        "notes": "'Yield' in the review; generic range (alpha 0.4). Replaces the source plan's assumed 0.40-0.70. confirmed in the final review draft; verify against the cited primary paper"
       },
       "resources": {
         "kwh_per_kg": {

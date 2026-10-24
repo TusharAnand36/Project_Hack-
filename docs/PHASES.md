@@ -51,8 +51,8 @@
   - `--schema` exports the schemas.
   - Makefile targets: `make data` and `make todo`.
 - `/health` now reports the real dataset version. The API loads and validates `/data` at startup.
-- `data/_staging/`: 13 candidate rows for human review. The engine does not read them.
-  - 9 from desk research, tagged `assumed`/D with quote and URL.
+- `data/_staging/`: candidate rows for human review. The engine does not read them.
+  - Desk-research candidates were removed on the team's instruction (see "Source policy" below).
   - 4 from the PhD report, tagged `measured`/B, waiting for the owner's permission. These are in `phd_pending.local.json`, which git ignores, so they never reach the repo.
 
 **Checked against the uploaded documents (24 Oct)**
@@ -91,7 +91,12 @@
 The gate, verdict and pea-parity paths have their inputs. The cost model and the off-flavour index do not.
 
 **Not done / known limits**
-- 25 values are flagged "verify", including the aflatoxin limits. The FSSAI 2015 amendment appears to set 15 µg/kg for oilseeds "for further processing", not 30 ppb; see the staged candidate.
+- 25 values are flagged "verify", including the aflatoxin limits (30 ppb domestic and 4 ppb EU, both from the Shriram summary cited in the source plan).
 - Which tariff site gives 43.96% and which gives 49.15% is not recorded; both sites were unreachable.
 - The protein and ash tables in the PhD report are images and were not read.
 - Almond cake has no anti-nutrient baselines. Literature should confirm that none exceed tolerances before GT5 is claimed.
+
+**Source policy (team instruction, 24 Oct)**
+- Use only references cited in the team's documents (source plan, website plan, review drafts, research plan, PhD report) and the organiser resource list.
+- The organiser resources are now in `sources.json` as `faostat`, `ifct2017`, `usda_fdc`, `foodb`, `openfoodfacts`, `agmarknet`, `datagov_mandi_daily` and `datagov_mandi_variety`.
+- All 6 desk-research sources and their 9 staged candidates were removed. Dataset version: `2026-10-24.3`.

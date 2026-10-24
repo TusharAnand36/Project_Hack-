@@ -129,7 +129,7 @@
         "phytic_acid": {
           "unit": "% dry basis",
           "tag": "assumed",
-          "notes": "MISSING: groundnut cake phytate baseline; IFCT 2017 / literature (candidate leads in _staging)"
+          "notes": "MISSING: groundnut cake phytate baseline; IFCT 2017 / literature ()"
         },
         "trypsin_inhibitor": {
           "unit": "% of raw activity",
@@ -235,7 +235,7 @@
         "phytic_acid": {
           "unit": "% dry basis",
           "tag": "assumed",
-          "notes": "MISSING: DORB phytate baseline (plan: high); candidate in _staging"
+          "notes": "MISSING: DORB phytate baseline (plan: high)"
         }
       },
       "flavour_baseline": {
