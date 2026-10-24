@@ -40,31 +40,24 @@ def test_gt2_groundnut_aflatoxin_60_ppb(ds):
     assert any("divert to feed or re-source" in a.lower() for a in r.verdict.actions)
 
 
-def test_gt3_rice_bran_unstabilised_24h(ds):
-    r = run(
-        ds,
-        byproduct="deoiled_rice_bran",
-        application="extruded_snack",
+def test_legacy_stability_gate_still_handles_measured_and_unstabilised_batches(ds):
+    from compass.gates import g2_rancidity
+
+    req = AnalyzeRequest(
+        byproduct="sunflower_cake",
+        application="beverage",
         process={"hours_since_milling": 24, "stabilised": False},
     )
-    assert gate(r, "G2").state is GateState.FAIL
-    assert r.verdict.label is VerdictLabel.NO_GO
-
-
-def test_gt4_rice_bran_stabilised_low_ffa(ds):
-    r = run(
-        ds,
-        byproduct="deoiled_rice_bran",
-        application="beverage",
-        batch={"ffa_pct": {"value": 2}},
-        process={"stabilised": True},
+    assert g2_rancidity(ds.gates["G2"], req).gate.state is GateState.FAIL
+    req = AnalyzeRequest.model_validate(
+        {
+            "byproduct": "sunflower_cake",
+            "application": "beverage",
+            "batch": {"ffa_pct": {"value": 2}},
+            "process": {"stabilised": True},
+        }
     )
-    assert gate(r, "G2").state is GateState.PASS
-    assert any(i.kind == "protein_density_gap" for i in r.issues)
-    raw = next(c for c in r.chains if c.id == "raw_flour")
-    assert raw.p_spec.value == 0.0
-    viable = [c for c in r.chains if c.p_spec.value > 0]
-    assert viable and all("ae_iep" in c.steps for c in viable)  # a fractionation chain is required
+    assert g2_rancidity(ds.gates["G2"], req).gate.state is GateState.PASS
 
 
 def test_gt5_almond_meat_analogue(ds):
@@ -77,7 +70,7 @@ def test_gt5_almond_meat_analogue(ds):
 
 
 def test_gt6_no_solvents(ds):
-    for bp, app in [("groundnut_cake", "beverage"), ("deoiled_rice_bran", "extruded_snack")]:
+    for bp, app in [("groundnut_cake", "beverage"), ("soybean_cake", "extruded_snack")]:
         r = run(ds, byproduct=bp, application=app, constraints={"no_solvents": True})
         assert all("ethanol_wash" not in c.steps for c in r.chains)
 

@@ -37,11 +37,15 @@ def _edit(path: Path, fn) -> None:
 
 def test_all_files_load(ds):
     assert ds.version
-    assert {"groundnut_cake", "deoiled_rice_bran", "almond_cake"} <= set(ds.byproducts)
+    assert next(iter(ds.byproducts)) == "sunflower_cake"
+    assert "deoiled_rice_bran" not in ds.byproducts
+    assert {"sunflower_cake", "groundnut_cake", "soybean_cake", "almond_cake", "pea_protein_isolate"} <= set(
+        ds.byproducts
+    )
     assert {"beverage", "extruded_snack", "meat_analogue"} == set(ds.applications)
     assert len(ds.treatments) >= 7
     assert {f"G{i}" for i in range(1, 8)} == set(ds.gates)
-    assert len(ds.presets) == 3
+    assert len(ds.presets) == 5
 
 
 def test_every_source_id_resolves(ds):
@@ -101,7 +105,7 @@ def test_transferred_evidence_has_alpha_below_one(ds):
 
 def test_bad_row_names_file_and_id(data_copy):
     def break_range(obj):
-        gnc = obj["byproducts"][0]
+        gnc = next(b for b in obj["byproducts"] if b["id"] == "groundnut_cake")
         gnc["composition"]["crude_protein_pct"]["dist"] = {"type": "uniform", "low": 60, "high": 45}
 
     _edit(data_copy / "byproducts.json", break_range)

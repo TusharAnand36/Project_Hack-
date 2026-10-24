@@ -44,7 +44,7 @@ from compass.contract import (
 from compass.data import Dataset
 from compass.models import Dist, Grade, Param, Tag
 from compass.montecarlo import ChainEval, Context, evaluate
-from compass.sampling import Provenance, Sampler, as_value, combine, summarise
+from compass.sampling import Provenance, Sampled, Sampler, as_value, combine, summarise
 
 DISCLAIMER = (
     "Proof of concept. Not a substitute for laboratory validation. "
@@ -79,7 +79,7 @@ def build_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sample
     bp = ds.byproducts[req.byproduct]
     s = Sampler(n, seed, k=_cfg(ds, "engine", "extrapolation_k"), lam=_cfg(ds, "engine", "pert_lambda"))
     for e in req.evidence:
-        if e.input.startswith("gate."):
+        if e.input.startswith(("gate.", "pea.")):
             continue  # gate priors are handled by the gate itself
         s.overrides[e.input] = Param(
             value=e.value, dist=e.dist, unit=e.unit, tag=e.tag, grade=e.grade, source_id=None, notes=e.note
@@ -139,19 +139,6 @@ def build_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sample
             s.add(f"u.{key}", ds.costs.utilities[key])
     for key, p in ds.costs.overheads.items():
         s.add(f"o.{key}", p)
-    # pea isolate (user sliders override)
-    pea = ds.costs.pea
-    overrides = {
-        "base_usd_per_kg": req.pea.base_usd_per_kg,
-        "usd_inr": req.pea.usd_inr,
-        "freight_frac": None if req.pea.freight_pct is None else req.pea.freight_pct / 100,
-        "protein_frac": None if req.pea.protein_pct is None else req.pea.protein_pct / 100,
-    }
-    for key, p in pea.items():
-        if overrides.get(key) is not None:
-            s.add_value(f"pea.{key}", overrides[key], p.unit, USER)
-        else:
-            s.add(f"pea.{key}", p)
     # unmeasured aflatoxin: the gate outcome is a Bernoulli(prior) input (§12.9)
     g1 = ds.gates.get("G1")
     if g1 and bp.id in g1.applies_to and req.batch.afb1_ppb is None:
@@ -166,6 +153,29 @@ def build_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sample
                 source_id=prior.source_id,
             ),
         )
+    return s
+
+
+def build_pea_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sampler:
+    # A separate Sobol dimension set keeps the reference identical across materials.
+    s = Sampler(n, seed + 1, k=_cfg(ds, "engine", "extrapolation_k"), lam=_cfg(ds, "engine", "pert_lambda"))
+    for e in req.evidence:
+        if e.input.startswith("pea."):
+            s.overrides[e.input] = Param(
+                value=e.value, dist=e.dist, unit=e.unit, tag=e.tag, grade=e.grade, notes=e.note
+            )
+    pea = ds.costs.pea
+    overrides = {
+        "base_usd_per_kg": req.pea.base_usd_per_kg,
+        "usd_inr": req.pea.usd_inr,
+        "freight_frac": None if req.pea.freight_pct is None else req.pea.freight_pct / 100,
+        "protein_frac": None if req.pea.protein_pct is None else req.pea.protein_pct / 100,
+    }
+    for key, p in pea.items():
+        if overrides.get(key) is not None:
+            s.add_value(f"pea.{key}", overrides[key], p.unit, USER)
+        else:
+            s.add(f"pea.{key}", p)
     return s
 
 
@@ -197,10 +207,15 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
     n = req.n_draws or int(_cfg(ds, "engine", "n_draws"))
     seed = req.seed if req.seed is not None else int(_cfg(ds, "engine", "seed"))
     sampler = build_sampler(req, ds, n, seed)
-    unused = sorted(set(sampler.overrides) - sampler.used_overrides)
+    pea_sampler = build_pea_sampler(req, ds, n, seed)
+    unused = sorted(
+        (set(sampler.overrides) - sampler.used_overrides)
+        | (set(pea_sampler.overrides) - pea_sampler.used_overrides)
+    )
     if unused:
         raise AnalyzeError(f"evidence for unknown or batch-overridden input(s): {unused}")
     d = sampler.sample()
+    d.update(pea_sampler.sample())
     limitations: list[str] = [
         "Inputs are sampled independently (no correlations between inputs).",
         "Functionality fit (solubility, emulsification, gelation) is a qualitative flag, not a computed score.",
@@ -218,7 +233,11 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
     )
     p0 = fx.true_protein(crude, d["nf"].values, n_used)
     p0_prov = combine([prot.prov, d["nf"].prov])
-    if req.batch.protein_pct is None and not prot.unit.startswith("% dry"):
+    if bp.id == "pea_protein_isolate":
+        p0 = crude if req.batch.protein_pct is not None else d["pea.protein_frac"].values
+        p0_prov = prot.prov if req.batch.protein_pct is not None else d["pea.protein_frac"].prov
+        limitations.append(bp.notes)
+    if bp.id != "pea_protein_isolate" and req.batch.protein_pct is None and not prot.unit.startswith("% dry"):
         limitations.append(f"{bp.name}: composition basis not stated in the source; treated as dry basis.")
 
     compounds = {}
@@ -277,6 +296,8 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
     pea_keys = ["base_usd_per_kg", "usd_inr", "freight_frac", "protein_frac", "buyer_discount"]
     pea_prov = combine([d[f"pea.{k}"].prov for k in pea_keys] + [Provenance.of(duty_p)])
     landed = peam.landed_per_kg_protein(pea_in)
+    if bp.id == "pea_protein_isolate" and req.raw_price_inr_per_kg is None:
+        d["bp.price"] = Sampled("bp.price", peam.landed_per_kg_product(pea_in), pea_prov, "INR/kg")
 
     # ---- plant economics (§12.7)
     scale = req.scale_kg_day or _cfg(ds, "decision", "default_scale_kg_day")
@@ -440,6 +461,7 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
     verdict.grade = readiness.grade
     if (
         voi_block
+        and bp.id != "pea_protein_isolate"
         and chain_models
         and all(c.e_utility is not None and c.e_utility.value < 0 for c in chain_models)
     ):

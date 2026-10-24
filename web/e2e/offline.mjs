@@ -32,7 +32,7 @@ try {
   await page.goto(URL);
   await page.getByTestId("health").filter({ hasText: "unreachable" }).waitFor({ timeout: 15000 });
   check(true, "API unreachable (as in a venue with no Wi-Fi)");
-  for (const pid of ["groundnut_beverage", "rice_bran_snack", "almond_meat"]) {
+  for (const pid of ["sunflower_beverage", "groundnut_beverage", "soybean_meat", "almond_meat", "pea_beverage"]) {
     await page.getByTestId("tab-input").click();
     await page.getByTestId(`preset-${pid}`).click({ timeout: 15000 });
     await page.getByTestId("offline-badge").waitFor({ timeout: 20000 });

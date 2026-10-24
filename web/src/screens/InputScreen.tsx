@@ -236,7 +236,7 @@ export function InputScreen() {
         {t("input.presets")}
       </h3>
       <div className="workspace-presets grid gap-4 lg:grid-cols-3">
-        {presets.isPending && [0, 1, 2].map((i) => <Skeleton key={i} className="h-28" />)}
+        {presets.isPending && [0, 1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-28" />)}
         {presets.data?.map((p, i) => (
           <Card key={p.id} className="workspace-preset flex flex-col justify-between gap-5">
             <div className="workspace-preset-top">
@@ -260,6 +260,18 @@ export function InputScreen() {
           </Card>
         ))}
       </div>
+
+      <aside className="my-6 border-l-2 border-primary pl-4 text-sm text-muted-foreground">
+        <p>{t("input.peaResearch")}</p>
+        <a
+          className="mt-2 inline-block underline underline-offset-4"
+          href="https://doi.org/10.1016/j.fochx.2025.102898"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {t("input.peaPaper")}
+        </a>
+      </aside>
 
       <Card className="workspace-describe">
         <div className="workspace-describe-intro">

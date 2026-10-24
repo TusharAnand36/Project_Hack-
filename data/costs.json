@@ -82,14 +82,14 @@
     "protein_frac": {
       "unit": "fraction",
       "tag": "published",
-      "dist": {
-        "type": "uniform",
-        "low": 0.8,
-        "high": 0.85
+      "value": 0.802,
+      "evidence_grade": "B",
+      "source_id": "qi_2025_pea",
+      "conditions": {
+        "section": "2.1 Materials",
+        "material": "commercial pea protein isolate"
       },
-      "evidence_grade": "C",
-      "source_id": "tridge_pea_cn",
-      "notes": "product grade 80-85% protein"
+      "notes": "Reported protein content of the commercial PPI used in the supplied paper; not an assay of the user batch."
     },
     "freight_frac": {
       "unit": "fraction",

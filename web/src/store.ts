@@ -26,7 +26,16 @@ export const useStore = create<UiState>((set) => ({
   selectedChain: null,
   setScreen: (screen) => set({ screen }),
   runRequest: (request, presetId = null, screen = "verdict") =>
-    set({ request, presetId, screen, selectedChain: null }),
+    set((s) => {
+      const pea = s.request?.pea ?? request.pea;
+      const changed = JSON.stringify(pea) !== JSON.stringify(request.pea);
+      return {
+        request: { ...request, pea },
+        presetId: changed ? null : presetId,
+        screen,
+        selectedChain: null,
+      };
+    }),
   patchRequest: (fn) => set((s) => (s.request ? { request: fn(s.request), presetId: null } : {})),
   toggleSources: () => set((s) => ({ showSources: !s.showSources })),
   selectChain: (selectedChain) => set({ selectedChain }),

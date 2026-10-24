@@ -232,7 +232,7 @@ function HomePage() {
             <IngredientPhoto eager />
             <div className="photo-caption">
               <span>{t("site.photoCaption")}</span>
-              <span>01 — 03</span>
+              <span>01 — 05</span>
             </div>
           </div>
           <div className="circular-seal" aria-hidden="true">

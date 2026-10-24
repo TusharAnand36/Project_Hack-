@@ -10,13 +10,18 @@
     "pageTitle": "Upcycle Compass · A second life for food by-products",
     "homeLabel": "Upcycle Compass home",
     "navigation": "Main navigation",
-    "nav": { "home": "Home", "about": "About us", "mission": "Our mission", "how-it-works": "How it works" },
+    "nav": {
+      "home": "Home",
+      "about": "About us",
+      "mission": "Our mission",
+      "how-it-works": "How it works"
+    },
     "openTool": "Open Compass",
     "tryTool": "Try the prototype",
     "openMenu": "Open navigation",
     "closeMenu": "Close navigation",
     "backHome": "Back to home",
-    "imageAlt": "Editorial illustration of groundnut flour, rice bran, peanuts and almonds in ceramic bowls on a sunlit stone surface.",
+    "imageAlt": "Food ingredients, peanuts and almonds in ceramic bowls on a sunlit stone surface.",
     "heroEyebrow": "RETHINK THE BY-PRODUCT",
     "heroLine1": "A second life.",
     "heroLine2": "A better",
@@ -38,7 +43,7 @@
     "whatItalic": "We help you find a path.",
     "whatDescription": "We turn a complex ingredient question into an evidence-led exploration: what could work, what stands in the way, and what to do next.",
     "feature1Title": "See the ingredient within",
-    "feature1Description": "Explore groundnut cake, rice bran, and almond cake as starting points for local protein ingredients.",
+    "feature1Description": "Explore sunflower, groundnut, soybean and almond cakes, with pea protein isolate as a research reference.",
     "feature2Title": "Put evidence before instinct",
     "feature2Description": "Understand safety gates, protein potential, and processing options. See the source and uncertainty behind each number.",
     "feature3Title": "Make the next step count",
@@ -279,7 +284,9 @@
     "no": "No",
     "unknown": "Not known",
     "choose": "Choose…",
-    "presetEdit": "Edit in form"
+    "presetEdit": "Edit in form",
+    "peaResearch": "Pea research reference · 80.2% protein. The study explores gellan gum and salt for functional performance. Purchase price comes from the shared market model, because the paper reports no price.",
+    "peaPaper": "Read the research paper ↗"
   },
   "verdict": {
     "summary": "The decision for this batch and use, with how sure the engine is and why.",
@@ -338,7 +345,7 @@
     "cost": "₹/kg protein",
     "pSpec": "P(spec)",
     "badges": "Notes",
-    "rawFlour": "raw flour (no treatment)",
+    "rawFlour": "As supplied / no treatment",
     "sortBy": "Sort by {{col}}",
     "none": "No chains: a safety gate failed, so chains are not ranked.",
     "detail": "Chain details",
@@ -421,7 +428,9 @@
       "full_stack_49": "Full stack (49.15%)",
       "bcd_only_igst_credited_22": "BCD only, IGST credited (~22%)"
     },
-    "chartSummary": "Ours {{ours}} vs pea {{pea}} per kg protein (P50)."
+    "chartSummary": "Ours {{ours}} vs pea {{pea}} per kg protein (P50).",
+    "allocationNote": "Bar segments are an illustrative allocation using median inputs; the total matches the modelled median cost.",
+    "sharedBenchmark": "Shared pea benchmark, per kg of isolate (different from per kg of protein):"
   },
   "next": {
     "summary": "The one test worth buying first, how ready the decision is, and a validation plan.",

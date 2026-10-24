@@ -73,9 +73,7 @@
       "id": "G2",
       "name": "Rancidity / lipase",
       "kind": "stop",
-      "applies_to": [
-        "deoiled_rice_bran"
-      ],
+      "applies_to": [],
       "inputs": [
         "ffa_pct",
         "hours_since_milling",
@@ -119,9 +117,7 @@
       "id": "G3",
       "name": "Heavy metals",
       "kind": "stop",
-      "applies_to": [
-        "deoiled_rice_bran"
-      ],
+      "applies_to": [],
       "inputs": [
         "inorganic_as_ppm",
         "cd_ppm"
@@ -151,7 +147,8 @@
       "kind": "stop",
       "applies_to": [
         "groundnut_cake",
-        "deoiled_rice_bran"
+        "sunflower_cake",
+        "soybean_cake"
       ],
       "inputs": [
         "solvent_extracted",
@@ -186,7 +183,8 @@
       "kind": "flag",
       "applies_to": [
         "groundnut_cake",
-        "almond_cake"
+        "almond_cake",
+        "soybean_cake"
       ],
       "inputs": [
         "application",

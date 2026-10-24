@@ -168,10 +168,16 @@ def evaluate(
 
     price = _get(ctx, "bp.price")
     c = costm.chain_cost(price.values, resources, b.mass, b.protein, ctx.econ, ctx.credit)
+    if bp.id == "pea_protein_isolate" and not seq:
+        # The purchase price already covers the isolate; do not add cake-processing overhead.
+        per_protein = price.values / b.protein
+        c = costm.CostResult(price.values, price.values, per_protein, None, None, {"raw": per_protein})
     margin = None if price.values is None else peam.margin_vs_pea(ctx.pea, c.per_kg_protein)
 
     prov_protein = combine(used)
     provs = {"protein": prov_protein, "cost": combine(used + [price.prov] + ctx.econ_prov)}
+    if bp.id == "pea_protein_isolate":
+        provs["cost"] = combine(used + [price.prov])
     if margin is not None:
         provs["margin"] = combine([provs["cost"], ctx.pea_prov])
     for comp, ps in comp_prov.items():

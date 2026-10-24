@@ -95,7 +95,9 @@ def test_rules_parser_reads_the_journey_j3_sentence():
         "constraints.no_solvents": True,
     }
     assert rules.parse("मूंगफली की खली, नमकीन के लिए")["byproduct"] == "groundnut_cake"
-    assert rules.parse("rice bran at Rs 1,050 per quintal, aflatoxin 12 ppb")["raw_price_inr_per_kg"] == 10.5
+    assert (
+        rules.parse("soybean cake at Rs 1,050 per quintal, aflatoxin 12 ppb")["raw_price_inr_per_kg"] == 10.5
+    )
 
 
 def test_llm_parse_with_invented_number_falls_back_to_rules():

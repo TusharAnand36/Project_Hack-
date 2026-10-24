@@ -83,13 +83,14 @@ export function CostScreen({ data }: { data: AnalyzeResponse }) {
 
   // approximate P50 split of the pea landed cost per kg protein
   const prot = inp.protein_frac.p50;
-  const baseInr = (base * fx) / prot;
-  const freight = baseInr * (freightPct / 100);
+  const baseInr = (inp.base_usd_per_kg.p50 * inp.usd_inr.p50) / prot;
+  const freight = baseInr * inp.freight_frac.p50;
   const dutyAmt = (baseInr + freight) * inp.duty_frac.p50;
+  const allocation = pea.landed_inr_per_kg_protein.p50 / (baseInr + freight + dutyAmt);
   const peaParts: Part[] = [
-    { key: "base", value: baseInr },
-    { key: "freight", value: freight },
-    { key: "duty", value: dutyAmt },
+    { key: "base", value: baseInr * allocation },
+    { key: "freight", value: freight * allocation },
+    { key: "duty", value: dutyAmt * allocation },
   ];
   const ourParts: Part[] = top?.cost_breakdown
     ? Object.entries(top.cost_breakdown).map(([key, r]) => ({ key, value: r.p50 }))
@@ -113,6 +114,7 @@ export function CostScreen({ data }: { data: AnalyzeResponse }) {
             oursLabel={t("cost.ours", { chain: `#${top.rank}` })}
             peaLabel={t("cost.pea")}
           />
+          <p className="text-xs text-muted-foreground">{t("cost.allocationNote")}</p>
           {!top.cost_complete && <p className="text-sm text-warn">{t("cost.lowerBound")}</p>}
           <dl className="grid gap-2 text-sm sm:grid-cols-2">
             <div>
@@ -177,6 +179,10 @@ export function CostScreen({ data }: { data: AnalyzeResponse }) {
           </p>
         </Card>
       )}
+
+      <p className="mt-4 text-sm text-muted-foreground">
+        {t("cost.sharedBenchmark")} <Num v={pea.landed_inr_per_kg_product} />
+      </p>
 
       <Card className="mt-4 space-y-4">
         <h3 className="font-medium">{t("cost.sliders")}</h3>

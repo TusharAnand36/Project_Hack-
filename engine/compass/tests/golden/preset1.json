@@ -1,13 +1,13 @@
 {
-  "dataset_version": "2026-10-24.3",
+  "dataset_version": "2026-10-24.4",
   "verdict": "TEST-FIRST",
   "grade": "hypothesis-grade",
   "g1_prior": 0.53,
-  "top_chain": "extrude+ae_iep",
-  "top_p_spec": 0.679,
+  "top_chain": "moist_heat+ae_iep",
+  "top_p_spec": 0.68,
   "top_protein_p50": 88.5,
-  "pea_landed_p50": 489.5,
+  "pea_landed_p50": 518.3,
   "recommended_test": "proximate_kjeldahl",
-  "evpi": 315400.0,
+  "evpi": 327400.0,
   "chains_total": 50
 }

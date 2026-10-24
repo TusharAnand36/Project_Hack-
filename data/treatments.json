@@ -287,6 +287,33 @@
             },
             "notes": "combined phytic acid + oxalate figure; confirmed in the final review draft; verify against the cited primary paper"
           }
+        },
+        {
+          "compound": "phytic_acid",
+          "applies_to": [
+            "sunflower_cake"
+          ],
+          "reduction": {
+            "unit": "fraction",
+            "tag": "published",
+            "dist": {
+              "type": "uniform",
+              "low": 0.75,
+              "high": 0.92
+            },
+            "evidence_grade": "C",
+            "source_id": "user_review_final",
+            "applicability": 1.0,
+            "conditions": {
+              "measured_on": "sunflower_cake",
+              "dose": "500 FTU/kg",
+              "pH": 5.5,
+              "temp_c": 50,
+              "time_min": 120,
+              "cites": "Akande (2011); Salgado et al. (2011)"
+            },
+            "notes": "Same-material range reported in final review Table 7; verify primary paper and batch treatment conditions."
+          }
         }
       ],
       "mass_yield": {
@@ -720,6 +747,31 @@
               "cites": "Kadam et al. (2025); Song et al. (2008)"
             },
             "notes": "Transferred from soybean; confirmed in the final review draft; verify against the cited primary paper"
+          }
+        },
+        {
+          "compound": "trypsin_inhibitor",
+          "applies_to": [
+            "soybean_cake"
+          ],
+          "reduction": {
+            "unit": "fraction",
+            "tag": "published",
+            "dist": {
+              "type": "uniform",
+              "low": 0.88,
+              "high": 0.985
+            },
+            "evidence_grade": "C",
+            "source_id": "user_review_final",
+            "applicability": 1.0,
+            "conditions": {
+              "measured_on": "soybean_cake",
+              "temp_c": "140-160",
+              "moisture_pct": "20-25",
+              "cites": "Kadam et al. (2025); Song et al. (2008)"
+            },
+            "notes": "Same-material range reported in final review Table 7; verify primary paper and batch treatment conditions."
           }
         }
       ],

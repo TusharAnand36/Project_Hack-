@@ -16,12 +16,149 @@
   },
   "reference_species": [
     "soybean",
-    "sunflower_cake",
     "sesame_cake",
     "rapeseed_cake",
-    "hemp_cake"
+    "hemp_cake",
+    "deoiled_rice_bran"
   ],
   "byproducts": [
+    {
+      "id": "sunflower_cake",
+      "name": "Sunflower cake",
+      "role": "core",
+      "allergen": null,
+      "oil_routes": [
+        "cold_pressed",
+        "expeller",
+        "solvent"
+      ],
+      "gates": [
+        "G4"
+      ],
+      "limiting_amino_acid": "lysine",
+      "composition": {
+        "moisture_pct": {
+          "unit": "%",
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
+          "dist": {
+            "type": "uniform",
+            "low": 6,
+            "high": 9
+          },
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Akande et al. (2011)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+        },
+        "crude_protein_pct": {
+          "unit": "%",
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
+          "dist": {
+            "type": "uniform",
+            "low": 21.6,
+            "high": 43.4
+          },
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Akande et al. (2011)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+        },
+        "fat_pct": {
+          "unit": "%",
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
+          "dist": {
+            "type": "uniform",
+            "low": 10,
+            "high": 31.4
+          },
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Akande et al. (2011)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+        },
+        "fibre_pct": {
+          "unit": "%",
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
+          "dist": {
+            "type": "uniform",
+            "low": 12.6,
+            "high": 37
+          },
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Akande et al. (2011)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+        },
+        "ash_pct": {
+          "unit": "%",
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
+          "dist": {
+            "type": "uniform",
+            "low": 4.3,
+            "high": 6.6
+          },
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Akande et al. (2011)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+        }
+      },
+      "compounds": {
+        "phytic_acid": {
+          "unit": "% dry basis",
+          "tag": "assumed",
+          "notes": "MISSING: Sunflower cake phytate baseline"
+        }
+      },
+      "flavour_baseline": {
+        "beany": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        },
+        "bitter": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        },
+        "rancid": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        },
+        "roasted": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        },
+        "earthy": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        }
+      },
+      "price_inr_per_kg": {
+        "unit": "INR/kg",
+        "tag": "assumed",
+        "notes": "MISSING: Sunflower cake purchase quote"
+      },
+      "notes": "Composition from the supplied final oilseed review, Table 2. Chlorogenic acid can affect colour and bitterness; quantify the batch before formulation."
+    },
     {
       "id": "groundnut_cake",
       "name": "Groundnut cake",
@@ -185,57 +322,113 @@
       "notes": "Limited by lysine and threonine (final review Table 3, Park et al. 2017): flag as 'blend, not treatment'. Composition values refer to cold-pressed cake."
     },
     {
-      "id": "deoiled_rice_bran",
-      "name": "De-oiled rice bran (DORB)",
+      "id": "soybean_cake",
+      "name": "Soybean cake",
       "role": "core",
-      "allergen": null,
+      "allergen": "soy",
       "oil_routes": [
+        "cold_pressed",
+        "expeller",
         "solvent"
       ],
       "gates": [
-        "G2",
-        "G3",
-        "G4"
+        "G4",
+        "G6"
       ],
-      "limiting_amino_acid": null,
+      "limiting_amino_acid": "methionine, cysteine",
       "composition": {
         "moisture_pct": {
           "unit": "%",
-          "tag": "assumed",
-          "notes": "MISSING: DORB moisture; IFCT/USDA/industry spec"
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
+          "dist": {
+            "type": "uniform",
+            "low": 5.8,
+            "high": 12
+          },
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Kadam et al. (2025)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
         },
         "crude_protein_pct": {
           "unit": "%",
-          "tag": "assumed",
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
           "dist": {
             "type": "uniform",
-            "low": 14.0,
-            "high": 18.0
+            "low": 43.3,
+            "high": 52.4
           },
-          "evidence_grade": "D",
-          "notes": "source plan [A] range; verify with IFCT/USDA/industry spec. Conflict: PhD report lists rice bran pellets at 9% (industrial sample, not used)"
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Kadam et al. (2025)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
         },
         "fat_pct": {
           "unit": "%",
-          "tag": "assumed",
-          "notes": "MISSING: DORB residual fat; plan says 'low'"
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
+          "dist": {
+            "type": "uniform",
+            "low": 7.3,
+            "high": 15.6
+          },
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Kadam et al. (2025)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
         },
         "fibre_pct": {
           "unit": "%",
-          "tag": "assumed",
-          "notes": "MISSING: DORB fibre"
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
+          "dist": {
+            "type": "uniform",
+            "low": 4.9,
+            "high": 11.3
+          },
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Kadam et al. (2025)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
         },
         "ash_pct": {
           "unit": "%",
-          "tag": "assumed",
-          "notes": "MISSING: DORB ash (plan: high ash/silica)"
+          "tag": "published",
+          "evidence_grade": "C",
+          "source_id": "user_review_final",
+          "dist": {
+            "type": "uniform",
+            "low": 5,
+            "high": 6.4
+          },
+          "conditions": {
+            "table": "final review Table 2",
+            "cites": "Kadam et al. (2025)"
+          },
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
         }
       },
       "compounds": {
         "phytic_acid": {
           "unit": "% dry basis",
           "tag": "assumed",
-          "notes": "MISSING: DORB phytate baseline (plan: high)"
+          "notes": "MISSING: Soybean cake phytate baseline"
+        },
+        "trypsin_inhibitor": {
+          "unit": "% of raw activity",
+          "tag": "assumed",
+          "value": 100,
+          "notes": "definitional: raw cake = 100% of its own activity; absolute TIA (TIU/mg) still missing"
         }
       },
       "flavour_baseline": {
@@ -268,12 +461,9 @@
       "price_inr_per_kg": {
         "unit": "INR/kg",
         "tag": "assumed",
-        "value": 10.5,
-        "evidence_grade": "D",
-        "source_id": "indiamart_mahalakshmi",
-        "notes": "trader listing INR 10,500/t; replace with AGMARKNET/SEA"
+        "notes": "MISSING: Soybean cake purchase quote"
       },
-      "notes": "Low base protein: a fractionation step is needed for high-protein applications."
+      "notes": "Composition from the supplied final oilseed review, Table 2. Soybean extrusion TIA evidence from Tables 7–8."
     },
     {
       "id": "almond_cake",
@@ -368,6 +558,63 @@
         "notes": "MISSING: almond cake price; trader quotes"
       },
       "notes": "Control case: few anti-nutrients (source plan §7.1). No compound baselines listed; confirm from literature that none exceed tolerances."
+    },
+    {
+      "id": "pea_protein_isolate",
+      "name": "Pea protein isolate",
+      "role": "control",
+      "allergen": null,
+      "oil_routes": [],
+      "gates": [],
+      "composition": {
+        "crude_protein_pct": {
+          "unit": "%",
+          "tag": "published",
+          "value": 80.2,
+          "evidence_grade": "B",
+          "source_id": "qi_2025_pea",
+          "conditions": {
+            "section": "2.1 Materials",
+            "material": "commercial pea protein isolate"
+          },
+          "notes": "Reported protein content of the commercial PPI used in the supplied paper; not an assay of the user batch."
+        }
+      },
+      "compounds": {},
+      "flavour_baseline": {
+        "beany": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        },
+        "bitter": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        },
+        "rancid": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        },
+        "roasted": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        },
+        "earthy": {
+          "unit": "index units (0-10 scale)",
+          "tag": "assumed",
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+        }
+      },
+      "limiting_amino_acid": null,
+      "price_inr_per_kg": {
+        "unit": "INR/kg",
+        "tag": "assumed",
+        "notes": "MISSING: uses the shared landed pea benchmark at analysis time; enter a supplier quote to override"
+      },
+      "notes": "Commercial isolate reference, not an oilseed cake. Qi et al. (2025), DOI 10.1016/j.fochx.2025.102898, reports 80.2% protein. Gellan gum 0.4% (w/v) and low NaCl (≤0.1 M) improved functional properties; NaCl ≥0.3 M weakened gels. The paper provides no purchase price, extraction yield, anti-nutrient reduction or process cost. These formulation findings are qualitative, not simulated treatments."
     }
   ]
 }

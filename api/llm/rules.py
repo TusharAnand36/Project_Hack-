@@ -11,8 +11,10 @@ from typing import Any
 
 _F = r"(\d+(?:\.\d+)?)"
 BYPRODUCT = [
+    (r"sunflower|सूरजमुखी", "sunflower_cake"),
+    (r"soy\s*bean|\bsoy\b|सोयाबीन", "soybean_cake"),
+    (r"pea\s*(?:protein|isolate)|मटर", "pea_protein_isolate"),
     (r"ground\s*nut|peanut|moong\s*phali|मूंगफली", "groundnut_cake"),
-    (r"rice\s*bran|\bdorb\b|de-?oiled\s+rice|राइस\s*ब्रान|चावल\s*(?:की)?\s*भूसी", "deoiled_rice_bran"),
     (r"almond|badam|बादाम", "almond_cake"),
 ]
 APPLICATION = [

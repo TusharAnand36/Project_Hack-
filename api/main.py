@@ -1,7 +1,7 @@
 """Upcycle Compass HTTP API (source plan §14.1).
 
 GET  /health            keep-alive and versions (and which LLM provider is active)
-GET  /presets           the three one-click presets with full payloads
+GET  /presets           the five one-click presets with full payloads
 GET  /data/{file}       read-only dataset files (allow-listed) and /data/report
 POST /analyze           the decision pipeline; returns the §14.2 result
 POST /update-evidence   enter one lab result -> posterior -> before/after (§12.12)

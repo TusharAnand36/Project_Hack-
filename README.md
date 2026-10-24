@@ -17,6 +17,19 @@ Choose **Open Compass** to enter the decision tool, or open `/#/compass` directl
 Both the public pages and the tool support English and Hindi. Design and image-source notes are in
 [`docs/WEBSITE.md`](docs/WEBSITE.md).
 
+The five presets are **sunflower cake** (first), groundnut cake, soybean cake, almond cake,
+and pea protein isolate. Rice bran is no longer offered as an analysable material.
+Sunflower and soybean composition is cited to the team's final oilseed review; missing
+purchase prices remain blank for a supplier quote.
+
+Pea isolate uses the supplied Qi et al. (2025) paper's **80.2% protein** value
+([DOI](https://doi.org/10.1016/j.fochx.2025.102898)). Its gellan-gum/salt findings are
+qualitative formulation guidance, not simulated extraction or anti-nutrient treatments.
+The paper gives no price: every preset uses the same existing market-price model and
+shared pea settings, with IGST-credit duty mode as the default scenario. The Cost screen
+distinguishes ₹/kg of isolate from ₹/kg of protein; an explicit supplier quote overrides
+the isolate's purchase cost. Historical source documents retain their original scope.
+
 ## What it does
 
 | Screen | Answers |

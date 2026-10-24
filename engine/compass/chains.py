@@ -30,6 +30,11 @@ def candidates(
     no_solvents: bool,
     equipment: list[str],
 ) -> Candidates:
+    if byproduct == "pea_protein_isolate":
+        return Candidates(
+            [],
+            {tid: "Commercial isolate reference; no validated cake treatment model" for tid in ds.treatments},
+        )
     allowed: list[str] = []
     removed: dict[str, str] = {}
     have = set(equipment)

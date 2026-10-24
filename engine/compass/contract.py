@@ -101,7 +101,7 @@ class PeaInputs(_Strict):
     base_usd_per_kg: float | None = Field(default=None, gt=0)
     protein_pct: float | None = Field(default=None, gt=0, le=100)
     freight_pct: float | None = Field(default=None, ge=0, le=100)
-    duty_mode: DutyMode = DutyMode.full_stack_44
+    duty_mode: DutyMode = DutyMode.bcd_only_igst_credited_22
     usd_inr: float | None = Field(default=None, gt=0)
 
 

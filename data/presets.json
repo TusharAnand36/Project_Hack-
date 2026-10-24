@@ -1,6 +1,18 @@
 {
   "presets": [
     {
+      "id": "sunflower_beverage",
+      "title": "Sunflower cake → beverage protein",
+      "story": "Start with sunflower: review protein enrichment, colour and bitterness. Composition comes from the team oilseed review; add a supplier quote for cost analysis.",
+      "payload": {
+        "byproduct": "sunflower_cake",
+        "application": "beverage",
+        "market": "domestic",
+        "scale_kg_day": 500,
+        "constraints": {}
+      }
+    },
+    {
       "id": "groundnut_beverage",
       "title": "Groundnut cake → beverage protein",
       "story": "Shows the aflatoxin safety gate (prior risk) and the chain Pareto. Batch protein and moisture are synthetic demo values (source plan §8.3 example), not measurements.",
@@ -34,26 +46,19 @@
             "tag": "synthetic"
           },
           "afb1_ppb": null
-        },
-        "pea": {
-          "protein_pct": 85,
-          "duty_mode": "bcd_only_igst_credited_22"
         }
       }
     },
     {
-      "id": "rice_bran_snack",
-      "title": "De-oiled rice bran → extruded snack",
-      "story": "Shows the stability gate and the low-protein reality.",
+      "id": "soybean_meat",
+      "title": "Soybean cake → meat analogue",
+      "story": "Explore protein enrichment and the published extrusion evidence for trypsin inhibitors. Soy allergen labelling and a supplier quote are required.",
       "payload": {
-        "byproduct": "deoiled_rice_bran",
-        "application": "extruded_snack",
+        "byproduct": "soybean_cake",
+        "application": "meat_analogue",
         "market": "domestic",
         "scale_kg_day": 500,
-        "constraints": {},
-        "process": {
-          "solvent_extracted": true
-        }
+        "constraints": {}
       }
     },
     {
@@ -63,6 +68,18 @@
       "payload": {
         "byproduct": "almond_cake",
         "application": "meat_analogue",
+        "market": "domestic",
+        "scale_kg_day": 500,
+        "constraints": {}
+      }
+    },
+    {
+      "id": "pea_beverage",
+      "title": "Pea protein isolate → beverage protein",
+      "story": "Research reference: 80.2% protein (Qi et al., 2025). Uses the same landed pea price as every comparison. Gellan gum / salt findings guide lab validation; no cake extraction is simulated.",
+      "payload": {
+        "byproduct": "pea_protein_isolate",
+        "application": "beverage",
         "market": "domestic",
         "scale_kg_day": 500,
         "constraints": {}

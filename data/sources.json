@@ -1,5 +1,5 @@
 {
-  "dataset_version": "2026-10-24.3",
+  "dataset_version": "2026-10-24.4",
   "sources": [
     {
       "id": "user_review_draft",
@@ -269,6 +269,16 @@
       "verified_by_team": false,
       "notes": "Hack the Fork 2026 organiser resource list",
       "accessed": "2026-10-24 (organiser resource list)"
+    },
+    {
+      "id": "qi_2025_pea",
+      "citation": "Qi X., Li Y., Xiao J., Zhang Q., Huang Z., Xie J. (2025). Modulating the functional properties of pea protein isolate: The impact of gellan gum and sodium chloride. Food Chemistry: X 30, 102898.",
+      "doi": "10.1016/j.fochx.2025.102898",
+      "url": "https://doi.org/10.1016/j.fochx.2025.102898",
+      "kind": "peer_reviewed",
+      "accessed": "2026-10-24 (supplied PDF, sections 2.1–2.2 and abstract)",
+      "verified_by_team": false,
+      "notes": "80.2% commercial PPI protein content. Functional formulation evidence only; no material price or cake-processing cost."
     }
   ]
 }

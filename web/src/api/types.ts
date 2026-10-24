@@ -772,7 +772,7 @@ export interface components {
             protein_pct?: number | null;
             /** Freight Pct */
             freight_pct?: number | null;
-            /** @default full_stack_44 */
+            /** @default bcd_only_igst_credited_22 */
             duty_mode?: components["schemas"]["DutyMode"];
             /** Usd Inr */
             usd_inr?: number | null;
@@ -788,7 +788,7 @@ export interface components {
             protein_pct: number | null;
             /** Freight Pct */
             freight_pct: number | null;
-            /** @default full_stack_44 */
+            /** @default bcd_only_igst_credited_22 */
             duty_mode: components["schemas"]["DutyMode"];
             /** Usd Inr */
             usd_inr: number | null;
@@ -1064,6 +1064,10 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
         };
         /**
          * Value
