@@ -1,4 +1,4 @@
 """Upcycle Compass decision engine (pure Python; no web, LLM or file-system imports
 except the dataset loader in data.py)."""
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"

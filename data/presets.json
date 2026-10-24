@@ -15,7 +15,7 @@
     {
       "id": "groundnut_beverage",
       "title": "Groundnut cake → beverage protein",
-      "story": "Shows the aflatoxin safety gate (prior risk) and the chain Pareto. Batch protein and moisture are synthetic demo values (source plan §8.3 example), not measurements.",
+      "story": "Checks the B1 and total-aflatoxin project thresholds and the chain Pareto. Batch protein and moisture are synthetic demo values (source plan §8.3 example), not measurements.",
       "payload": {
         "byproduct": "groundnut_cake",
         "application": "beverage",

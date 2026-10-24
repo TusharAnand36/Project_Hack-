@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from compass.contract import AnalyzeRequest, Gate, GateState
+from compass.contract import AnalyzeRequest, Gate, GateState, SafetyCheck
 from compass.data import Byproduct, Dataset, SafetyGate
 from compass.models import Grade, Param, Tag
 from compass.sampling import Provenance, as_value
@@ -23,14 +23,6 @@ class GateOutcome:
     gate: Gate
     p_pass: float | None  # probability the gate passes; None = unknown (no prior)
     prior_prov: Provenance | None = None
-
-
-def odds_to_p(o: float) -> float:
-    return o / (1 + o)
-
-
-def p_to_odds(p: float) -> float:
-    return p / (1 - p)
 
 
 def _val(p: Param):
@@ -46,69 +38,61 @@ def worst(states: list[GateState]) -> GateState:
     return max(stops, key=_ORDER.__getitem__)
 
 
-def solvent_extracted(req: AnalyzeRequest, bp: Byproduct) -> tuple[bool, str | None]:
-    """True when the material is solvent-extracted. Unknown route = the by-product's first listed route."""
-    if req.process.solvent_extracted is not None:
-        return req.process.solvent_extracted, None
-    route = req.process.oil_route
-    note = None
-    if route is None and bp.oil_routes:
-        route = bp.oil_routes[0]
-        note = f"oil-extraction route not given; assumed '{route}'"
-    return route == "solvent", note
+def _numeric_check(compound, name, measurement, limit: Param) -> SafetyCheck:
+    measured = None if measurement is None else _measured(measurement, limit.unit)
+    state = (
+        GateState.TEST_FIRST
+        if measurement is None
+        else (GateState.FAIL if measurement.value > limit.value else GateState.PASS)
+    )
+    note = (
+        f"{name} not measured; project threshold ≤ {limit.value:g} {limit.unit}"
+        if measured is None
+        else f"{name} {measured.value:g} {limit.unit} {'>' if state is GateState.FAIL else '≤'} "
+        f"project threshold {limit.value:g} {limit.unit}"
+    )
+    return SafetyCheck(
+        compound=compound, name=name, limit=_val(limit), measured=measured, state=state, note=note
+    )
 
 
-def g1_aflatoxin(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
-    lim = g.limits[req.market]
-    L = lim.value
-    frac = g.params["pass_fraction_of_limit"].value
-    out = Gate(
+def _checked_gate(g: SafetyGate, checks: list[SafetyCheck]) -> GateOutcome:
+    state = worst([c.state for c in checks])
+    gate = Gate(
         id=g.id,
         name=g.name,
         kind=g.kind,
-        state=GateState.TEST_FIRST,
-        limit=_val(lim),
+        state=state,
+        checks=checks,
+        reasons=[c.note for c in sorted(checks, key=lambda c: _ORDER[c.state], reverse=True)],
         required_test=" + ".join(g.required_tests),
         flip_condition=g.flip_condition,
     )
-    x = req.batch.afb1_ppb
-    if x is not None:
-        out.measured = _measured(x, "ppb")
-        if x.value <= frac * L:
-            out.state = GateState.PASS
-            out.reasons.append(f"AFB1 {x.value:g} ppb ≤ {frac:g} × limit ({L:g} ppb, {req.market})")
-            return GateOutcome(out, 1.0)
-        if x.value <= L:
-            out.reasons.append(
-                f"AFB1 {x.value:g} ppb is within the limit but above {frac:g} × limit: confirm by HPLC"
-            )
-            return GateOutcome(out, None)
-        out.state = GateState.FAIL
-        out.reasons.append(
-            f"AFB1 {x.value:g} ppb > limit {L:g} ppb ({req.market}): divert to feed or re-source"
+    return GateOutcome(gate, {GateState.PASS: 1.0, GateState.FAIL: 0.0}.get(state))
+
+
+def g1_aflatoxin(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
+    checks = [
+        _numeric_check("aflatoxin_b1", "Aflatoxin B1", req.batch.afb1_ppb, g.limits[req.market]),
+        _numeric_check(
+            "total_aflatoxins",
+            "Total aflatoxins (B1+B2+G1+G2)",
+            req.batch.total_aflatoxins_ppb,
+            g.limits["total_aflatoxins"],
+        ),
+    ]
+    out = _checked_gate(g, checks)
+    out.gate.limit = checks[0].limit
+    out.gate.measured = checks[0].measured
+    for evidence in req.evidence:
+        if evidence.input == "gate.G1" and evidence.note:
+            out.gate.reasons.append(evidence.note)
+    if out.gate.state is GateState.TEST_FIRST:
+        out.gate.reasons.append(
+            "Confirm B1 and total aflatoxins by HPLC on a representative composite. "
+            "The historical 20-ppb groundnut prior is not calibrated to these project thresholds."
         )
-        return GateOutcome(out, 0.0)
-    prior = g.params["prior_p_fail"]
-    p_fail = prior.value
-    prov = Provenance.of(prior)
-    screen = next((e for e in req.evidence if e.input == "gate.G1" and e.p_fail is not None), None)
-    if screen is not None:  # an ELISA screen updated the prior (§12.12); HPLC still decides the gate
-        p_fail = screen.p_fail
-        prov = Provenance(screen.tag, screen.grade, prov.source_ids, None, "derived")
-        out.reasons.append(screen.note or "prior updated by a screening test")
-    elif req.process.sorted_food_grade_supply:
-        mult = g.params["sorted_supply_odds_multiplier"]
-        p_fail = odds_to_p(p_to_odds(p_fail) * mult.value)
-        prov = Provenance(Tag.assumed, Grade.D, prov.source_ids, None, "derived")
-        out.reasons.append(f"sorted food-grade supply: prior odds × {mult.value:g} (assumed)")
-    out.prior_p_fail = as_value(p_fail, prov, "probability")
-    n_sub = g.params["composite_subsamples_min"].value
-    out.reasons.insert(
-        0,
-        f"AFB1 not measured by HPLC; {'updated' if screen else 'prior'} P(fail) = {p_fail:.2f} [{prov.tag.value}]. "
-        f"Test a composite of ≥ {n_sub:g} sub-samples (sampling error often dominates assay error).",
-    )
-    return GateOutcome(out, 1.0 - p_fail, prov)
+    return out
 
 
 def g2_rancidity(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
@@ -157,59 +141,34 @@ def g2_rancidity(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
 
 
 def g3_heavy_metals(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
-    out = Gate(
-        id=g.id,
-        name=g.name,
-        kind=g.kind,
-        state=GateState.TEST_FIRST,
-        required_test=" + ".join(g.required_tests),
-        flip_condition=g.flip_condition,
-    )
-    pairs = [
-        ("inorganic_arsenic", req.batch.inorganic_as_ppm, "inorganic As"),
-        ("cadmium", req.batch.cd_ppm, "Cd"),
+    checks = [
+        _numeric_check(key, name, measurement, g.limits[key])
+        for key, name, measurement in [
+            ("lead", "Lead", req.batch.pb_ppm),
+            ("cadmium", "Cadmium", req.batch.cd_ppm),
+            ("arsenic", "Arsenic (total)", req.batch.arsenic_ppm),
+            ("mercury", "Mercury", req.batch.hg_ppm),
+        ]
     ]
-    states = []
-    for key, m, label in pairs:
-        lim = g.limits[key]
-        if m is None:
-            out.reasons.append(f"{label} not measured (ICP-MS)")
-            states.append(GateState.TEST_FIRST)
-        elif lim.value is None:
-            out.reasons.append(
-                f"{label} measured at {m.value:g} mg/kg, but no limit is available in the dataset"
-            )
-            states.append(GateState.TEST_FIRST)
-        elif m.value > lim.value:
-            out.reasons.append(f"{label} {m.value:g} mg/kg > limit {lim.value:g} mg/kg")
-            states.append(GateState.FAIL)
-        else:
-            states.append(GateState.PASS)
-    out.state = worst(states)
-    return GateOutcome(out, {GateState.PASS: 1.0, GateState.FAIL: 0.0}.get(out.state))
+    return _checked_gate(g, checks)
 
 
-def g4_solvent(g: SafetyGate, req: AnalyzeRequest, bp: Byproduct) -> GateOutcome:
-    out = Gate(
-        id=g.id,
-        name=g.name,
-        kind=g.kind,
-        state=GateState.PASS,
-        required_test=" + ".join(g.required_tests),
-        flip_condition=g.flip_condition,
+def g4_solvent(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
+    check = _numeric_check(
+        "hexane_residue", "Hexane residue", req.batch.hexane_ppm, g.limits["hexane_residue"]
     )
-    solvent, note = solvent_extracted(req, bp)
-    if note:
-        out.reasons.append(note)
-    if not solvent:
-        out.reasons.append("not solvent-extracted: no hexane residue risk")
-        return GateOutcome(out, 1.0)
-    if req.process.hexane_cert:
-        out.reasons.append("solvent-extracted with a hexane-residue certificate")
-        return GateOutcome(out, 1.0)
-    out.state = GateState.TEST_FIRST
-    out.reasons.append("solvent-extracted and no hexane-residue certificate")
-    return GateOutcome(out, None)
+    if req.batch.hexane_ppm is None:
+        non_solvent = req.process.solvent_extracted is False or (
+            req.process.solvent_extracted is None and req.process.oil_route in ("cold_pressed", "expeller")
+        )
+        if non_solvent:
+            check.state = GateState.PASS
+            check.note = (
+                "Confirmed non-solvent processing: hexane residue testing is not required for this route."
+            )
+        elif req.process.hexane_cert:
+            check.note = "Supplier certificate available: enter its quantitative hexane result to check the 10 mg/kg threshold."
+    return _checked_gate(g, [check])
 
 
 def g5_provenance(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
@@ -266,7 +225,7 @@ def evaluate(req: AnalyzeRequest, ds: Dataset) -> list[GateOutcome]:
         elif g.id == "G3":
             out.append(g3_heavy_metals(g, req))
         elif g.id == "G4":
-            out.append(g4_solvent(g, req, bp))
+            out.append(g4_solvent(g, req))
         elif g.id == "G5":
             out.append(g5_provenance(g, req))
         elif g.id == "G6":

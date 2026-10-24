@@ -53,6 +53,13 @@ export const formSchema = z
     moisture: optNum({ max: 100 }),
     ffa: optNum({ max: 100 }),
     afb1: optNum(),
+    totalAflatoxins: optNum(),
+    hexane: optNum(),
+    lead: optNum(),
+    cadmium: optNum(),
+    arsenic: optNum(),
+    mercury: optNum(),
+
     phytate: optNum({ max: 100 }),
     oilRoute: z.enum(["", "cold_pressed", "expeller", "solvent"]),
     hours: optNum(),
@@ -63,6 +70,14 @@ export const formSchema = z
     hexaneCert: tri,
   })
   .superRefine((v, ctx) => {
+    if (v.afb1 !== undefined && v.totalAflatoxins !== undefined && v.totalAflatoxins < v.afb1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["totalAflatoxins"],
+        message: "input.errors.aflatoxinTotal",
+      });
+    }
+
     if (v.protein !== undefined && v.moisture !== undefined && v.protein + v.moisture > 100) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["protein"], message: "input.errors.proximate" });
     }
@@ -90,6 +105,13 @@ export const EMPTY_FORM: FormInput = {
   moisture: "",
   ffa: "",
   afb1: "",
+  totalAflatoxins: "",
+  hexane: "",
+  lead: "",
+  cadmium: "",
+  arsenic: "",
+  mercury: "",
+
   phytate: "",
   oilRoute: "",
   hours: "",
@@ -126,6 +148,13 @@ export function toRequest(v: FormOutput): AnalyzeRequest {
       moisture_pct: m(v.moisture),
       ffa_pct: m(v.ffa),
       afb1_ppb: m(v.afb1),
+      total_aflatoxins_ppb: m(v.totalAflatoxins),
+      hexane_ppm: m(v.hexane),
+      pb_ppm: m(v.lead),
+      cd_ppm: m(v.cadmium),
+      arsenic_ppm: m(v.arsenic),
+      hg_ppm: m(v.mercury),
+
       phytate_pct: m(v.phytate),
     },
     process: {
@@ -165,6 +194,13 @@ export function fromRequest(r: AnalyzeRequest): FormInput {
     moisture: str(b.moisture_pct?.value),
     ffa: str(b.ffa_pct?.value),
     afb1: str(b.afb1_ppb?.value),
+    totalAflatoxins: str(b.total_aflatoxins_ppb?.value),
+    hexane: str(b.hexane_ppm?.value),
+    lead: str(b.pb_ppm?.value),
+    cadmium: str(b.cd_ppm?.value),
+    arsenic: str(b.arsenic_ppm?.value),
+    mercury: str(b.hg_ppm?.value),
+
     phytate: str(b.phytate_pct?.value),
     oilRoute: p.oil_route ?? "",
     hours: str(p.hours_since_milling),

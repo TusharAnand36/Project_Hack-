@@ -51,11 +51,12 @@ def test_measured_aflatoxin_over_limit_flips_to_no_go(ds):
     assert r.before.verdict.value == "TEST-FIRST" and r.after.verdict.value == "NO-GO"
 
 
-def test_negative_elisa_lowers_the_prior_but_keeps_test_first(ds):
+def test_negative_elisa_records_screen_without_uncalibrated_probability(ds):
     r = update_evidence(UpdateEvidenceRequest(request=req(ds), input="gate.G1.u", result="negative"), ds)
-    assert r.posterior.value < r.prior.value
+    assert r.posterior is None and r.prior is None
+    assert "no calibrated prior" in r.note
     g1 = next(g for g in analyze(r.after_request, ds).gates if g.id == "G1")
-    assert g1.state.value == "TEST-FIRST" and g1.prior_p_fail.value == pytest.approx(r.posterior.value)
+    assert g1.state.value == "TEST-FIRST" and g1.prior_p_fail is None
 
 
 def test_fraction_inputs_reject_percentages(ds):

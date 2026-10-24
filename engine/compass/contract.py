@@ -10,7 +10,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from compass.models import Dist, Grade, Range, Tag, Value
 
@@ -79,9 +79,21 @@ class Batch(_Strict):
     ash_pct: PctMeasurement | None = None
     phytate_pct: PctMeasurement | None = Field(default=None, description="% dry basis")
     afb1_ppb: Measurement | None = None
+    total_aflatoxins_ppb: Measurement | None = None
+    hexane_ppm: Measurement | None = None
+    pb_ppm: Measurement | None = None
+    arsenic_ppm: Measurement | None = None
+    hg_ppm: Measurement | None = None
     tia: Measurement | None = None
     inorganic_as_ppm: Measurement | None = None
     cd_ppm: Measurement | None = None
+
+    @model_validator(mode="after")
+    def _aflatoxin_total(self):
+        if self.afb1_ppb is not None and self.total_aflatoxins_ppb is not None:
+            if self.total_aflatoxins_ppb.value < self.afb1_ppb.value:
+                raise ValueError("Total aflatoxins cannot be less than aflatoxin B1")
+        return self
 
 
 class Process(_Strict):
@@ -187,6 +199,15 @@ class Verdict(_Strict):
     actions: list[str] = Field(default_factory=list)
 
 
+class SafetyCheck(_Strict):
+    compound: str
+    name: str
+    limit: Value
+    measured: Value | None = None
+    state: GateState
+    note: str
+
+
 class Gate(_Strict):
     id: str
     name: str
@@ -199,6 +220,7 @@ class Gate(_Strict):
     required_test: str | None = None
     flip_condition: str | None = None
     flags: list[str] = Field(default_factory=list)
+    checks: list[SafetyCheck] = Field(default_factory=list)
 
 
 class Diagnosis(_Strict):

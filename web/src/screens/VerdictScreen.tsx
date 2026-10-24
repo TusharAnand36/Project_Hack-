@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { AnalyzeResponse } from "@/api/client";
 import { AiSummary } from "@/components/AiSummary";
 import { Num } from "@/components/Num";
+import { SafetyLimits } from "@/components/SafetyLimits";
 import { ScreenHeader } from "@/components/States";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -59,6 +60,7 @@ export function VerdictScreen({ data }: { data: AnalyzeResponse }) {
         </div>
       )}
 
+      <SafetyLimits gates={data.gates} />
       <h3 className="mb-2 mt-6 font-medium">{t("verdict.gates")}</h3>
       <div className="grid gap-3 md:grid-cols-2">
         {data.gates.map((g) => (

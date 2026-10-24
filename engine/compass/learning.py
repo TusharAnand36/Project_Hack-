@@ -60,28 +60,16 @@ def update_evidence(body: UpdateEvidenceRequest, ds: Dataset) -> UpdateEvidenceR
             measurement = as_value(body.value, MEASURED, "ppb")
             prior, post = None, None
             note = "AFB1 measured on a composite sample: the gate is now decided by the measurement."
-        elif body.result is not None:  # ELISA screen updates the prior; HPLC still confirms
-            g1 = next(g for g in before.gates if g.id == "G1")
-            if g1.prior_p_fail is None:
+        elif body.result is not None:
+            if req.batch.afb1_ppb is not None:
                 raise AnalyzeError("G1 already has a measured AFB1 value; a screen cannot update it")
-            elisa = ds.lab_tests["afb1_elisa"]
-            p1 = upd.lr_update(
-                g1.prior_p_fail.value,
-                body.result == "positive",
-                elisa.sensitivity.value,
-                elisa.specificity.value,
-            )
             note = (
-                f"ELISA screen {body.result}: P(fail) {g1.prior_p_fail.value:.2f} → {p1:.2f} "
-                f"(sensitivity {elisa.sensitivity.value:g}, specificity {elisa.specificity.value:g}, assumed). "
-                "Confirm by HPLC on a composite."
+                f"ELISA screen {body.result} recorded. Confirm B1 and total aflatoxins by HPLC; "
+                "no calibrated prior is available for the project thresholds, so no probability is inferred."
             )
-            ev = Evidence(
-                input="gate.G1", p_fail=p1, unit="probability", tag=Tag.measured, grade=Grade.B, note=note
-            )
+            ev = Evidence(input="gate.G1", unit="probability", tag=Tag.measured, grade=Grade.B, note=note)
             after_req = _with_evidence(req, ev)
-            prior, measurement = g1.prior_p_fail, None
-            post = as_value(p1, Provenance(Tag.measured, Grade.B), "probability")
+            prior, measurement, post = None, None, None
         else:
             raise AnalyzeError("for aflatoxin give a measured value in ppb (HPLC) or an ELISA result")
     else:

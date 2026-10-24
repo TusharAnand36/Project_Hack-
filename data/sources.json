@@ -1,5 +1,5 @@
 {
-  "dataset_version": "2026-10-24.4",
+  "dataset_version": "2026-10-24.5",
   "sources": [
     {
       "id": "user_review_draft",
@@ -279,6 +279,14 @@
       "accessed": "2026-10-24 (supplied PDF, sections 2.1–2.2 and abstract)",
       "verified_by_team": false,
       "notes": "80.2% commercial PPI protein content. Functional formulation evidence only; no material price or cake-processing cost."
+    },
+    {
+      "id": "user_project_limits",
+      "citation": "User-specified project contaminant acceptance limits, 24 October 2026",
+      "kind": "plan",
+      "accessed": "2026-10-24 (user message)",
+      "verified_by_team": false,
+      "notes": "Hexane 10 mg/kg; AFB1 10 µg/kg; total aflatoxins 15 µg/kg; lead 1.0, cadmium 0.1, total arsenic 0.5, mercury 0.1 mg/kg. Arsenic unit inferred as mg/kg. Project policy, not a verified regulatory citation."
     }
   ]
 }

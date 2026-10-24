@@ -24,7 +24,7 @@ def key_values() -> dict:
         "dataset_version": ds.version,
         "verdict": r.verdict.label.value,
         "grade": r.verdict.grade.value,
-        "g1_prior": next(g for g in r.gates if g.id == "G1").prior_p_fail.value,
+        "g1_prior": next(g for g in r.gates if g.id == "G1").prior_p_fail,
         "top_chain": top.id,
         "top_p_spec": round(top.p_spec.value, 3),
         "top_protein_p50": round(top.protein_pct_final.p50, 2),

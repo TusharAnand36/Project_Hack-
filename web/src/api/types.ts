@@ -278,6 +278,11 @@ export interface components {
             /** @description % dry basis */
             phytate_pct?: components["schemas"]["PctMeasurement-Input"] | null;
             afb1_ppb?: components["schemas"]["Measurement-Input"] | null;
+            total_aflatoxins_ppb?: components["schemas"]["Measurement-Input"] | null;
+            hexane_ppm?: components["schemas"]["Measurement-Input"] | null;
+            pb_ppm?: components["schemas"]["Measurement-Input"] | null;
+            arsenic_ppm?: components["schemas"]["Measurement-Input"] | null;
+            hg_ppm?: components["schemas"]["Measurement-Input"] | null;
             tia?: components["schemas"]["Measurement-Input"] | null;
             inorganic_as_ppm?: components["schemas"]["Measurement-Input"] | null;
             cd_ppm?: components["schemas"]["Measurement-Input"] | null;
@@ -295,6 +300,11 @@ export interface components {
             /** @description % dry basis */
             phytate_pct: components["schemas"]["PctMeasurement-Output"] | null;
             afb1_ppb: components["schemas"]["Measurement-Output"] | null;
+            total_aflatoxins_ppb: components["schemas"]["Measurement-Output"] | null;
+            hexane_ppm: components["schemas"]["Measurement-Output"] | null;
+            pb_ppm: components["schemas"]["Measurement-Output"] | null;
+            arsenic_ppm: components["schemas"]["Measurement-Output"] | null;
+            hg_ppm: components["schemas"]["Measurement-Output"] | null;
             tia: components["schemas"]["Measurement-Output"] | null;
             inorganic_as_ppm: components["schemas"]["Measurement-Output"] | null;
             cd_ppm: components["schemas"]["Measurement-Output"] | null;
@@ -583,6 +593,8 @@ export interface components {
             flip_condition: string | null;
             /** Flags */
             flags: string[];
+            /** Checks */
+            checks: components["schemas"]["SafetyCheck"][];
         };
         /**
          * GateState
@@ -923,6 +935,18 @@ export interface components {
             passed: boolean | null;
             value: components["schemas"]["Value"] | null;
             threshold: components["schemas"]["Value"] | null;
+        };
+        /** SafetyCheck */
+        SafetyCheck: {
+            /** Compound */
+            compound: string;
+            /** Name */
+            name: string;
+            limit: components["schemas"]["Value"];
+            measured: components["schemas"]["Value"] | null;
+            state: components["schemas"]["GateState"];
+            /** Note */
+            note: string;
         };
         /** Scenario */
         Scenario: {

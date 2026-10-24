@@ -42,7 +42,7 @@ from compass.contract import (
     Voi,
 )
 from compass.data import Dataset
-from compass.models import Dist, Grade, Param, Tag
+from compass.models import Grade, Param, Tag
 from compass.montecarlo import ChainEval, Context, evaluate
 from compass.sampling import Provenance, Sampled, Sampler, as_value, combine, summarise
 
@@ -139,20 +139,6 @@ def build_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sample
             s.add(f"u.{key}", ds.costs.utilities[key])
     for key, p in ds.costs.overheads.items():
         s.add(f"o.{key}", p)
-    # unmeasured aflatoxin: the gate outcome is a Bernoulli(prior) input (§12.9)
-    g1 = ds.gates.get("G1")
-    if g1 and bp.id in g1.applies_to and req.batch.afb1_ppb is None:
-        prior = g1.params["prior_p_fail"]
-        s.add(
-            "gate.G1.u",
-            Param(
-                dist=Dist(type="uniform", low=0.0, high=1.0),
-                unit="probability",
-                tag=prior.tag,
-                grade=prior.grade,
-                source_id=prior.source_id,
-            ),
-        )
     return s
 
 
@@ -428,7 +414,7 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
             test_id=tid,
             acceptance=(
                 planm.acceptance(
-                    ds.lab_tests[tid], targets, req.market, _g1_limit(outcomes), app.functionality
+                    ds.lab_tests[tid], targets, req.market, _g1_limit(outcomes), app.functionality, ds.gates
                 )
                 if tid in ds.lab_tests
                 else "market or price data, not a lab test"

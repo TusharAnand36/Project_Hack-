@@ -54,6 +54,44 @@ def diagnose(
     out: list[Diagnosis] = []
     rank = 0
     for go in gate_outcomes:  # safety compounds first
+        if go.gate.checks:
+            for check in go.gate.checks:
+                rank += 1
+                measured = check.measured
+                lvl = (
+                    None
+                    if measured is None
+                    else summarise(
+                        np.full(3, measured.value), Provenance(measured.tag, measured.grade), measured.unit
+                    )
+                )
+                exceed = (
+                    None
+                    if measured is None
+                    else as_value(
+                        float(measured.value > check.limit.value),
+                        combine(
+                            [
+                                Provenance(measured.tag, measured.grade),
+                                Provenance(check.limit.tag, check.limit.grade, tuple(check.limit.source_ids)),
+                            ]
+                        ),
+                        "probability",
+                    )
+                )
+                out.append(
+                    Diagnosis(
+                        compound=check.compound,
+                        name=check.name,
+                        role="gate",
+                        level=lvl,
+                        tolerance=check.limit,
+                        p_exceed=exceed,
+                        rank=rank,
+                        note=f"{check.state.value}: {check.note}; not tunable by treatment",
+                    )
+                )
+            continue
         for cid in GATE_COMPOUNDS.get(go.gate.id, []):
             rank += 1
             c = ds.compounds[cid]

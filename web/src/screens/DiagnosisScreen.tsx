@@ -17,6 +17,9 @@ export function DiagnosisScreen({ data }: { data: AnalyzeResponse }) {
   return (
     <section>
       <ScreenHeader title={t("diagnosis.title")} summary={t("diagnosis.summary")} />
+      <p className="mb-4 text-sm text-muted-foreground">
+        {t("safety.policy")} {t("safety.units")}
+      </p>
       <p className="mb-3 text-sm" aria-live="polite">
         {t("diagnosis.textSummary", { n: rows.length, limiting })}
       </p>

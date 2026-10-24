@@ -40,9 +40,10 @@
     },
     {
       "id": "afb1_hplc",
-      "name": "Aflatoxin B1 HPLC confirmation",
+      "name": "Aflatoxin B1 and total aflatoxins (HPLC)",
       "measures": [
-        "afb1_ppb"
+        "aflatoxin_b1",
+        "total_aflatoxins"
       ],
       "method": "HPLC-FLD on a composite sample",
       "cost_inr": {
@@ -60,7 +61,8 @@
         "tag": "assumed",
         "notes": "MISSING: Aflatoxin B1 HPLC confirmation measurement CV (log scale)"
       },
-      "replicates_min": 3
+      "replicates_min": 3,
+      "notes": "Report B1 and total B1+B2+G1+G2 separately in µg/kg on a representative composite."
     },
     {
       "id": "ffa_titration",
@@ -112,10 +114,12 @@
     },
     {
       "id": "icp_ms_metals",
-      "name": "Heavy metals (As, Cd)",
+      "name": "Lead, cadmium, total arsenic and mercury (ICP-MS)",
       "measures": [
-        "inorganic_as_ppm",
-        "cd_ppm"
+        "lead",
+        "cadmium",
+        "arsenic",
+        "mercury"
       ],
       "method": "ICP-MS (with As speciation for inorganic As)",
       "cost_inr": {
@@ -133,7 +137,8 @@
         "tag": "assumed",
         "notes": "MISSING: Heavy metals (As, Cd) measurement CV (log scale)"
       },
-      "replicates_min": 3
+      "replicates_min": 3,
+      "notes": "Report each metal separately in mg/kg; total arsenic is required for the project threshold."
     },
     {
       "id": "hexane_residue_gchs",

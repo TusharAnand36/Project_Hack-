@@ -2,38 +2,45 @@
   "gates": [
     {
       "id": "G1",
-      "name": "Aflatoxin B1",
+      "name": "Aflatoxins (B1 and total)",
       "kind": "stop",
       "applies_to": [
-        "groundnut_cake"
+        "*"
       ],
       "inputs": [
         "afb1_ppb",
-        "market",
-        "sorted_food_grade_supply"
+        "total_aflatoxins_ppb"
       ],
-      "rule": "measured <= pass_fraction x L -> PASS; <= L -> TEST-FIRST (confirm by HPLC); > L -> FAIL. Not measured -> TEST-FIRST with prior P(fail).",
+      "rule": "B1 ≤ 10 µg/kg and total B1+B2+G1+G2 ≤ 15 µg/kg: PASS; any result above its threshold: FAIL; any missing result: TEST-FIRST.",
       "required_tests": [
         "afb1_elisa",
         "afb1_hplc"
       ],
-      "flip_condition": "measured <= 0.5 x limit on a representative composite sample",
+      "flip_condition": "Representative composite: B1 ≤ 10 µg/kg AND total aflatoxins ≤ 15 µg/kg",
       "limits": {
         "domestic": {
-          "unit": "ppb",
-          "tag": "published",
-          "value": 30,
-          "evidence_grade": "C",
-          "source_id": "shriram_aflatoxin",
-          "notes": "per one Indian institute summary; verify legal basis"
+          "value": 10,
+          "unit": "µg/kg",
+          "tag": "assumed",
+          "evidence_grade": "D",
+          "source_id": "user_project_limits",
+          "notes": "User-specified project acceptance threshold (24 Oct 2026); not independently verified as a regulatory limit."
         },
         "export_EU": {
-          "unit": "ppb",
-          "tag": "published",
-          "value": 4,
-          "evidence_grade": "C",
-          "source_id": "shriram_aflatoxin",
-          "notes": "total aflatoxin; verify Reg. (EU) 2023/915 (B1 vs total; sorting vs direct consumption)"
+          "value": 10,
+          "unit": "µg/kg",
+          "tag": "assumed",
+          "evidence_grade": "D",
+          "source_id": "user_project_limits",
+          "notes": "User-specified project acceptance threshold (24 Oct 2026); not independently verified as a regulatory limit."
+        },
+        "total_aflatoxins": {
+          "value": 15,
+          "unit": "µg/kg",
+          "tag": "assumed",
+          "evidence_grade": "D",
+          "source_id": "user_project_limits",
+          "notes": "User-specified project acceptance threshold (24 Oct 2026); not independently verified as a regulatory limit."
         }
       },
       "params": {
@@ -67,7 +74,7 @@
           "notes": "lot sampling, source plan §12.1"
         }
       },
-      "notes": "Aflatoxin sits in a few hot kernels: sampling error often dominates assay error."
+      "notes": "Project thresholds apply to every material and both market scenarios. The historical 0.53 failure prior was measured at 20 ppb on feed-grade groundnut; it is not used to predict compliance at the new 10 µg/kg threshold."
     },
     {
       "id": "G2",
@@ -117,48 +124,84 @@
       "id": "G3",
       "name": "Heavy metals",
       "kind": "stop",
-      "applies_to": [],
-      "inputs": [
-        "inorganic_as_ppm",
-        "cd_ppm"
+      "applies_to": [
+        "*"
       ],
-      "rule": "Not measured -> TEST-FIRST. Measured vs limit (null limit -> TEST-FIRST).",
+      "inputs": [
+        "pb_ppm",
+        "cd_ppm",
+        "arsenic_ppm",
+        "hg_ppm"
+      ],
+      "rule": "All four measured results ≤ their project thresholds: PASS; any exceedance: FAIL; otherwise TEST-FIRST.",
       "required_tests": [
         "icp_ms_metals"
       ],
-      "flip_condition": "measured <= limit",
+      "flip_condition": "Lead ≤ 1.0; cadmium ≤ 0.1; total arsenic ≤ 0.5; mercury ≤ 0.1 mg/kg",
       "limits": {
-        "inorganic_arsenic": {
+        "lead": {
+          "value": 1,
           "unit": "mg/kg",
           "tag": "assumed",
-          "notes": "MISSING: inorganic As limit for rice-bran ingredients (FSSAI/Codex)"
+          "evidence_grade": "D",
+          "source_id": "user_project_limits",
+          "notes": "User-specified project acceptance threshold (24 Oct 2026); not independently verified as a regulatory limit."
         },
         "cadmium": {
+          "value": 0.1,
           "unit": "mg/kg",
           "tag": "assumed",
-          "notes": "MISSING: Cd limit for rice-bran ingredients (FSSAI/Codex)"
+          "evidence_grade": "D",
+          "source_id": "user_project_limits",
+          "notes": "User-specified project acceptance threshold (24 Oct 2026); not independently verified as a regulatory limit."
+        },
+        "arsenic": {
+          "value": 0.5,
+          "unit": "mg/kg",
+          "tag": "assumed",
+          "evidence_grade": "D",
+          "source_id": "user_project_limits",
+          "notes": "User-specified project acceptance threshold (24 Oct 2026); not independently verified as a regulatory limit."
+        },
+        "mercury": {
+          "value": 0.1,
+          "unit": "mg/kg",
+          "tag": "assumed",
+          "evidence_grade": "D",
+          "source_id": "user_project_limits",
+          "notes": "User-specified project acceptance threshold (24 Oct 2026); not independently verified as a regulatory limit."
         }
       },
-      "notes": "Rice bran concentrates arsenic (~1 mg/kg inorganic As reported). Add a citation before pitching."
+      "notes": "Arsenic is treated as total arsenic; mg/kg is inferred from the neighbouring metal limits supplied by the user. An inorganic-arsenic-only assay does not establish total-arsenic compliance."
     },
     {
       "id": "G4",
       "name": "Solvent residue",
       "kind": "stop",
       "applies_to": [
-        "groundnut_cake",
-        "sunflower_cake",
-        "soybean_cake"
+        "*"
       ],
       "inputs": [
+        "hexane_ppm",
         "solvent_extracted",
+        "oil_route",
         "hexane_cert"
       ],
-      "rule": "Solvent-extracted and no certificate -> TEST-FIRST.",
+      "rule": "Measured hexane ≤ 10 mg/kg: PASS; > 10: FAIL. Without a measurement, explicit non-solvent processing passes this gate; solvent or unknown processing needs a quantitative residue result.",
       "required_tests": [
         "hexane_residue_gchs"
       ],
-      "flip_condition": "certificate or measurement"
+      "flip_condition": "Hexane residue ≤ 10 mg/kg (10 ppm), or confirmed non-solvent processing",
+      "limits": {
+        "hexane_residue": {
+          "value": 10,
+          "unit": "mg/kg",
+          "tag": "assumed",
+          "evidence_grade": "D",
+          "source_id": "user_project_limits",
+          "notes": "User-specified project acceptance threshold (24 Oct 2026); not independently verified as a regulatory limit."
+        }
+      }
     },
     {
       "id": "G5",

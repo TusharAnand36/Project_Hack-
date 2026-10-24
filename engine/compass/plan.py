@@ -57,22 +57,25 @@ def _range(p: Param, unit: str):
     return summarise(np.array([lo, mid, hi]), Provenance.of(p), unit)
 
 
-def acceptance(test: LabTest, targets: dict, market: str, limit: float | None, functionality: str) -> str:
+def acceptance(
+    test: LabTest, targets: dict, market: str, limit: float | None, functionality: str, gates: dict
+) -> str:
     t = test.id
     if t.startswith("afb1"):
-        return (
-            f"AFB1 ≤ {0.5 * limit:g} ppb (half the {market} limit of {limit:g} ppb) on a composite of ≥ 10 sub-samples"
-            if limit
-            else "AFB1 below half the market limit on a composite sample"
-        )
+        total = gates["G1"].limits["total_aflatoxins"].value
+        return f"AFB1 ≤ {limit:g} µg/kg AND total B1+B2+G1+G2 ≤ {total:g} µg/kg on a representative composite (project thresholds)"
     if t == "ffa_titration":
         return "FFA ≤ 3% on stabilised material"
     if t == "peroxide_value":
         return "Peroxide value within the product spec (limit to be set with the buyer)"
     if t == "icp_ms_metals":
-        return "Inorganic As and Cd at or below the regulatory limits (limits still to be sourced)"
+        return (
+            "; ".join(f"{key} ≤ {p.value:g} {p.unit}" for key, p in gates["G3"].limits.items())
+            + " (project thresholds; total arsenic)"
+        )
     if t == "hexane_residue_gchs":
-        return "Hexane residue below the regulatory limit, or a supplier certificate"
+        p = gates["G4"].limits["hexane_residue"]
+        return f"Quantitative hexane residue ≤ {p.value:g} {p.unit}, or confirmed non-solvent processing (project threshold)"
     if t == "micro_panel":
         return "Total plate count and yeast & mould within spec; Salmonella absent"
     if t == "phytate_assay" and targets.get("phytate"):
@@ -125,7 +128,7 @@ def build(
                 sample_plan=sample,
                 cost_inr=cost,
                 turnaround_days=_range(lt.turnaround_days, "days"),
-                acceptance=acceptance(lt, targets, market, g1_limit, functionality),
+                acceptance=acceptance(lt, targets, market, g1_limit, functionality, ds.gates),
                 why=why,
             )
         )

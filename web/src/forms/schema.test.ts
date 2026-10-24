@@ -35,4 +35,32 @@ describe("form schema", () => {
     const again = toRequest(formSchema.parse(fromRequest(req)));
     expect(again).toEqual(req);
   });
+
+  it("keeps every contaminant in its labelled unit, including zero results", () => {
+    const values = {
+      ...base,
+      hexane: "10",
+      afb1: "10",
+      totalAflatoxins: "15",
+      lead: "1",
+      cadmium: "0.1",
+      arsenic: "0.5",
+      mercury: "0",
+    };
+    const req = toRequest(formSchema.parse(values));
+    expect(req.batch).toMatchObject({
+      hexane_ppm: { value: 10 },
+      afb1_ppb: { value: 10 },
+      total_aflatoxins_ppb: { value: 15 },
+      pb_ppm: { value: 1 },
+      cd_ppm: { value: 0.1 },
+      arsenic_ppm: { value: 0.5 },
+      hg_ppm: { value: 0 },
+    });
+    expect(toRequest(formSchema.parse(fromRequest(req)))).toEqual(req);
+  });
+
+  it("rejects a total aflatoxin result below its B1 component", () => {
+    expect(formSchema.safeParse({ ...base, afb1: "10", totalAflatoxins: "9" }).success).toBe(false);
+  });
 });

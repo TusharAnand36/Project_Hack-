@@ -30,6 +30,28 @@ shared pea settings, with IGST-credit duty mode as the default scenario. The Cos
 distinguishes ₹/kg of isolate from ₹/kg of protein; an explicit supplier quote overrides
 the isolate's purchase cost. Historical source documents retain their original scope.
 
+The Verdict and Diagnosis screens use these **user-specified project contaminant thresholds**:
+
+| Contaminant | Maximum |
+|---|---|
+| Hexane residue | 10 mg/kg (10 ppm) |
+| Aflatoxin B1 | 10 µg/kg (10 ppb) |
+| Total aflatoxins, B1+B2+G1+G2 | 15 µg/kg (15 ppb) |
+| Lead | 1.0 mg/kg |
+| Cadmium | 0.1 mg/kg |
+| Total arsenic | 0.5 mg/kg |
+| Mercury | 0.1 mg/kg |
+
+These are project acceptance settings, applied to all materials and both market scenarios;
+they are not independently verified regulatory limits. Arsenic is interpreted as total
+arsenic in mg/kg. Enter the batch report under **Contaminant lab results**. An entered
+value at or below its threshold passes that check; an exceedance fails the safety gate;
+missing results require testing. Both B1 and total aflatoxins must pass. A hexane
+certificate checkbox alone cannot override a high or missing quantitative result;
+confirmed non-solvent processing clears that route's hexane check without an assay.
+The older 20-ppb groundnut survey prior is not used to infer compliance at 10 ppb.
+Form labels no longer show provenance/default badges; result provenance remains available.
+
 ## What it does
 
 | Screen | Answers |

@@ -1,13 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
-import { useForm, useWatch, type FieldPath, type UseFormRegister } from "react-hook-form";
+import { useForm, type FieldPath, type UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { api } from "@/api/client";
 import { useDataFile, useDataReport, usePresets } from "@/api/hooks";
 import { ScreenHeader } from "@/components/States";
-import { TagChip } from "@/components/TagChip";
 import { VoiceInput } from "@/components/VoiceInput";
 import { Button } from "@/components/ui/button";
 import { Card, Skeleton } from "@/components/ui/card";
@@ -65,20 +64,18 @@ function Labelled({
   id,
   label,
   error,
-  chip,
   children,
 }: {
   id: string;
   label: string;
   error?: string;
-  chip?: ReactNode;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
   return (
     <div>
       <label htmlFor={id} className="flex items-center gap-2 text-sm font-medium">
-        {label} {chip}
+        {label}
       </label>
       {children}
       {error && (
@@ -90,41 +87,22 @@ function Labelled({
   );
 }
 
-function DefaultChip() {
-  const { t } = useTranslation();
-  return (
-    <span className="rounded border border-border px-1 text-[0.7rem] text-muted-foreground">
-      {t("input.default")}
-    </span>
-  );
-}
-
 function NumField({
   name,
   label,
   register,
   errors,
-  value,
-  measured,
   highlighted,
 }: {
   name: FieldPath<FormInput>;
   label: string;
   register: UseFormRegister<FormInput>;
   errors: Record<string, { message?: string } | undefined>;
-  value: unknown;
-  measured?: boolean;
   highlighted?: boolean;
 }) {
   const err = errors[name]?.message;
-  const filled = typeof value === "string" && value.trim() !== "";
   return (
-    <Labelled
-      id={name}
-      label={label}
-      error={err}
-      chip={filled ? <TagChip tag={measured ? "measured" : "assumed"} /> : <DefaultChip />}
-    >
+    <Labelled id={name} label={label} error={err}>
       <input
         id={name}
         inputMode="decimal"
@@ -174,13 +152,11 @@ export function InputScreen() {
     register,
     handleSubmit,
     reset,
-    control,
     formState: { errors },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(formSchema),
     defaultValues: request ? fromRequest(request) : EMPTY_FORM,
   });
-  const values = useWatch({ control });
   useEffect(() => {
     if (request) reset(fromRequest(request));
   }, [request, reset]);
@@ -202,16 +178,8 @@ export function InputScreen() {
   const hl = (name: string) => highlight.has(name);
 
   const errs = errors as Record<string, { message?: string } | undefined>;
-  const num = (name: FieldPath<FormInput>, label: string, measured = false) => (
-    <NumField
-      name={name}
-      label={label}
-      register={register}
-      errors={errs}
-      value={values[name as keyof FormInput]}
-      measured={measured}
-      highlighted={hl(name)}
-    />
+  const num = (name: FieldPath<FormInput>, label: string) => (
+    <NumField name={name} label={label} register={register} errors={errs} highlighted={hl(name)} />
   );
 
   return (
@@ -416,12 +384,22 @@ export function InputScreen() {
           <summary className="min-h-11 cursor-pointer py-2 font-medium">{t("input.batch")}</summary>
           <p className="mb-3 text-sm text-muted-foreground">{t("input.batchHint")}</p>
           <div className="grid gap-4 sm:grid-cols-2">
-            {num("protein", t("input.protein"), true)}
-            {num("nFactor", t("input.nFactor"), true)}
-            {num("moisture", t("input.moisture"), true)}
-            {num("ffa", t("input.ffa"), true)}
-            {num("afb1", t("input.afb1"), true)}
-            {num("phytate", t("input.phytate"), true)}
+            {num("protein", t("input.protein"))}
+            {num("nFactor", t("input.nFactor"))}
+            {num("moisture", t("input.moisture"))}
+            {num("ffa", t("input.ffa"))}
+            {num("phytate", t("input.phytate"))}
+          </div>
+          <h4 className="mb-2 mt-6 font-medium">{t("input.contaminants")}</h4>
+          <p className="mb-3 text-sm text-muted-foreground">{t("input.contaminantHint")}</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {num("hexane", t("input.hexane"))}
+            {num("afb1", t("input.afb1"))}
+            {num("totalAflatoxins", t("input.totalAflatoxins"))}
+            {num("lead", t("input.lead"))}
+            {num("cadmium", t("input.cadmium"))}
+            {num("arsenic", t("input.arsenic"))}
+            {num("mercury", t("input.mercury"))}
           </div>
           <h4 className="mb-2 mt-4 font-medium">{t("input.process")}</h4>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -433,7 +411,7 @@ export function InputScreen() {
                 <option value="solvent">{t("input.solvent")}</option>
               </select>
             </Labelled>
-            {num("hours", t("input.hours"), true)}
+            {num("hours", t("input.hours"))}
             <TriField
               name="stabilised"
               label={t("input.stabilised")}

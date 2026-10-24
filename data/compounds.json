@@ -143,6 +143,50 @@
       ],
       "unit": "% dry basis",
       "notes": "Reference compound (sesame); not in core by-products."
+    },
+    {
+      "id": "total_aflatoxins",
+      "name": "Total aflatoxins (B1+B2+G1+G2)",
+      "roles": [
+        "safety",
+        "toxic"
+      ],
+      "gate": "G1",
+      "unit": "µg/kg",
+      "assay_test_id": "afb1_hplc"
+    },
+    {
+      "id": "lead",
+      "name": "Lead",
+      "roles": [
+        "safety",
+        "toxic"
+      ],
+      "gate": "G3",
+      "unit": "mg/kg",
+      "assay_test_id": "icp_ms_metals"
+    },
+    {
+      "id": "arsenic",
+      "name": "Arsenic (total)",
+      "roles": [
+        "safety",
+        "toxic"
+      ],
+      "gate": "G3",
+      "unit": "mg/kg",
+      "assay_test_id": "icp_ms_metals"
+    },
+    {
+      "id": "mercury",
+      "name": "Mercury",
+      "roles": [
+        "safety",
+        "toxic"
+      ],
+      "gate": "G3",
+      "unit": "mg/kg",
+      "assay_test_id": "icp_ms_metals"
     }
   ]
 }

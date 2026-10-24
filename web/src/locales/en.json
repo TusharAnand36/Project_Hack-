@@ -252,7 +252,7 @@
     "nFactor": "N factor used for protein",
     "moisture": "Moisture (%)",
     "ffa": "Free fatty acids (%)",
-    "afb1": "Aflatoxin B1 (ppb)",
+    "afb1": "Aflatoxin B1 (µg/kg)",
     "phytate": "Phytic acid (% dry basis)",
     "process": "Process context",
     "oilRoute": "Oil-extraction route",
@@ -278,7 +278,8 @@
       "max100": "Must be 100 or less",
       "max10": "Must be 10 or less",
       "nFactor": "Usually between 5 and 6.5",
-      "proximate": "Protein + moisture is over 100%"
+      "proximate": "Protein + moisture is over 100%",
+      "aflatoxinTotal": "Total aflatoxins cannot be less than aflatoxin B1."
     },
     "yes": "Yes",
     "no": "No",
@@ -286,7 +287,15 @@
     "choose": "Choose…",
     "presetEdit": "Edit in form",
     "peaResearch": "Pea research reference · 80.2% protein. The study explores gellan gum and salt for functional performance. Purchase price comes from the shared market model, because the paper reports no price.",
-    "peaPaper": "Read the research paper ↗"
+    "peaPaper": "Read the research paper ↗",
+    "contaminants": "Contaminant lab results",
+    "contaminantHint": "Enter the quantitative results from the batch report. Blank results require testing. µg/kg = ppb; mg/kg = ppm. Arsenic means total arsenic.",
+    "hexane": "Hexane residue (mg/kg)",
+    "totalAflatoxins": "Total aflatoxins: B1+B2+G1+G2 (µg/kg)",
+    "lead": "Lead (mg/kg)",
+    "cadmium": "Cadmium (mg/kg)",
+    "arsenic": "Arsenic, total (mg/kg)",
+    "mercury": "Mercury (mg/kg)"
   },
   "verdict": {
     "summary": "The decision for this batch and use, with how sure the engine is and why.",
@@ -588,5 +597,11 @@
     "sources": "Sources",
     "notes": "Every number carries a label: M measured, P published, A assumed, S synthetic.",
     "noChain": "No chain is ranked (a safety gate failed)."
+  },
+  "safety": {
+    "title": "Project contaminant limits",
+    "policy": "User-specified project acceptance thresholds, applied to every material and both market scenarios. These are not independently verified regulatory limits.",
+    "status": "Check result",
+    "units": "µg/kg = ppb. mg/kg = ppm. Arsenic is total arsenic; the supplied 0.5 limit is interpreted as mg/kg."
   }
 }

@@ -27,9 +27,9 @@ def test_gt1_groundnut_unmeasured_aflatoxin(ds):
     r = run(ds, byproduct="groundnut_cake", application="beverage", market="domestic")
     g1 = gate(r, "G1")
     assert g1.state is GateState.TEST_FIRST
-    assert g1.prior_p_fail.value == pytest.approx(0.53) and g1.prior_p_fail.tag.value == "published"
+    assert g1.prior_p_fail is None  # historical 20-ppb data is not a prior for the new 10-ppb limit
     assert r.verdict.label is not VerdictLabel.GO
-    assert any("prior P(fail) = 0.53" in x for x in r.verdict.reasons)
+    assert any("not measured" in x for x in r.verdict.reasons)
 
 
 def test_gt2_groundnut_aflatoxin_60_ppb(ds):
@@ -103,8 +103,13 @@ def test_same_seed_same_result(ds):
     assert a.model_dump() == b.model_dump()
 
 
-def test_measured_aflatoxin_below_half_limit_passes(ds):
-    r = run(ds, byproduct="groundnut_cake", application="beverage", batch={"afb1_ppb": {"value": 10}})
+def test_measured_aflatoxins_at_project_limits_pass(ds):
+    r = run(
+        ds,
+        byproduct="groundnut_cake",
+        application="beverage",
+        batch={"afb1_ppb": {"value": 10}, "total_aflatoxins_ppb": {"value": 15}},
+    )
     assert gate(r, "G1").state is GateState.PASS
 
 
