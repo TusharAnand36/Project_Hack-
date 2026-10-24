@@ -126,6 +126,8 @@ export interface components {
             chains: components["schemas"]["Chain"][];
             pea: components["schemas"]["Pea"];
             voi: components["schemas"]["Voi"] | null;
+            readiness: components["schemas"]["Readiness"] | null;
+            picks: components["schemas"]["Picks"] | null;
             plan: components["schemas"]["Plan"] | null;
             /** Limitations */
             limitations: string[];
@@ -281,16 +283,22 @@ export interface components {
          * @enum {string}
          */
         DutyMode: "full_stack_44" | "full_stack_49" | "bcd_only_igst_credited_22";
-        /** Evppi */
+        /**
+         * Evppi
+         * @description Expected value of perfectly learning one input (or one test's group of inputs).
+         */
         Evppi: {
             /** Input */
             input: string;
+            /** Label */
+            label: string;
             value: components["schemas"]["Value"];
             /** Test Id */
             test_id: string | null;
-            evsi: components["schemas"]["Value"] | null;
-            cost_inr: components["schemas"]["Value"] | null;
-            roi: components["schemas"]["Value"] | null;
+            /** Grade */
+            grade: string | null;
+            /** Note */
+            note: string | null;
         };
         /** Gate */
         Gate: {
@@ -406,6 +414,15 @@ export interface components {
              */
             is_stub: boolean;
         };
+        /** MustDemonstrate */
+        MustDemonstrate: {
+            /** Item */
+            item: string;
+            /** Test Id */
+            test_id: string | null;
+            /** Acceptance */
+            acceptance: string;
+        };
         /** PctMeasurement */
         PctMeasurement: {
             /** Value */
@@ -450,6 +467,17 @@ export interface components {
             /** Usd Inr */
             usd_inr?: number | null;
         };
+        /** Picks */
+        Picks: {
+            /** Best Expected Value */
+            best_expected_value: string | null;
+            /** Safest */
+            safest: string | null;
+            /** Cheapest Viable */
+            cheapest_viable: string | null;
+            /** Ties */
+            ties: string[][];
+        };
         /** Plan */
         Plan: {
             /** Tests */
@@ -457,6 +485,8 @@ export interface components {
             /** Timeline */
             timeline: components["schemas"]["PlanMonth"][];
             budget_inr: components["schemas"]["Budget"];
+            /** Pilot Partner */
+            pilot_partner: string;
         };
         /** PlanMonth */
         PlanMonth: {
@@ -471,14 +501,20 @@ export interface components {
         PlanTest: {
             /** Test Id */
             test_id: string;
+            /** Name */
+            name: string;
             /** Method */
             method: string;
             /** Replicates */
             replicates: number;
+            /** Sample Plan */
+            sample_plan: string;
             cost_inr: components["schemas"]["Range"] | null;
             turnaround_days: components["schemas"]["Range"] | null;
             /** Acceptance */
             acceptance: string;
+            /** Why */
+            why: string;
         };
         /** Process */
         Process: {
@@ -519,6 +555,25 @@ export interface components {
             /** Alpha */
             alpha: number | null;
         };
+        /** Readiness */
+        Readiness: {
+            grade: components["schemas"]["DecisionGrade"];
+            /** Checks */
+            checks: components["schemas"]["ReadinessCheck"][];
+            /** Must Demonstrate */
+            must_demonstrate: components["schemas"]["MustDemonstrate"][];
+        };
+        /** ReadinessCheck */
+        ReadinessCheck: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Passed */
+            passed: boolean | null;
+            value: components["schemas"]["Value"] | null;
+            threshold: components["schemas"]["Value"] | null;
+        };
         /** Scenario */
         Scenario: {
             /** Id */
@@ -546,6 +601,37 @@ export interface components {
             max_offflavour_index?: number | null;
             /** Max Phytate Pct */
             max_phytate_pct?: number | null;
+        };
+        /** TestValue */
+        TestValue: {
+            /** Test Id */
+            test_id: string;
+            /** Name */
+            name: string;
+            /** Inputs */
+            inputs: string[];
+            evppi: components["schemas"]["Value"];
+            evsi: components["schemas"]["Value"];
+            /** Evsi Is Upper Bound */
+            evsi_is_upper_bound: boolean;
+            cost_inr: components["schemas"]["Value"] | null;
+            roi: components["schemas"]["Value"] | null;
+            /**
+             * Worth It
+             * @enum {string}
+             */
+            worth_it: "yes" | "no" | "unknown";
+        };
+        /**
+         * Utility
+         * @description Decision utility, stated on screen (source plan §12.9).
+         */
+        Utility: {
+            campaign_kg_cake: components["schemas"]["Value"];
+            /** Failure Cost Basis */
+            failure_cost_basis: string;
+            /** Description */
+            description: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -591,11 +677,17 @@ export interface components {
         VerdictLabel: "GO" | "NO-GO" | "TEST-FIRST";
         /** Voi */
         Voi: {
+            utility: components["schemas"]["Utility"];
+            e_now: components["schemas"]["Value"];
             evpi: components["schemas"]["Value"];
             /** Evppi */
             evppi: components["schemas"]["Evppi"][];
+            /** Tests */
+            tests: components["schemas"]["TestValue"][];
             /** Recommended Test */
             recommended_test: string | null;
+            /** Recommendation */
+            recommendation: string;
             /**
              * Note
              * @default

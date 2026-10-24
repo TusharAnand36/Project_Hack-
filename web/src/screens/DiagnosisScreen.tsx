@@ -29,7 +29,7 @@ export function DiagnosisScreen({ data }: { data: AnalyzeResponse }) {
         {table ? t("diagnosis.showChart") : t("diagnosis.showTable")}
       </Button>
       {!table && <ExceedanceBars rows={rows} />}
-      <div className={table ? "overflow-x-auto" : "mt-4 overflow-x-auto"}>
+      <div className={table ? "relative overflow-x-auto" : "relative mt-4 overflow-x-auto"} tabIndex={0}>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-start">

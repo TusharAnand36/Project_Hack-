@@ -17,22 +17,32 @@ from compass import cost as costm
 from compass import diagnosis as diag
 from compass import effects as fx
 from compass import gates as gatesm
+from compass import pareto as paretom
 from compass import pea as peam
+from compass import plan as planm
+from compass import readiness as readm
+from compass import voi as voim
 from compass.contract import (
     AnalyzeRequest,
     AnalyzeResponse,
     Chain,
     Criterion,
     DecisionGrade,
+    Evppi,
     GateState,
     Meta,
+    MustDemonstrate,
     Pea,
+    Picks,
     Scenario,
+    TestValue,
+    Utility,
     Verdict,
     VerdictLabel,
+    Voi,
 )
 from compass.data import Dataset
-from compass.models import Grade, Param, Tag
+from compass.models import Dist, Grade, Param, Tag
 from compass.montecarlo import ChainEval, Context, evaluate
 from compass.sampling import Provenance, Sampler, as_value, combine, summarise
 
@@ -136,6 +146,20 @@ def build_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sample
             s.add_value(f"pea.{key}", overrides[key], p.unit, USER)
         else:
             s.add(f"pea.{key}", p)
+    # unmeasured aflatoxin: the gate outcome is a Bernoulli(prior) input (§12.9)
+    g1 = ds.gates.get("G1")
+    if g1 and bp.id in g1.applies_to and req.batch.afb1_ppb is None:
+        prior = g1.params["prior_p_fail"]
+        s.add(
+            "gate.G1.u",
+            Param(
+                dist=Dist(type="uniform", low=0.0, high=1.0),
+                unit="probability",
+                tag=prior.tag,
+                grade=prior.grade,
+                source_id=prior.source_id,
+            ),
+        )
     return s
 
 
@@ -285,20 +309,149 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
                     continue
             evals.append(ev)
     total = len(evals)
-    evals.sort(key=lambda e: (-float(e.spec.mean()), float(np.median(e.cost.per_kg_protein)), len(e.seq)))
-    capped = len(evals) > max_chains
-    evals = evals[:max_chains]
-
     not_viable = _cfg(ds, "readiness", "not_viable_p_spec_max")
+
+    # ---- decision utility per draw (§12.9); gates without a prior are not modelled
+    gate_pass = np.ones(n, dtype=bool)
+    gate_prov: list[Provenance] = []
+    g1 = next((o for o in outcomes if o.gate.id == "G1"), None)
+    if "gate.G1.u" in d and g1 is not None and g1.gate.prior_p_fail is not None:
+        gate_pass = d["gate.G1.u"].values >= g1.gate.prior_p_fail.value
+        gate_prov = [g1.prior_prov] if g1.prior_prov else []
+    campaign = _cfg(ds, "decision", "campaign_kg_cake")
+    utilities: dict[int, np.ndarray] = {}
+    for i, ev in enumerate(evals):
+        if ev.margin is not None:
+            utilities[i] = voim.utility(
+                campaign, ev.retained * p0, ev.margin, ev.cost.per_kg_raw, ev.spec & gate_pass
+            )
+    eu = {i: float(u.mean()) for i, u in utilities.items()}
+
+    # rank by E[U] when it is computable for every chain, else by P(spec) then cost (rule 3)
+    order = list(range(len(evals)))
+    if evals and len(eu) == len(evals):
+        order.sort(key=lambda i: (float(evals[i].spec.mean()) < not_viable, -eu[i]))
+    else:
+        order.sort(
+            key=lambda i: (
+                -float(evals[i].spec.mean()),
+                float(np.median(evals[i].cost.per_kg_protein)),
+                len(evals[i].seq),
+            )
+        )
+    order = order[:max_chains]
+    capped = total > max_chains
+    evals = [evals[i] for i in order]
+    utilities = {k: utilities[i] for k, i in enumerate(order) if i in utilities}
+
     chain_models = [_chain_model(ev, i + 1, ds, app, landed, not_viable) for i, ev in enumerate(evals)]
+    for i, ch in enumerate(chain_models):
+        if i in utilities:
+            prov = combine([evals[i].provs["margin"], *gate_prov])
+            ch.e_utility = as_value(float(utilities[i].mean()), prov, "INR per decision")
     _badges(chain_models, not_viable)
+
+    # ---- Pareto and named picks (§12.10)
+    objs = [
+        paretom.Objectives(
+            ch.id,
+            ev.retained,
+            ev.cost.per_kg_protein if ch.cost_inr_per_kg_protein else None,
+            ev.ofi,
+            float(ev.spec.mean()),
+            ch.e_utility.value if ch.e_utility else None,
+        )
+        for ev, ch in zip(evals, chain_models, strict=False)
+    ]
+    picks = None
+    viable_objs = [o for o in objs if o.p_spec >= not_viable]  # compare only chains that can meet the spec
+    if objs:
+        on_front = paretom.front(viable_objs) if viable_objs else set()
+        for ch in chain_models:
+            ch.pareto = ch.id in on_front
+        named = paretom.picks(objs, targets["cost"][0] if targets["cost"] else None, not_viable)
+        picks = Picks(**named, ties=paretom.ties(viable_objs, on_front))
+        for key, cid in named.items():
+            ch = next((c for c in chain_models if c.id == cid), None)
+            if ch and key not in ch.badges:
+                ch.badges.insert(0, key)
+
+    # ---- value of information (§12.9)
+    voi_block, drivers = None, []
+    if evals and len(utilities) == len(evals):
+        voi_block, drivers = _voi(d, ds, bp, evals, utilities, campaign, gate_prov)
 
     # ---- pea block
     best = evals[0] if evals else None
     pea_block = _pea_block(req, ds, d, pea_in, pea_prov, landed, best, duty_p)
 
-    # ---- verdict (§12.14)
+    # ---- verdict (§12.14) and decision readiness (§12.11)
     verdict = _verdict(outcomes, overall, chain_models, best, landed, pea_block, not_viable, issues)
+    stop = [o for o in outcomes if o.gate.kind == "stop" or o.gate.state is GateState.FAIL]
+    top = next(
+        (c for c in chain_models if c.p_spec.value >= not_viable), chain_models[0] if chain_models else None
+    )
+    must = [
+        MustDemonstrate(
+            item=label,
+            test_id=tid,
+            acceptance=(
+                planm.acceptance(
+                    ds.lab_tests[tid], targets, req.market, _g1_limit(outcomes), app.functionality
+                )
+                if tid in ds.lab_tests
+                else "market or price data, not a lab test"
+            ),
+        )
+        for label, tid, _ in drivers[:5]
+    ]
+    if top is not None:
+        must += [
+            MustDemonstrate(
+                item=f"transferred evidence: {x}",
+                test_id=None,
+                acceptance="repeat the effect on this by-product at bench scale",
+            )
+            for x in top.transferred
+        ]
+    readiness = readm.grade(
+        readm.Inputs(
+            gates_pass=all(o.gate.state is GateState.PASS for o in stop),
+            any_gate_fail=overall is GateState.FAIL,
+            best_p_spec=top.p_spec.value if top else None,
+            best_margin_p50=top.margin_vs_pea.p50 if top and top.margin_vs_pea else None,
+            evpi=voi_block.evpi.value if voi_block else None,
+            e_now=voi_block.e_now.value if voi_block else None,
+            driver_grades=[g for _, _, g in drivers],
+            must_demonstrate=must,
+        ),
+        {k: p.value for k, p in ds.costs.readiness.items()},
+    )
+    verdict.grade = readiness.grade
+    if (
+        voi_block
+        and chain_models
+        and all(c.e_utility is not None and c.e_utility.value < 0 for c in chain_models)
+    ):
+        verdict.reasons.append(
+            "On current evidence every chain has a negative expected value, so selling as feed is the best option "
+            "today; the recommended test is what could change that."
+        )
+
+    # ---- validation plan (§12.13)
+    plan_tests = [
+        (t, f"required by {o.gate.id}")
+        for o in stop
+        if o.gate.state is GateState.TEST_FIRST
+        for t in ds.gates[o.gate.id].required_tests
+    ]
+    if voi_block:
+        plan_tests = [
+            (t.test_id, f"value of information ₹{t.evsi.value:,.0f}")
+            for t in voi_block.tests
+            if t.evsi.value > 0
+        ] + plan_tests
+    plan = planm.build(ds, plan_tests, targets, req.market, _g1_limit(outcomes), app.functionality)
 
     # ---- limitations
     no_data = sorted({x for ev in evals for x in ev.no_data})
@@ -318,6 +471,15 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
         )
     for o in outcomes:
         limitations += [r for r in o.gate.reasons if r.startswith("oil-extraction route not given")]
+    if voi_block is None and evals:
+        limitations.append(
+            "Value of information not computable: the utility needs our cost (raw material price missing)."
+        )
+    elif voi_block is not None:
+        limitations.append(
+            "Value of information uses lower-bound costs, so margins (and test values) may be optimistic; "
+            "gates without a prior (all but G1) are not part of the utility."
+        )
     limitations.append("This is a proof of concept; the next step is laboratory validation.")
 
     return AnalyzeResponse(
@@ -337,6 +499,10 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
         issues=issues,
         chains=chain_models,
         pea=pea_block,
+        voi=voi_block,
+        readiness=readiness,
+        picks=picks,
+        plan=plan,
         limitations=limitations,
         disclaimer=DISCLAIMER,
     )
@@ -554,3 +720,130 @@ def _verdict(
         if i.kind in ("no_treatment_needed", "protein_density_gap", "diagnosis_blocked"):
             reasons.append(i.message)
     return Verdict(label=label, grade=grade, p_go=p_go, p_go_note=note, reasons=reasons, actions=actions)
+
+
+def _g1_limit(outcomes) -> float | None:
+    g = next((o for o in outcomes if o.gate.id == "G1"), None)
+    return g.gate.limit.value if g and g.gate.limit else None
+
+
+def _input_label(key: str, ds: Dataset) -> tuple[str, str | None]:
+    """Human label and the lab test that informs an input (None = market data, not a lab test)."""
+    parts = key.split(".")
+    if key == "gate.G1.u":
+        return "aflatoxin B1 status of this lot (G1)", "afb1_hplc"
+    if key == "bp.protein":
+        return "protein content of the cake", "proximate_kjeldahl"
+    if key == "nf":
+        return "nitrogen-to-protein factor", "proximate_kjeldahl"
+    if key == "bp.price":
+        return "by-product price", None
+    if parts[0] == "cmp":
+        c = ds.compounds[parts[1]]
+        return f"{c.name.lower()} baseline", c.assay_test_id
+    if parts[0] == "flav":
+        return f"{parts[1]} off-flavour baseline", "sensory_panel"
+    if parts[0] == "pea":
+        return f"pea isolate {parts[1].replace('_', ' ')}", None
+    if parts[0] == "t":
+        t = ds.treatments[parts[1]]
+        what = parts[2]
+        if what.startswith("e"):
+            e = t.effects[int(what[1:])]
+            return (
+                f"{t.id}: {ds.compounds[e.compound].name.lower()} reduction",
+                ds.compounds[e.compound].assay_test_id,
+            )
+        names = {"m": "mass yield", "rho": "protein retention", "pi": "purity", "rec": "recovery"}
+        if what in names:
+            return f"{t.id}: {names[what]}", "proximate_kjeldahl"
+    return key, None
+
+
+def _voi(
+    d, ds: Dataset, bp, evals, utilities, campaign: float, gate_prov
+) -> tuple[Voi, list[tuple[str, str | None, str | None]]]:
+    U = voim.with_feed(np.column_stack([utilities[i] for i in range(len(evals))]))
+    prov = combine([ev.provs["margin"] for ev in evals] + list(gate_prov))
+    unit = "INR per decision"
+    e0, ev_pi = voim.e_now(U), voim.evpi(U)
+    bins = int(_cfg(ds, "engine", "evppi_bins"))
+    singles = []
+    for key, s in d.items():
+        if s.values is None or s.dist is None or np.ptp(s.values) == 0:
+            continue
+        if not (
+            key.startswith(("cmp.", "t.", "pea.", "flav.", "gate."))
+            or key in ("bp.protein", "nf", "bp.price")
+        ):
+            continue
+        label, test = _input_label(key, ds)
+        grade = "D" if s.prov.status == "no_data" else (s.prov.grade.value if s.prov.grade else None)
+        singles.append((key, label, test, grade, voim.evppi_bins(s.values, U, bins)))
+    singles.sort(key=lambda x: -x[4])
+    evppi = [
+        Evppi(input=k, label=lab, value=as_value(v, prov, unit), test_id=t, grade=g)
+        for k, lab, t, g, v in singles[:8]
+    ]
+    groups: dict[str, list[str]] = {}
+    for k, _, t, _, _ in singles:
+        if t:
+            groups.setdefault(t, []).append(k)
+    tests: list[voim.TestEval] = []
+    meta = {}
+    for tid, keys in groups.items():
+        X = np.column_stack([d[k].values for k in keys])
+        val = voim.evppi_bins(X[:, 0], U, bins) if len(keys) == 1 else voim.evppi_regression(X, U)
+        lt = ds.lab_tests.get(tid)
+        cv = lt.cv.value if lt and lt.cv.value is not None else None
+        rels = [r for r in (voim.reliability(d[k].values, cv) for k in keys) if r is not None]
+        r = min(rels) if rels else None
+        cost = None
+        if lt and (lt.cost_inr.value is not None or lt.cost_inr.dist is not None):
+            cost = (
+                lt.cost_inr.value
+                if lt.cost_inr.value is not None
+                else (lt.cost_inr.dist.low + lt.cost_inr.dist.high) / 2
+            )
+        te = voim.TestEval(tid, val, val * (r if r is not None else 1.0), r is None, cost)
+        tests.append(te)
+        meta[tid] = keys
+    tests.sort(key=lambda t: -t.evsi)
+    rec, why = voim.recommend(tests, ev_pi)
+    tv = [
+        TestValue(
+            test_id=t.test_id,
+            name=ds.lab_tests[t.test_id].name if t.test_id in ds.lab_tests else t.test_id,
+            inputs=[_input_label(k, ds)[0] for k in meta[t.test_id]],
+            evppi=as_value(t.evppi, prov, unit),
+            evsi=as_value(t.evsi, prov, unit),
+            evsi_is_upper_bound=t.upper_bound,
+            cost_inr=None if t.cost is None else as_value(t.cost, Provenance(Tag.assumed, Grade.D), "INR"),
+            roi=None if t.roi is None else as_value(t.roi, prov, "ratio"),
+            worth_it=t.worth_it,
+        )
+        for t in tests
+    ]
+    if rec:
+        best = next(t for t in tv if t.test_id == rec)
+        why = f"{best.name}: {why} Expected value ₹{best.evsi.value:,.0f} per decision."
+    utility = Utility(
+        campaign_kg_cake=as_value(campaign, Provenance.of(ds.costs.decision["campaign_kg_cake"]), "kg"),
+        failure_cost_basis="variable cost of the campaign (our cost per kg raw cake × campaign size)",
+        description=(
+            "U = campaign protein × margin vs pea if the spec is met and G1 passes; otherwise minus the "
+            "campaign's variable cost. Selling as feed = 0. All in ₹ per decision (one pilot campaign)."
+        ),
+    )
+    voi = Voi(
+        utility=utility,
+        e_now=as_value(e0, prov, unit),
+        evpi=as_value(ev_pi, prov, unit),
+        evppi=evppi,
+        tests=tv,
+        recommended_test=rec,
+        recommendation=why,
+        note="EVSI = EVPPI × reliability; without an assay CV it is an upper bound (perfect test).",
+    )
+    drivers = [(lab, t, g) for _, lab, t, g, v in singles if v > 0]
+    return voi, drivers

@@ -264,28 +264,86 @@ class Pea(_Strict):
 
 
 class Evppi(_Strict):
+    """Expected value of perfectly learning one input (or one test's group of inputs)."""
+
     input: str
-    value: Value
+    label: str
+    value: Value  # INR per decision
     test_id: str | None
-    evsi: Value | None
+    grade: str | None = None
+    note: str | None = None
+
+
+class TestValue(_Strict):
+    test_id: str
+    name: str
+    inputs: list[str]
+    evppi: Value
+    evsi: Value
+    evsi_is_upper_bound: bool
     cost_inr: Value | None
     roi: Value | None
+    worth_it: Literal["yes", "no", "unknown"]
+
+
+class Utility(_Strict):
+    """Decision utility, stated on screen (source plan §12.9)."""
+
+    campaign_kg_cake: Value
+    failure_cost_basis: str
+    description: str
 
 
 class Voi(_Strict):
+    utility: Utility
+    e_now: Value
     evpi: Value
     evppi: list[Evppi]
+    tests: list[TestValue]
     recommended_test: str | None
+    recommendation: str
     note: str = ""
+
+
+class ReadinessCheck(_Strict):
+    id: str
+    label: str
+    passed: bool | None  # None = not computable
+    value: Value | None = None
+    threshold: Value | None = None
+
+
+class MustDemonstrate(_Strict):
+    item: str
+    test_id: str | None
+    acceptance: str
+
+
+class Readiness(_Strict):
+    grade: DecisionGrade
+    checks: list[ReadinessCheck]
+    must_demonstrate: list[MustDemonstrate]
+
+
+class Picks(_Strict):
+    best_expected_value: str | None
+    safest: str | None
+    cheapest_viable: str | None
+    ties: list[list[str]] = Field(
+        default_factory=list
+    )  # pairs "statistically tied" (neither dominates w.p. >= 0.8)
 
 
 class PlanTest(_Strict):
     test_id: str
+    name: str
     method: str
     replicates: int
+    sample_plan: str
     cost_inr: Range | None
     turnaround_days: Range | None
     acceptance: str
+    why: str
 
 
 class PlanMonth(_Strict):
@@ -305,6 +363,7 @@ class Plan(_Strict):
     tests: list[PlanTest]
     timeline: list[PlanMonth]
     budget_inr: Budget
+    pilot_partner: str
 
 
 class AnalyzeResponse(_Strict):
@@ -315,7 +374,9 @@ class AnalyzeResponse(_Strict):
     issues: list[Issue] = Field(default_factory=list)
     chains: list[Chain]
     pea: Pea
-    voi: Voi | None = None  # Phase 5
-    plan: Plan | None = None  # Phase 5
+    voi: Voi | None = None  # null when utility is not computable (e.g. price missing)
+    readiness: Readiness | None = None
+    picks: Picks | None = None
+    plan: Plan | None = None
     limitations: list[str]
     disclaimer: str

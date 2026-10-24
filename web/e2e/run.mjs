@@ -22,7 +22,6 @@ const check = (ok, msg) => {
 async function axe(page, label) {
   await page.addScriptTag({ path: AXE });
   const res = await page.evaluate(async () =>
-    // eslint-disable-next-line no-undef
     (await axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] })).violations.map((v) => ({
       id: v.id,
       impact: v.impact,
@@ -60,6 +59,14 @@ try {
   for (const tab of ["chains", "cost", "next"]) {
     await page.getByTestId(`tab-${tab}`).click();
     await page.waitForTimeout(300);
+    if (tab === "next") {
+      const rec = await page.getByTestId("recommended-test").innerText();
+      check(/₹[\d,]+/.test(rec), `next: recommended test with a ₹ value (${rec.split("\n")[1]})`);
+      check(await page.getByTestId("readiness").isVisible(), "next: readiness grade and checklist shown");
+      check(await page.getByTestId("plan").isVisible(), "next: validation plan shown");
+    }
+    const wide = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+    check(!wide, `no horizontal page scroll at 360 px (${tab})`);
     await axe(page, `${tab} (360)`);
     await page.screenshot({ path: `${SHOTS}/360-${tab}.png`, fullPage: true });
   }

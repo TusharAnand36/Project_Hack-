@@ -274,3 +274,55 @@ The gate, verdict and pea-parity paths have their inputs. The cost model and the
 - The preset 1 batch values are synthetic (as the source plan §8.3 example), so every derived number in that preset is correctly tagged S.
 - The chains table shows all chains (up to 60); there is no paging.
 - Lighthouse mobile has not been run yet (Phase 8).
+
+## Phase 5: Decision intelligence
+
+**Implemented**
+- **Full Monte Carlo:** 8,192 Sobol draws (seeded), joint P(spec) per chain. An unmeasured aflatoxin gate (G1) is sampled as Bernoulli(prior) on its own Sobol dimension, so P(GO) = P(gate pass) × P(spec | pass).
+- **`voi.py`** (§12.9):
+  - Utility per draw: campaign protein × margin vs pea if the spec is met and G1 passes; otherwise minus the campaign's variable cost. Feed = 0. Shown on screen with the 10 t campaign.
+  - E_now, EVPI, and EVPPI by 25 equal-count bins (one bin per value for discrete inputs) for every uncertain input.
+  - For a test that informs several inputs (e.g. proximate/Kjeldahl → protein, yields, retention): a regression estimator on a quadratic basis.
+  - EVSI = EVPPI × R, with R from the assay CV. Without a CV, R = 1 and EVSI is flagged as an upper bound. ROI = EVSI / cost.
+  - Recommendation: argmax ROI subject to EVSI > cost. Honest alternatives: "No test is worth its cost: decide now", "No measurement can change the decision", or, while lab costs are missing, the highest-EVSI test with "buy it if a quote is below ₹X".
+- **`pareto.py`** (§12.10): non-dominated chains on median retention, cost and OFI (when computable), among viable chains only (P(spec) ≥ 0.2). P(A dominates B) is computed on common draws, and pairs are "statistically tied" below 0.8. Three named picks: best expected value, safest, cheapest viable.
+- **Ranking** (rule 3): by E[U] when it is computable for every chain; never recommends a chain with P(spec) < 0.2.
+- **`readiness.py`** (§12.11): decision-grade / hypothesis-grade / not viable from config thresholds, shown on screen. The checklist covers gates, P(spec) ≥ 0.80, EVPI/|E_now| ≤ 0.15 and ≥ 70% of the top-5 drivers graded A/B. "What must be demonstrated" lists the top value drivers (test + acceptance criterion) and the top chain's transferred evidence.
+- **`plan.py`** (§12.13): rule-based validation plan.
+  - Tests come from the top value-of-information tests and the outstanding gate tests, each with method, replicates (≥ 3), sample plan (composite of ≥ 10 sub-samples for AFB1), cost and turnaround from `lab_tests.json`, an acceptance criterion derived from targets and limits, and why it's included.
+  - The 6-month timeline follows the plan's template, with a pilot-partner type.
+  - Budget is "not computable" while lab costs are missing.
+- **UI:**
+  - Next screen: test-to-buy-first card, EVPPI tornado (top 8, with table toggle), all tests ranked (EVSI, cost, ROI), decision assumptions (campaign, E_now, EVPI), readiness grade and checklist, gate tests, validation plan, timeline, budget, partner, limitations.
+  - Chains screen: Pareto scatter (cost × retention, dot size = P(spec), P10–P90 bars both ways, front outlined, ties listed), an E[U] column, and pick badges.
+- **Bug fixed** (since Phase 4): table scroll wrappers weren't positioned, so screen-reader-only spans inside them widened the page to 561 px on phones. Wrappers are now positioned and keyboard-focusable (axe `scrollable-region-focusable`). The e2e test now checks there is no horizontal scroll at 360 px on every screen.
+- Engine version 0.3.0.
+
+**Preset 1 (groundnut → beverage) now says**
+- TEST-FIRST, hypothesis-grade.
+- Every chain has negative E[U] today, so selling as feed is best (E_now = 0).
+- EVPI ≈ ₹3.15 lakh per decision.
+- Top value drivers: aflatoxin status of this lot (₹1.45 lakh), then the protein retention of the first step (no data), then the AE-IEP trypsin-inhibitor partition. Pea price research ranks low (≈ ₹15,000).
+- Test to buy first: proximate + Kjeldahl, i.e. bench yield and retention (EVSI ≈ ₹1.52 lakh, upper bound), narrowly ahead of AFB1 HPLC. Lab costs aren't in the dataset, so the card says to buy if a quote is below that value.
+
+**Tested**
+- pytest: 78 passing. New tests cover:
+  - EVPPI ≥ 0 and ≤ EVPI (hypothesis); an informative input carries the value and pure noise ≈ 0; a binary input recovers EVPI exactly.
+  - Reliability; recommendation rules, including "no test is worth its cost" and "decide now".
+  - Readiness rules: decision-grade, hypothesis-grade (low P(spec), weak evidence), not viable (gate fail, P(spec) < 0.2, negative margin).
+  - Preset 1 recommends a test with EVSI > 0, readiness, plan and picks.
+  - Monotonicity: a higher pea price never lowers P(margin > 0).
+  - Measuring AFB1 removes its value of information.
+  - Regression snapshot of preset 1 (`tests/golden/preset1.json`).
+- GT1–GT6 still pass.
+- vitest: 9 passing. e2e: all checks pass, including the next-screen cards, no horizontal scroll at 360 px on every screen, and axe 0 serious/critical.
+- `/analyze` for preset 1: about 0.5 s over HTTP at 8,192 draws (target < 3 s), so no draw reduction was needed for sliders.
+- Initial JS 147 KB gzipped.
+
+**Exit gate: met.** GT1–GT6 pass; J1 runs to "Next step" with a recommended test (₹ value), readiness label and checklist.
+
+**Known limits**
+- Test values use lower-bound costs, so margins are optimistic. Gates without a prior (G2–G5) are not in the utility.
+- EVSI is an upper bound while assay CVs are missing. ROI and "worth it" need lab quotes in `lab_tests.json`.
+- Almond cake has no price, so its utility and value of information are "not computable"; enter a price on the Input screen.
+- Pareto colour by OFI is omitted because OFI is not computable without sensory data.

@@ -201,7 +201,9 @@
       "transferred": "transferred",
       "cost_lower_bound": "cost lower bound",
       "cost_not_computable": "cost not computable",
-      "not_recommended": "not recommended"
+      "not_recommended": "not recommended",
+      "best_expected_value": "best expected value",
+      "safest": "safest"
     },
     "criterion": {
       "protein": "Protein ≥ target",
@@ -209,7 +211,13 @@
       "tia": "Trypsin inhibitor ≤ limit",
       "ofi": "Off-flavour ≤ limit",
       "cost": "Cost ≤ target"
-    }
+    },
+    "eu": "E[U] (₹/decision)",
+    "paretoTitle": "Pareto view: cost vs protein retained (viable chains)",
+    "paretoSummary": "{{n}} viable chains; {{front}} on the Pareto front (outlined). Dot size = P(spec); bars = P10–P90.",
+    "paretoNone": "No viable chain has a computable cost, so the Pareto chart is not shown.",
+    "onFront": "on Pareto front",
+    "ties": "Statistically tied (neither dominates with P ≥ 0.8): {{pairs}}"
   },
   "cost": {
     "summary": "Our cost per kg protein for the top chain against imported pea isolate, landed in India.",
@@ -252,12 +260,58 @@
     "chartSummary": "Ours {{ours}} vs pea {{pea}} per kg protein (P50)."
   },
   "next": {
-    "summary": "What to do next. Value-of-information ranking arrives in the next phase.",
+    "summary": "The one test worth buying first, how ready the decision is, and a validation plan.",
     "title": "Next step",
+    "readiness": "Decision readiness",
+    "grades": {
+      "decision-grade": "decision-grade",
+      "hypothesis-grade": "hypothesis-grade",
+      "not viable": "not viable"
+    },
+    "threshold": "threshold",
+    "notComputable": "not computable",
+    "mustDemonstrate": "What must be demonstrated",
+    "recommended": "Test to buy first",
+    "noTest": "No measurement is worth buying: decide now.",
+    "evsi": "Expected value of the test",
+    "upperBound": "upper bound (assay CV unknown, perfect test assumed)",
+    "cost": "Lab cost",
+    "costMissing": "not in the dataset yet: buy it if a quote is below {{evsi}}",
+    "worth": {
+      "yes": "worth its cost",
+      "no": "not worth its cost",
+      "unknown": "cost unknown"
+    },
+    "evppiTitle": "Which uncertainty matters most (EVPPI, ₹ per decision)",
+    "evppiSummary": "Top driver: {{label}}. Price inputs rank low when they barely change the decision.",
+    "tests": "All tests ranked",
+    "test": "Test",
+    "inputs": "Informs",
+    "roi": "Value ÷ cost",
+    "utility": "Decision assumptions (shown so you can challenge them)",
+    "campaign": "Decision volume (one pilot campaign of cake)",
+    "eNow": "Expected value of the best option now",
+    "evpi": "Value of perfect information (EVPI)",
+    "notAvailable": "Value of information is not computable: our cost needs the by-product price. Enter it on the Input screen.",
+    "plan": "Validation plan",
+    "method": "Method",
+    "replicates": "Replicates",
+    "samplePlan": "Sample plan",
+    "turnaround": "Turnaround (days)",
+    "acceptance": "Acceptance criterion",
+    "why": "Why",
+    "timeline": "6-month pilot timeline",
+    "months": "Months",
+    "work": "Work",
+    "output": "Output",
+    "budget": "Test budget",
+    "partner": "First pilot partner",
     "actions": "Tests the safety gates require",
     "none": "No gate test is outstanding.",
     "limitations": "Limitations of this analysis",
-    "pending": "The one-test-to-buy-first ranking (EVPPI) is computed in Phase 5."
+    "showTable": "Show as table",
+    "showChart": "Show as chart",
+    "input": "Input"
   },
   "state": {
     "loading": "Analysing…",

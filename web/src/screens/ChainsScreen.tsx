@@ -2,13 +2,14 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { AnalyzeResponse, Chain, Range } from "@/api/client";
+import { ParetoScatter } from "@/charts/ParetoScatter";
 import { Num } from "@/components/Num";
 import { ScreenHeader } from "@/components/States";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/store";
 
-type Col = "rank" | "retained" | "protein" | "cost" | "pspec";
+type Col = "rank" | "retained" | "protein" | "cost" | "pspec" | "eu";
 
 const sortValue: Record<Col, (c: Chain) => number> = {
   rank: (c) => c.rank,
@@ -16,6 +17,7 @@ const sortValue: Record<Col, (c: Chain) => number> = {
   protein: (c) => c.protein_pct_final.p50,
   cost: (c) => c.cost_inr_per_kg_protein?.p50 ?? Number.POSITIVE_INFINITY,
   pspec: (c) => c.p_spec.value,
+  eu: (c) => c.e_utility?.value ?? Number.NEGATIVE_INFINITY,
 };
 
 function Steps({ chain }: { chain: Chain }) {
@@ -58,7 +60,7 @@ function ChainDetail({ chain, data }: { chain: Chain; data: AnalyzeResponse }) {
       <h3 className="font-medium">
         {t("chains.detail")}: <Steps chain={chain} />
       </h3>
-      <div className="overflow-x-auto">
+      <div className="relative overflow-x-auto" tabIndex={0}>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border">
@@ -127,6 +129,27 @@ function ChainDetail({ chain, data }: { chain: Chain; data: AnalyzeResponse }) {
   );
 }
 
+function Pareto({ data }: { data: AnalyzeResponse }) {
+  const { t } = useTranslation();
+  const viable = data.chains.filter((c) => c.p_spec.value >= 0.2 && c.cost_inr_per_kg_protein);
+  const ties = data.picks?.ties ?? [];
+  if (viable.length === 0)
+    return <p className="mb-4 text-sm text-muted-foreground">{t("chains.paretoNone")}</p>;
+  return (
+    <Card className="mb-4">
+      <p className="mb-2 text-sm" aria-live="polite">
+        {t("chains.paretoSummary", { n: viable.length, front: viable.filter((c) => c.pareto).length })}
+      </p>
+      <ParetoScatter chains={viable} title={t("chains.paretoTitle")} />
+      {ties.length > 0 && (
+        <p className="mt-2 text-xs text-muted-foreground">
+          {t("chains.ties", { pairs: ties.map((p) => p.join(" ≈ ")).join("; ") })}
+        </p>
+      )}
+    </Card>
+  );
+}
+
 export function ChainsScreen({ data }: { data: AnalyzeResponse }) {
   const { t } = useTranslation();
   const selected = useStore((s) => s.selectedChain);
@@ -166,6 +189,7 @@ export function ChainsScreen({ data }: { data: AnalyzeResponse }) {
   return (
     <section>
       <ScreenHeader title={t("chains.title")} summary={t("chains.summary")} />
+      {data.chains.length > 0 && <Pareto data={data} />}
       {data.chains.length === 0 ? (
         <Card>{t("chains.none")}</Card>
       ) : (
@@ -173,7 +197,7 @@ export function ChainsScreen({ data }: { data: AnalyzeResponse }) {
           <p className="mb-2 text-sm text-muted-foreground">
             {t("chains.shown", { shown: data.meta.chains_shown, total: data.meta.chains_total })}
           </p>
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto" tabIndex={0}>
             <table className="w-full min-w-[44rem] text-sm">
               <thead>
                 <tr className="border-b border-border">
@@ -191,6 +215,7 @@ export function ChainsScreen({ data }: { data: AnalyzeResponse }) {
                   </th>
                   {header("cost", t("chains.cost"))}
                   {header("pspec", t("chains.pSpec"))}
+                  {header("eu", t("chains.eu"))}
                   <th scope="col" className="text-start">
                     {t("chains.badges")}
                   </th>
@@ -230,6 +255,7 @@ export function ChainsScreen({ data }: { data: AnalyzeResponse }) {
                     <td>
                       <Num v={c.p_spec} />
                     </td>
+                    <td>{c.e_utility ? <Num v={c.e_utility} /> : "—"}</td>
                     <td className="text-xs">{c.badges.map((b) => t(`chains.badge.${b}`)).join(", ")}</td>
                   </tr>
                 ))}
