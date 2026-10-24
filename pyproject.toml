@@ -5,7 +5,7 @@ requires-python = ">=3.11"
 
 [tool.pytest.ini_options]
 pythonpath = ["engine", "."]
-testpaths = ["engine/tests", "api/tests"]
+testpaths = ["engine/compass/tests", "api/tests"]
 
 [tool.black]
 line-length = 110

@@ -32,7 +32,7 @@ export interface paths {
         put?: never;
         /**
          * Analyze
-         * @description STUB. Returns the response shape filled with placeholder values (tag: synthetic).
+         * @description STUB. Validates the §8.3 payload and returns the §14.2 shape filled with placeholders.
          */
         post: operations["analyze_analyze_post"];
         delete?: never;
@@ -45,19 +45,32 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /**
-         * AnalyzeRequest
-         * @description Phase 0 request shape. Fields are refined against the source plan in Phase 3.
-         */
+        /** AnalyzeRequest */
         AnalyzeRequest: {
-            /** Byproduct Id */
-            byproduct_id: string;
-            /** Application Id */
-            application_id: string;
-            /** Scale Tonnes Per Day */
-            scale_tonnes_per_day?: number | null;
-            /** Constraints */
-            constraints?: string[];
+            /** Byproduct */
+            byproduct: string;
+            /** Application */
+            application: string;
+            targets?: components["schemas"]["Targets"];
+            /**
+             * Market
+             * @default domestic
+             * @enum {string}
+             */
+            market: "domestic" | "export_EU";
+            /** Scale Kg Day */
+            scale_kg_day?: number | null;
+            constraints?: components["schemas"]["Constraints"];
+            batch?: components["schemas"]["Batch"];
+            process?: components["schemas"]["Process"];
+            /** Claims */
+            claims?: string[];
+            pea?: components["schemas"]["PeaInputs"];
+            /**
+             * Co Product Credit Inr Per Kg Protein
+             * @default 0
+             */
+            co_product_credit_inr_per_kg_protein: number;
             /**
              * Seed
              * @default 42
@@ -66,23 +79,45 @@ export interface components {
         };
         /** AnalyzeResponse */
         AnalyzeResponse: {
-            /** Is Stub */
-            is_stub: boolean;
-            /** Engine Version */
-            engine_version: string;
-            /** Dataset Version */
-            dataset_version: string;
+            meta: components["schemas"]["Meta"];
             verdict: components["schemas"]["Verdict"];
             /** Gates */
             gates: components["schemas"]["Gate"][];
             /** Diagnosis */
-            diagnosis: components["schemas"]["CompoundDiagnosis"][];
+            diagnosis: components["schemas"]["Diagnosis"][];
             /** Chains */
             chains: components["schemas"]["Chain"][];
-            pea: components["schemas"]["PeaComparison"];
-            recommended_test: components["schemas"]["RecommendedTest"] | null;
+            pea: components["schemas"]["Pea"];
+            voi: components["schemas"]["Voi"];
+            plan: components["schemas"]["Plan"];
+            /** Limitations */
+            limitations: string[];
             /** Disclaimer */
             disclaimer: string;
+        };
+        /**
+         * Batch
+         * @description Own batch data. Any field left null falls back to a labelled dataset default.
+         */
+        Batch: {
+            protein_pct?: components["schemas"]["PctMeasurement"] | null;
+            moisture_pct?: components["schemas"]["PctMeasurement"] | null;
+            fat_pct?: components["schemas"]["PctMeasurement"] | null;
+            ffa_pct?: components["schemas"]["PctMeasurement"] | null;
+            ash_pct?: components["schemas"]["PctMeasurement"] | null;
+            phytate_pct?: components["schemas"]["PctMeasurement"] | null;
+            afb1_ppb?: components["schemas"]["Measurement"] | null;
+            tia?: components["schemas"]["Measurement"] | null;
+            inorganic_as_ppm?: components["schemas"]["Measurement"] | null;
+            cd_ppm?: components["schemas"]["Measurement"] | null;
+        };
+        /** Budget */
+        Budget: {
+            /** Low */
+            low: number;
+            /** High */
+            high: number;
+            tag: components["schemas"]["Tag"];
         };
         /** Chain */
         Chain: {
@@ -90,19 +125,73 @@ export interface components {
             id: string;
             /** Steps */
             steps: string[];
-            /** Tier */
-            tier: string;
+            /**
+             * Tier
+             * @enum {string}
+             */
+            tier: "flour" | "treated_flour" | "concentrate" | "isolate";
             protein_retained: components["schemas"]["Range"];
-            cost_per_kg_protein: components["schemas"]["Range"];
-            p_spec: components["schemas"]["Range"];
+            protein_pct_final: components["schemas"]["Range"];
+            ofi: components["schemas"]["Range"];
+            cost_inr_per_kg_protein: components["schemas"]["Range"];
+            kwh_per_kg_protein: components["schemas"]["Range"];
+            l_water_per_kg_protein: components["schemas"]["Range"];
+            p_spec: components["schemas"]["Value"];
+            e_utility: components["schemas"]["Value"];
+            /** Transferred */
+            transferred?: string[];
+            /**
+             * Pareto
+             * @default false
+             */
+            pareto: boolean;
+            /** Badges */
+            badges?: string[];
         };
-        /** CompoundDiagnosis */
-        CompoundDiagnosis: {
-            /** Compound Id */
-            compound_id: string;
+        /** Constraints */
+        Constraints: {
+            /** Exclude Treatments */
+            exclude_treatments?: string[];
+            /** Equipment */
+            equipment?: string[];
+            /** Electricity Inr Per Kwh */
+            electricity_inr_per_kwh?: number | null;
+            /** Water Inr Per M3 */
+            water_inr_per_m3?: number | null;
+            /** Labour Inr Per H */
+            labour_inr_per_h?: number | null;
+        };
+        /**
+         * DecisionGrade
+         * @enum {string}
+         */
+        DecisionGrade: "decision-grade" | "hypothesis-grade" | "not viable";
+        /** Diagnosis */
+        Diagnosis: {
+            /** Compound */
+            compound: string;
+            tolerance: components["schemas"]["Value"] | null;
             level: components["schemas"]["Range"];
-            tolerance?: components["schemas"]["Range"] | null;
-            p_exceed: components["schemas"]["Range"];
+            p_exceed: components["schemas"]["Value"] | null;
+            /** Rank */
+            rank: number;
+        };
+        /**
+         * DutyMode
+         * @description Import duty stack on HS 3504 (sources disagree; source plan §12.8).
+         * @enum {string}
+         */
+        DutyMode: "full_stack_44" | "full_stack_49" | "bcd_only_igst_credited_22";
+        /** Evppi */
+        Evppi: {
+            /** Input */
+            input: string;
+            value: components["schemas"]["Value"];
+            /** Test Id */
+            test_id: string | null;
+            evsi: components["schemas"]["Value"] | null;
+            cost_inr: components["schemas"]["Value"] | null;
+            roi: components["schemas"]["Value"] | null;
         };
         /** Gate */
         Gate: {
@@ -111,16 +200,19 @@ export interface components {
             /** Name */
             name: string;
             state: components["schemas"]["GateState"];
+            prior_p_fail?: components["schemas"]["Value"] | null;
             /** Required Test */
             required_test?: string | null;
-            /** What Flips It */
-            what_flips_it?: string | null;
+            /** Flip Condition */
+            flip_condition?: string | null;
+            /** Flags */
+            flags?: string[];
         };
         /**
          * GateState
          * @enum {string}
          */
-        GateState: "PASS" | "TEST_FIRST" | "FAIL";
+        GateState: "PASS" | "TEST-FIRST" | "FAIL";
         /**
          * Grade
          * @description Evidence grade, A (strongest) to D (weakest).
@@ -141,12 +233,115 @@ export interface components {
             /** Dataset Version */
             dataset_version: string;
         };
-        /** PeaComparison */
-        PeaComparison: {
-            pea_landed_per_kg_protein: components["schemas"]["Range"];
-            ours_per_kg_protein: components["schemas"]["Range"];
-            /** Duty Mode */
-            duty_mode: string;
+        /**
+         * Measurement
+         * @description A user-entered batch measurement. Defaults to tag `measured`.
+         */
+        Measurement: {
+            /** Value */
+            value: number;
+            /** @default measured */
+            tag: components["schemas"]["Tag"];
+            /** N Factor */
+            n_factor?: number | null;
+        };
+        /** Meta */
+        Meta: {
+            /** Seed */
+            seed: number;
+            /** N Draws */
+            n_draws: number;
+            /** Engine Version */
+            engine_version: string;
+            /** Dataset Version */
+            dataset_version: string;
+            /**
+             * Is Stub
+             * @default false
+             */
+            is_stub: boolean;
+        };
+        /** PctMeasurement */
+        PctMeasurement: {
+            /** Value */
+            value: number;
+            /** @default measured */
+            tag: components["schemas"]["Tag"];
+            /** N Factor */
+            n_factor?: number | null;
+        };
+        /** Pea */
+        Pea: {
+            duty_mode: components["schemas"]["DutyMode"];
+            landed_inr_per_kg_protein: components["schemas"]["Range"];
+            break_even_base_usd_per_kg: components["schemas"]["Range"];
+            /** Scenarios */
+            scenarios: components["schemas"]["Scenario"][];
+        };
+        /**
+         * PeaInputs
+         * @description Imported pea isolate parameters. null = dataset default (labelled).
+         */
+        PeaInputs: {
+            /** Base Usd Per Kg */
+            base_usd_per_kg?: number | null;
+            /** Protein Pct */
+            protein_pct?: number | null;
+            /** Freight Pct */
+            freight_pct?: number | null;
+            /** @default full_stack_44 */
+            duty_mode: components["schemas"]["DutyMode"];
+            /** Usd Inr */
+            usd_inr?: number | null;
+        };
+        /** Plan */
+        Plan: {
+            /** Tests */
+            tests: components["schemas"]["PlanTest"][];
+            /** Timeline */
+            timeline: components["schemas"]["PlanMonth"][];
+            budget_inr: components["schemas"]["Budget"];
+        };
+        /** PlanMonth */
+        PlanMonth: {
+            /** Months */
+            months: string;
+            /** Work */
+            work: string;
+            /** Output */
+            output: string;
+        };
+        /** PlanTest */
+        PlanTest: {
+            /** Test Id */
+            test_id: string;
+            /** Method */
+            method: string;
+            /** Replicates */
+            replicates: number;
+            cost_inr: components["schemas"]["Range"];
+            turnaround_days: components["schemas"]["Range"];
+            /** Acceptance */
+            acceptance: string;
+        };
+        /** Process */
+        Process: {
+            /** Oil Route */
+            oil_route?: ("cold_pressed" | "expeller" | "solvent") | null;
+            /** Hours Since Milling */
+            hours_since_milling?: number | null;
+            /** Stabilised */
+            stabilised?: boolean | null;
+            /** Storage */
+            storage?: ("hygienic" | "open") | null;
+            /** Food Grade Supply */
+            food_grade_supply?: boolean | null;
+            /** Sorted Food Grade Supply */
+            sorted_food_grade_supply?: boolean | null;
+            /** Solvent Extracted */
+            solvent_extracted?: boolean | null;
+            /** Hexane Cert */
+            hexane_cert?: boolean | null;
         };
         /**
          * Range
@@ -168,14 +363,11 @@ export interface components {
             /** Alpha */
             alpha?: number | null;
         };
-        /** RecommendedTest */
-        RecommendedTest: {
-            /** Test Id */
-            test_id: string;
+        /** Scenario */
+        Scenario: {
             /** Name */
             name: string;
-            cost_inr: components["schemas"]["Range"];
-            evsi_inr?: components["schemas"]["Range"] | null;
+            landed: components["schemas"]["Range"];
         };
         /**
          * Tag
@@ -183,6 +375,17 @@ export interface components {
          * @enum {string}
          */
         Tag: "measured" | "published" | "assumed" | "synthetic";
+        /** Targets */
+        Targets: {
+            /** Min Protein Pct */
+            min_protein_pct?: number | null;
+            /** Max Cost Inr Per Kg Protein */
+            max_cost_inr_per_kg_protein?: number | null;
+            /** Max Offflavour Index */
+            max_offflavour_index?: number | null;
+            /** Max Phytate Pct */
+            max_phytate_pct?: number | null;
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -192,10 +395,27 @@ export interface components {
             /** Error Type */
             type: string;
         };
+        /**
+         * Value
+         * @description A single engine output number (e.g. a probability), with provenance.
+         */
+        Value: {
+            /** Value */
+            value: number;
+            /** Unit */
+            unit?: string | null;
+            tag: components["schemas"]["Tag"];
+            grade?: components["schemas"]["Grade"] | null;
+            /** Source Ids */
+            source_ids?: string[];
+            /** Alpha */
+            alpha?: number | null;
+        };
         /** Verdict */
         Verdict: {
             label: components["schemas"]["VerdictLabel"];
-            p_go: components["schemas"]["Range"];
+            grade: components["schemas"]["DecisionGrade"];
+            p_go: components["schemas"]["Value"];
             /** Reasons */
             reasons: string[];
         };
@@ -203,7 +423,20 @@ export interface components {
          * VerdictLabel
          * @enum {string}
          */
-        VerdictLabel: "GO" | "NO_GO" | "TEST_FIRST";
+        VerdictLabel: "GO" | "NO-GO" | "TEST-FIRST";
+        /** Voi */
+        Voi: {
+            evpi: components["schemas"]["Value"];
+            /** Evppi */
+            evppi: components["schemas"]["Evppi"][];
+            /** Recommended Test */
+            recommended_test: string | null;
+            /**
+             * Note
+             * @default
+             */
+            note: string;
+        };
     };
     responses: never;
     parameters: never;

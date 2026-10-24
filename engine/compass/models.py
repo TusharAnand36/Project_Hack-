@@ -9,7 +9,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 
 
 class Tag(str, Enum):
@@ -31,7 +31,10 @@ class Grade(str, Enum):
 
 
 class _Strict(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+
+
+Conditions = dict[str, str | float | int | bool | None]
 
 
 class Dist(_Strict):
@@ -54,16 +57,23 @@ class Dist(_Strict):
 
 
 class Param(_Strict):
-    """One input parameter: a point value or a distribution, with provenance."""
+    """One input parameter: a point value or a distribution, with provenance.
+
+    Both `value` and `dist` may be missing (null); that means "no data yet" and
+    the row must appear in DATA_TODO.md (source plan §11.1). The data files use
+    the source plan's names `evidence_grade` / `applicability`; both spellings load.
+    """
 
     value: float | None = None
     dist: Dist | None = None
     unit: str
     tag: Tag
-    grade: Grade | None = None
+    grade: Grade | None = Field(default=None, validation_alias=AliasChoices("grade", "evidence_grade"))
     source_id: str | None = None
-    alpha: float | None = Field(default=None, ge=0.0, le=1.0)
-    conditions: str | None = None
+    alpha: float | None = Field(
+        default=None, ge=0.0, le=1.0, validation_alias=AliasChoices("alpha", "applicability")
+    )
+    conditions: Conditions | None = None
     notes: str | None = None
 
     @model_validator(mode="after")
@@ -71,6 +81,17 @@ class Param(_Strict):
         if self.value is not None and self.dist is not None:
             raise ValueError("give either value or dist, not both")
         return self
+
+
+class Value(_Strict):
+    """A single engine output number (e.g. a probability), with provenance."""
+
+    value: float
+    unit: str | None = None
+    tag: Tag
+    grade: Grade | None = None
+    source_ids: list[str] = Field(default_factory=list)
+    alpha: float | None = Field(default=None, ge=0.0, le=1.0)
 
 
 class Range(_Strict):

@@ -5,22 +5,24 @@ For one food by-product batch and one target use, Upcycle Compass answers **Go /
 > **Proof of concept, Hack the Fork 2026 (Problem Statement 2).** Decision support only. Not a regulatory approval. Confirm FSSAI classification and limits.
 > **Phase 0 status:** the `/analyze` endpoint is a **stub**. All of its numbers are placeholders tagged `synthetic`.
 
-## Layout
+## Layout (source plan §10.2)
 
 ```
-engine/compass/   pure-Python decision engine (no web/LLM imports)
-  models.py       Tag, Grade, Dist, Param, Range: the provenance types
-engine/tests/
-api/main.py       FastAPI app: /health, /analyze (stub)
-api/llm/          Bedrock client, prompts, number verifier (Phase 6)
-api/tests/
-data/             JSON datasets (Phase 1); data/_staging/ for unreviewed rows
-web/              React 18 + TS + Vite + Tailwind (shadcn/ui conventions)
-  src/api/types.ts  generated from the API's OpenAPI schema; do not edit by hand
-  src/locales/    en.json, hi.json (i18n keys; no hard-coded UI strings)
-  public/snapshots/ offline precomputed results (Phase 8)
-scripts/gen_types.sh
-docs/             plans and phase reports
+data/                       JSON datasets (Phase 1); schema/ for exported schemas; _staging/ for unreviewed rows
+engine/compass/             pure-Python decision engine (no web/LLM imports)
+  models.py                 Tag, Grade, Dist, Param, Value, Range: provenance types
+  sampling.py effects.py flavour.py cost.py pea.py gates.py diagnosis.py chains.py
+  montecarlo.py voi.py pareto.py readiness.py update.py plan.py   (placeholders until their phase)
+  tests/
+api/main.py                 FastAPI app: /health, /analyze (stub)
+api/schemas.py              request (§8.3) and response (§14.2) contract
+api/routers/  api/llm/      routers; Bedrock client, prompts, number verifier (Phase 6)
+web/                        React 18 + TS + Vite + Tailwind (shadcn/ui conventions)
+  src/api/types.ts          generated from the API's OpenAPI schema; do not edit by hand
+  src/locales/              en.json, hi.json (i18n keys; no hard-coded UI strings)
+  public/snapshots/         offline precomputed results (Phase 8)
+scripts/                    gen_types.sh, build_snapshots.py, extract_rows_from_abstracts.py
+docs/                       source plan, website plan, phase reports
 ```
 
 ## Run
@@ -44,4 +46,4 @@ make lint
 - Every numeric output carries a `tag`, plus `grade`, `source_ids` and `alpha` where they apply.
 - After any API change, run `make types` and commit the regenerated `types.ts`.
 
-See `docs/Website_Development_Master_Plan.md` for the phase plan and `docs/PHASES.md` for progress.
+The science and engine specification is `docs/Upcycle_Compass_Master_Prompt.md` (source plan v2). See `docs/Website_Development_Master_Plan.md` for the phase plan and `docs/PHASES.md` for progress.
