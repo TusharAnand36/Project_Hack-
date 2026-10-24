@@ -1,8 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, type ReactNode } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect, useState, type ReactNode } from "react";
 import { useForm, useWatch, type FieldPath, type UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { api } from "@/api/client";
 import { useDataFile, useDataReport, usePresets } from "@/api/hooks";
 import { ScreenHeader } from "@/components/States";
 import { TagChip } from "@/components/TagChip";
@@ -17,6 +19,7 @@ import {
   type FormOutput,
 } from "@/forms/schema";
 import { formatValue } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { useStore } from "@/store";
 
 interface Named {
@@ -25,6 +28,37 @@ interface Named {
 }
 
 const field = "mt-1 block min-h-11 w-full rounded-md border border-border bg-background px-3";
+const HL = "ring-2 ring-warn";
+
+/** /parse-text field names -> form field names (for highlighting what the reader filled). */
+const PARSED_TO_FORM: Record<string, string> = {
+  byproduct: "byproduct",
+  application: "application",
+  market: "market",
+  scale_kg_day: "scale",
+  raw_price_inr_per_kg: "price",
+  "targets.min_protein_pct": "minProtein",
+  "targets.max_cost_inr_per_kg_protein": "maxCost",
+  "batch.protein_pct": "protein",
+  "batch.moisture_pct": "moisture",
+  "batch.afb1_ppb": "afb1",
+  "batch.ffa_pct": "ffa",
+  "batch.phytate_pct": "phytate",
+  "process.oil_route": "oilRoute",
+  "process.stabilised": "stabilised",
+  "process.hours_since_milling": "hours",
+  "constraints.no_solvents": "noSolvents",
+};
+const BATCH_FIELDS = new Set([
+  "protein",
+  "moisture",
+  "afb1",
+  "ffa",
+  "phytate",
+  "oilRoute",
+  "stabilised",
+  "hours",
+]);
 
 function Labelled({
   id,
@@ -71,6 +105,7 @@ function NumField({
   errors,
   value,
   measured,
+  highlighted,
 }: {
   name: FieldPath<FormInput>;
   label: string;
@@ -78,6 +113,7 @@ function NumField({
   errors: Record<string, { message?: string } | undefined>;
   value: unknown;
   measured?: boolean;
+  highlighted?: boolean;
 }) {
   const err = errors[name]?.message;
   const filled = typeof value === "string" && value.trim() !== "";
@@ -91,7 +127,7 @@ function NumField({
       <input
         id={name}
         inputMode="decimal"
-        className={field}
+        className={cn(field, highlighted && HL)}
         aria-invalid={!!err}
         aria-describedby={err ? `${name}-error` : undefined}
         {...register(name)}
@@ -104,15 +140,17 @@ function TriField({
   name,
   label,
   register,
+  highlighted,
 }: {
   name: FieldPath<FormInput>;
   label: string;
   register: UseFormRegister<FormInput>;
+  highlighted?: boolean;
 }) {
   const { t } = useTranslation();
   return (
     <Labelled id={name} label={label}>
-      <select id={name} className={field} {...register(name)}>
+      <select id={name} className={cn(field, highlighted && HL)} {...register(name)}>
         <option value="unknown">{t("input.unknown")}</option>
         <option value="yes">{t("input.yes")}</option>
         <option value="no">{t("input.no")}</option>
@@ -146,6 +184,22 @@ export function InputScreen() {
     if (request) reset(fromRequest(request));
   }, [request, reset]);
 
+  const { i18n } = useTranslation();
+  const [text, setText] = useState("");
+  const [highlight, setHighlight] = useState<Set<string>>(new Set());
+  const [batchOpen, setBatchOpen] = useState(false);
+  const parse = useMutation({
+    mutationFn: () => api.parseText(text, null, i18n.language),
+    onSuccess: (r) => {
+      if (!r.payload) return;
+      reset(fromRequest(r.payload));
+      const hl = new Set(r.changed.map((k) => PARSED_TO_FORM[k]).filter(Boolean));
+      setHighlight(hl);
+      if ([...hl].some((f) => BATCH_FIELDS.has(f))) setBatchOpen(true);
+    },
+  });
+  const hl = (name: string) => highlight.has(name);
+
   const errs = errors as Record<string, { message?: string } | undefined>;
   const num = (name: FieldPath<FormInput>, label: string, measured = false) => (
     <NumField
@@ -155,6 +209,7 @@ export function InputScreen() {
       errors={errs}
       value={values[name as keyof FormInput]}
       measured={measured}
+      highlighted={hl(name)}
     />
   );
 
@@ -185,6 +240,40 @@ export function InputScreen() {
         ))}
       </div>
 
+      <Card className="mt-6">
+        <label htmlFor="describe" className="font-medium">
+          {t("ai.describe")}
+        </label>
+        <p id="describe-hint" className="text-sm text-muted-foreground">
+          {t("ai.describeHint")}
+        </p>
+        <textarea
+          id="describe"
+          rows={3}
+          maxLength={2000}
+          className="mt-2 block w-full rounded-md border border-border bg-background p-3"
+          aria-describedby="describe-hint"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          data-testid="describe"
+        />
+        <Button
+          type="button"
+          variant="outline"
+          className="mt-2"
+          disabled={text.trim().length < 3 || parse.isPending}
+          onClick={() => parse.mutate()}
+          data-testid="fill-form"
+        >
+          {parse.isPending ? t("ai.filling") : t("ai.fill")}
+        </Button>
+        <p role="status" aria-live="polite" className="mt-2 text-sm" data-testid="parse-message">
+          {parse.data?.payload && t("ai.filled", { provider: parse.data.provider })}
+          {parse.data && !parse.data.payload && <span className="text-warn">{parse.data.message}</span>}
+          {parse.isError && <span className="text-warn">{t("ai.failed")}</span>}
+        </p>
+      </Card>
+
       <form
         className="mt-6 space-y-6"
         noValidate
@@ -196,7 +285,7 @@ export function InputScreen() {
         </h3>
         <div className="grid gap-4 sm:grid-cols-2">
           <Labelled id="byproduct" label={t("input.byproduct")} error={errs.byproduct?.message}>
-            <select id="byproduct" className={field} {...register("byproduct")}>
+            <select id="byproduct" className={cn(field, hl("byproduct") && HL)} {...register("byproduct")}>
               <option value="">{t("input.choose")}</option>
               {byproducts.data?.byproducts.map((b) => (
                 <option key={b.id} value={b.id}>
@@ -206,7 +295,11 @@ export function InputScreen() {
             </select>
           </Labelled>
           <Labelled id="application" label={t("input.application")} error={errs.application?.message}>
-            <select id="application" className={field} {...register("application")}>
+            <select
+              id="application"
+              className={cn(field, hl("application") && HL)}
+              {...register("application")}
+            >
               <option value="">{t("input.choose")}</option>
               {applications.data?.applications.map((a) => (
                 <option key={a.id} value={a.id}>
@@ -216,7 +309,7 @@ export function InputScreen() {
             </select>
           </Labelled>
           <Labelled id="market" label={t("input.market")}>
-            <select id="market" className={field} {...register("market")}>
+            <select id="market" className={cn(field, hl("market") && HL)} {...register("market")}>
               <option value="domestic">{t("input.marketDomestic")}</option>
               <option value="export_EU">{t("input.marketEU")}</option>
             </select>
@@ -245,7 +338,12 @@ export function InputScreen() {
         <fieldset>
           <legend className="mb-2 font-medium">{t("input.constraints")}</legend>
           <label className="flex min-h-11 items-center gap-2">
-            <input type="checkbox" className="h-5 w-5" {...register("noSolvents")} /> {t("input.noSolvents")}
+            <input
+              type="checkbox"
+              className={cn("h-5 w-5", hl("noSolvents") && HL)}
+              {...register("noSolvents")}
+            />{" "}
+            {t("input.noSolvents")}
           </label>
           <p className="mt-2 text-sm font-medium">{t("input.equipment")}</p>
           <div className="flex flex-wrap gap-x-4">
@@ -266,7 +364,11 @@ export function InputScreen() {
           </div>
         </fieldset>
 
-        <details className="rounded-lg border border-border p-4">
+        <details
+          className="rounded-lg border border-border p-4"
+          open={batchOpen}
+          onToggle={(e) => setBatchOpen((e.target as HTMLDetailsElement).open)}
+        >
           <summary className="min-h-11 cursor-pointer py-2 font-medium">{t("input.batch")}</summary>
           <p className="mb-3 text-sm text-muted-foreground">{t("input.batchHint")}</p>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -280,7 +382,7 @@ export function InputScreen() {
           <h4 className="mb-2 mt-4 font-medium">{t("input.process")}</h4>
           <div className="grid gap-4 sm:grid-cols-2">
             <Labelled id="oilRoute" label={t("input.oilRoute")}>
-              <select id="oilRoute" className={field} {...register("oilRoute")}>
+              <select id="oilRoute" className={cn(field, hl("oilRoute") && HL)} {...register("oilRoute")}>
                 <option value="">{t("input.oilRouteUnknown")}</option>
                 <option value="cold_pressed">{t("input.cold_pressed")}</option>
                 <option value="expeller">{t("input.expeller")}</option>
@@ -288,11 +390,36 @@ export function InputScreen() {
               </select>
             </Labelled>
             {num("hours", t("input.hours"), true)}
-            <TriField name="stabilised" label={t("input.stabilised")} register={register} />
-            <TriField name="foodGrade" label={t("input.foodGrade")} register={register} />
-            <TriField name="hygienic" label={t("input.hygienic")} register={register} />
-            <TriField name="sorted" label={t("input.sorted")} register={register} />
-            <TriField name="hexaneCert" label={t("input.hexaneCert")} register={register} />
+            <TriField
+              name="stabilised"
+              label={t("input.stabilised")}
+              register={register}
+              highlighted={hl("stabilised")}
+            />
+            <TriField
+              name="foodGrade"
+              label={t("input.foodGrade")}
+              register={register}
+              highlighted={hl("foodGrade")}
+            />
+            <TriField
+              name="hygienic"
+              label={t("input.hygienic")}
+              register={register}
+              highlighted={hl("hygienic")}
+            />
+            <TriField
+              name="sorted"
+              label={t("input.sorted")}
+              register={register}
+              highlighted={hl("sorted")}
+            />
+            <TriField
+              name="hexaneCert"
+              label={t("input.hexaneCert")}
+              register={register}
+              highlighted={hl("hexaneCert")}
+            />
           </div>
         </details>
 

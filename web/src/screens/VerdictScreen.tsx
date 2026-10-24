@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import type { AnalyzeResponse } from "@/api/client";
+import { AiSummary } from "@/components/AiSummary";
 import { Num } from "@/components/Num";
 import { ScreenHeader } from "@/components/States";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { useStore } from "@/store";
 export function VerdictScreen({ data }: { data: AnalyzeResponse }) {
   const { t } = useTranslation();
   const setScreen = useStore((s) => s.setScreen);
+  const request = useStore((s) => s.request);
   const v = data.verdict;
   return (
     <section>
@@ -50,6 +52,12 @@ export function VerdictScreen({ data }: { data: AnalyzeResponse }) {
         )}
         <p className="text-sm text-muted-foreground">{t("verdict.disclaimer")}</p>
       </Card>
+
+      {request && (
+        <div className="mt-4">
+          <AiSummary request={request} />
+        </div>
+      )}
 
       <h3 className="mb-2 mt-6 font-medium">{t("verdict.gates")}</h3>
       <div className="grid gap-3 md:grid-cols-2">

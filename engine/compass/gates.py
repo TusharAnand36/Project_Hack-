@@ -91,7 +91,12 @@ def g1_aflatoxin(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
     prior = g.params["prior_p_fail"]
     p_fail = prior.value
     prov = Provenance.of(prior)
-    if req.process.sorted_food_grade_supply:
+    screen = next((e for e in req.evidence if e.input == "gate.G1" and e.p_fail is not None), None)
+    if screen is not None:  # an ELISA screen updated the prior (§12.12); HPLC still decides the gate
+        p_fail = screen.p_fail
+        prov = Provenance(screen.tag, screen.grade, prov.source_ids, None, "derived")
+        out.reasons.append(screen.note or "prior updated by a screening test")
+    elif req.process.sorted_food_grade_supply:
         mult = g.params["sorted_supply_odds_multiplier"]
         p_fail = odds_to_p(p_to_odds(p_fail) * mult.value)
         prov = Provenance(Tag.assumed, Grade.D, prov.source_ids, None, "derived")
@@ -100,7 +105,7 @@ def g1_aflatoxin(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
     n_sub = g.params["composite_subsamples_min"].value
     out.reasons.insert(
         0,
-        f"AFB1 not measured; prior P(fail) = {p_fail:.2f} [{prov.tag.value}]. "
+        f"AFB1 not measured by HPLC; {'updated' if screen else 'prior'} P(fail) = {p_fail:.2f} [{prov.tag.value}]. "
         f"Test a composite of ≥ {n_sub:g} sub-samples (sampling error often dominates assay error).",
     )
     return GateOutcome(out, 1.0 - p_fail, prov)

@@ -118,6 +118,36 @@ try {
     await axe(d, `${s} (1280)`);
     await d.screenshot({ path: `${SHOTS}/1280-${s}.png`, fullPage: true });
   }
+  // J1 continued: AI summary + enter a lab result (GT8) with before/after
+  await d.getByTestId("nav-verdict").click();
+  const badge = await d.getByTestId("ai-badge").innerText({ timeout: 20000 });
+  check(/summary/i.test(badge), `verdict: AI summary card with badge ("${badge}")`);
+  await d.getByTestId("nav-next").click();
+  await d.getByTestId("lab-input").selectOption("cmp.phytic_acid");
+  await d.getByTestId("lab-value").fill("1.8");
+  await d.getByTestId("lab-submit").click();
+  await d.getByTestId("before-after").waitFor({ timeout: 30000 });
+  check(true, "next: lab result shows before/after");
+  await axe(d, "next with lab result (1280)");
+  await d.screenshot({ path: `${SHOTS}/1280-next-lab.png`, fullPage: true });
+  await d.getByTestId("lab-keep").click();
+  await d.getByTestId("recommended-test").waitFor();
+  check(true, "next: keeping the lab result re-runs the analysis");
+
+  // J3: describe in words -> filled form with highlights -> user confirms
+  await d.getByTestId("nav-input").click();
+  await d.getByTestId("describe").fill("Groundnut cake from Rajkot, about 48% protein, for a protein drink, no solvents");
+  await d.getByTestId("fill-form").click();
+  await d.getByTestId("parse-message").filter({ hasText: "highlighted" }).waitFor({ timeout: 20000 });
+  const bp = await d.locator("#byproduct").inputValue();
+  const prot = await d.locator("#protein").inputValue();
+  const ring = await d.locator("#protein").getAttribute("class");
+  check(bp === "groundnut_cake" && prot === "48" && ring.includes("ring-2"), `J3: form filled and highlighted (${bp}, ${prot}%)`);
+  check(!(await d.getByTestId("verdict-card").count()), "J3: nothing is analysed until the user confirms");
+  await d.getByTestId("submit").click();
+  await d.getByTestId("verdict-card").waitFor({ timeout: 20000 });
+  check(true, "J3: Analyse runs the filled request");
+
   const overflow = await d.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   check(!overflow, "no horizontal page scroll at 1280 px");
   await dctx.close();

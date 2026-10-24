@@ -2,7 +2,7 @@ import type { components } from "./types";
 
 type S = components["schemas"];
 export type Health = S["Health"];
-export type AnalyzeRequest = S["AnalyzeRequest"];
+export type AnalyzeRequest = S["AnalyzeRequest-Input"];
 export type AnalyzeResponse = S["AnalyzeResponse"];
 export type Value = S["Value"];
 export type Range = S["Range"];
@@ -12,6 +12,12 @@ export type Diagnosis = S["Diagnosis"];
 export type Issue = S["Issue"];
 export type Pea = S["Pea"];
 export type Tag = Value["tag"];
+export type AiText = S["AiText"];
+export type ParseResponse = S["ParseResponse"];
+export type PlanResponse = S["PlanResponse"];
+export type UpdateEvidenceRequest = S["UpdateEvidenceRequest"];
+export type UpdateEvidenceResponse = S["UpdateEvidenceResponse"];
+export type Snapshot = S["Snapshot"];
 
 export interface Preset {
   id: string;
@@ -81,6 +87,10 @@ async function request<T>(path: string, init?: RequestInit, timeoutMs = ANALYZE_
   }
 }
 
+function post<T>(path: string, body: unknown, timeoutMs?: number): Promise<T> {
+  return request<T>(path, { method: "POST", body: JSON.stringify(body) }, timeoutMs);
+}
+
 async function snapshot(presetId: string, lang: string): Promise<AnalyzeResponse | null> {
   for (const l of [lang, "en"]) {
     try {
@@ -97,6 +107,12 @@ export const api = {
   health: () => request<Health>("/health", undefined, 4000),
   presets: () => request<Preset[]>("/presets"),
   dataFile: <T>(name: string) => request<T>(`/data/${name}`),
+  explain: (request: AnalyzeRequest, lang: string) => post<AiText>("/explain", { request, lang }, 30000),
+  plan: (request: AnalyzeRequest, lang: string) => post<PlanResponse>("/plan", { request, lang }, 30000),
+  parseText: (text: string, base: AnalyzeRequest | null, lang: string) =>
+    post<ParseResponse>("/parse-text", { text, base, lang }, 30000),
+  updateEvidence: (body: UpdateEvidenceRequest) =>
+    post<UpdateEvidenceResponse>("/update-evidence", body, 20000),
   /** Live analysis; on network failure or timeout, fall back to the preset's demo snapshot. */
   analyze: async (body: AnalyzeRequest, presetId: string | null, lang: string): Promise<AnalysisResult> => {
     try {

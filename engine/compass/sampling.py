@@ -164,6 +164,8 @@ class Sampler:
             raise ValueError("need at least 2 draws")
         self.n, self.seed, self.method, self.lam, self.k = n_draws, seed, method, lam, k
         self._specs: dict[str, _Spec] = {}
+        self.overrides: dict[str, Param] = {}  # lab results (evidence) replace dataset rows
+        self.used_overrides: set[str] = set()
 
     def add(
         self,
@@ -180,6 +182,9 @@ class Sampler:
         """
         if key in self._specs:
             return
+        if key in self.overrides:
+            param, alpha = self.overrides[key], 1.0  # measured on this batch: fully applicable
+            self.used_overrides.add(key)
         unit = unit or (param.unit if param else "")
         a = alpha if alpha is not None else (param.alpha if param else None)
         spec = _Spec(key, param, unit, a)
@@ -210,7 +215,8 @@ class Sampler:
             elif s.dist is not None and s.col is None:
                 vals = np.full(self.n, float(s.dist.low))
             elif s.dist is not None:
-                vals = ppf(s.dist, u[:, s.col], self.lam)
+                lo, hi = unit_bounds(s.unit)
+                vals = np.clip(ppf(s.dist, u[:, s.col], self.lam), lo, hi)
             else:
                 vals = None
             out[s.key] = Sampled(s.key, vals, s.prov, s.unit, s.dist)

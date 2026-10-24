@@ -5,3 +5,4 @@ pydantic==2.10.4
 numpy==2.2.1
 scipy==1.15.0
 pandas==2.2.3
+boto3==1.35.90  # Amazon Bedrock (LLM explain/parse); optional at runtime

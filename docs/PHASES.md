@@ -326,3 +326,54 @@ The gate, verdict and pea-parity paths have their inputs. The cost model and the
 - EVSI is an upper bound while assay CVs are missing. ROI and "worth it" need lab quotes in `lab_tests.json`.
 - Almond cake has no price, so its utility and value of information are "not computable"; enter a price on the Input screen.
 - Pareto colour by OFI is omitted because OFI is not computable without sensory data.
+
+## Phase 6: AI layer (Bedrock, number verifier, Bayesian update)
+
+**Implemented**
+- **`api/llm/client.py`:**
+  - Provider switch (`LLM_PROVIDER`): Amazon Bedrock `converse` (us-east-1, `BEDROCK_MODEL_ID`, temperature 0.2, 700 tokens), optional Groq (OpenAI-compatible endpoint, `GROQ_MODEL_ID`), or the template.
+  - Token bucket at 1 request/s (requests queue), 20 s timeout, one retry, cache by hash(endpoint, input, language, model) in memory and `api/.cache/`.
+  - Logs provider, model, latency and verifier result; never user text.
+  - Gemini was not implemented; Groq covers the optional second provider.
+- **`api/llm/prompts.py`:** the formatter system prompt; tasks for explain, plan and parse; user data wrapped in delimiters and marked as data.
+- **`api/llm/verify.py`:** the number extractor (₹ en-IN grouping, %, decimals, ranges, lakh/crore, negatives, ids like G1/AFB1 skipped) and the matcher at displayed precision (fraction ↔ %). It also rejects unknown source ids.
+- **`api/llm/service.py`:**
+  - `/explain` and `/plan` run LLM → verifier → one retry naming the bad numbers → template.
+  - `/parse-text` takes LLM JSON and keeps only allowed keys; its numbers must appear in the user's text, or the rule-based reader (`rules.py`, English + common Hindi words) is used. It validates against the request schema, returns the filled payload plus changed fields, and never analyses.
+- **`api/llm/template.py`:** deterministic explanation and plan paragraph from engine numbers (en-IN).
+- **`engine/compass/update.py` and `learning.py`** (§12.12):
+  - Lognormal conjugate update with the assay CV; without a CV the value is treated as exact and the UI says so.
+  - Likelihood-ratio update of the G1 prior from an ELISA screen (sensitivity 0.95, specificity 0.90, assumed). An HPLC value sets the measured AFB1.
+  - The request gains `evidence` overrides (tag M, grade A, α = 1); unknown keys are rejected.
+  - `/update-evidence` returns prior, measurement, posterior, a before/after snapshot (verdict, grade, P(GO), best chain, P(spec), recommended test, EVPPI) and the request to continue with.
+  - The sampler now clips draws to physical unit bounds.
+- **API:** `/explain`, `/plan`, `/parse-text`, `/update-evidence`; an LRU cache of analysis results; 10/min/IP rate limit on the AI endpoints. `/explain` re-runs the analysis server-side, so the verifier checks against real engine output, never client-sent numbers.
+- **UI:**
+  - Verdict: AI summary card (plain text; badge "AI-written summary; numbers checked against the engine" or "Template summary", plus the note).
+  - Input: "Describe in words" box → "Fill the form" → filled fields highlighted, batch section opened, message "check the highlighted fields, then press Analyse".
+  - Next: "Enter your lab result" (input from the value-of-information list and compounds; AFB1 as HPLC ppb or ELISA ±; optional CV and method) → prior → posterior and a before/after table with changes marked → "Keep this result".
+- **Docs:** `docs/AI.md` covers what the AI does and does not do, the guardrails and how to run with Bedrock. `.env.example` adds `GROQ_MODEL_ID`. Engine version 0.4.0.
+
+**Demo moment, tested end to end:** groundnut → beverage, enter phytic acid 1.8% (beverage limit 1.0%):
+- grade hypothesis → not viable;
+- P(GO) ≤ 32% → ≤ 9.4%;
+- best chain extrude + AE-IEP → extrude + phytase + AE-IEP, P(spec) 68% → 20%;
+- top value driver aflatoxin status → AE-IEP phytate partition.
+
+**Tested**
+- pytest: 100 passing.
+  - GT7: injected ₹777 is rejected on both attempts and the template is used.
+  - A verified LLM text is used; the template passes its own verifier; unknown sources are rejected.
+  - Token bucket: 11 calls ≥ 1 s apart.
+  - Rule parser: the J3 sentence, Hindi "मूंगफली", ₹/quintal → ₹/kg.
+  - An LLM-parsed invented number falls back to rules.
+  - `/parse-text` fills but never analyses; `/explain` and `/plan` work without an LLM; rate limit returns 429 on the 11th call; user text is wrapped.
+  - GT8: measured phytate is M/A, and P(spec) and EVPPI change.
+  - Posterior variance < prior; LR update; HPLC 60 ppb → NO-GO; ELISA negative lowers P(fail) and keeps TEST-FIRST; fraction inputs reject percentages; unknown evidence is rejected; `/update-evidence` endpoint.
+- vitest: 9 passing. e2e: all checks pass, including the AI summary badge, lab result before/after, "keep this result" and J3 (filled and highlighted, nothing analysed until the user confirms). axe 0 serious/critical.
+
+**Exit gate: met on the template path.** GT7 and GT8 pass. "Enter one lab number → recommendation sharpens" works offline (template).
+
+**Not done / needs the team**
+- Live Bedrock was not exercised: no AWS credentials or model id in this environment. On the demo laptop, set `AWS_PROFILE`, `LLM_PROVIDER=bedrock` and `BEDROCK_MODEL_ID` from the console and check the badge says "AI-written".
+- Hindi explanations and voice input are Phase 7.

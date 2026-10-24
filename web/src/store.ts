@@ -12,7 +12,7 @@ interface UiState {
   showSources: boolean;
   selectedChain: string | null;
   setScreen: (s: Screen) => void;
-  runRequest: (r: AnalyzeRequest, presetId?: string | null) => void;
+  runRequest: (r: AnalyzeRequest, presetId?: string | null, screen?: Screen) => void;
   patchRequest: (fn: (r: AnalyzeRequest) => AnalyzeRequest) => void;
   toggleSources: () => void;
   selectChain: (id: string | null) => void;
@@ -25,8 +25,8 @@ export const useStore = create<UiState>((set) => ({
   showSources: false,
   selectedChain: null,
   setScreen: (screen) => set({ screen }),
-  runRequest: (request, presetId = null) =>
-    set({ request, presetId, screen: "verdict", selectedChain: null }),
+  runRequest: (request, presetId = null, screen = "verdict") =>
+    set({ request, presetId, screen, selectedChain: null }),
   patchRequest: (fn) => set((s) => (s.request ? { request: fn(s.request), presetId: null } : {})),
   toggleSources: () => set((s) => ({ showSources: !s.showSources })),
   selectChain: (selectedChain) => set({ selectedChain }),

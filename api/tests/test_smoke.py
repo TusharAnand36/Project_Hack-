@@ -75,3 +75,12 @@ def test_data_files_are_allow_listed():
     assert client.get("/data/report").json()["dataset_version"] == DATASET.version
     assert client.get("/data/..%2F.env").status_code == 404
     assert client.get("/data/secrets").status_code == 404
+
+
+def test_update_evidence_endpoint():
+    body = {"request": {**EXAMPLE, "batch": {}}, "input": "gate.G1.u", "value": 5}
+    r = client.post("/update-evidence", json=body)
+    assert r.status_code == 200, r.text
+    j = r.json()
+    assert j["before"]["verdict"] == "TEST-FIRST" and j["after_request"]["batch"]["afb1_ppb"]["value"] == 5
+    assert client.post("/update-evidence", json={**body, "value": None}).status_code == 422

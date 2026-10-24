@@ -12,7 +12,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from compass.models import Range, Tag, Value
+from compass.models import Dist, Grade, Range, Tag, Value
 
 
 class _Strict(BaseModel):
@@ -105,6 +105,23 @@ class PeaInputs(_Strict):
     usd_inr: float | None = Field(default=None, gt=0)
 
 
+class Evidence(_Strict):
+    """A lab result folded into the analysis (source plan §12.12): replaces one input's distribution.
+
+    `input` is an engine input key (e.g. "cmp.phytic_acid", "t.phytase.m", "bp.protein") or "gate.G1"
+    for an updated aflatoxin prior. Produced by /update-evidence; the client sends it back unchanged.
+    """
+
+    input: str
+    value: float | None = None
+    dist: Dist | None = None
+    p_fail: float | None = Field(default=None, ge=0, le=1)  # gate.G1 only
+    unit: str
+    tag: Tag = Tag.measured
+    grade: Grade | None = Grade.A
+    note: str | None = None
+
+
 class AnalyzeRequest(_Strict):
     byproduct: str = Field(examples=["groundnut_cake"])
     application: str = Field(examples=["beverage"])
@@ -122,6 +139,7 @@ class AnalyzeRequest(_Strict):
         description="By-product price; overrides the dataset default (convert ₹/quintal or ₹/t first)",
     )
     co_product_credit_inr_per_kg_protein: float | None = Field(default=None, ge=0)
+    evidence: list[Evidence] = Field(default_factory=list, max_length=20)
     seed: int | None = None
     n_draws: int | None = Field(default=None, ge=256, le=16384)
 
@@ -380,3 +398,43 @@ class AnalyzeResponse(_Strict):
     plan: Plan | None = None
     limitations: list[str]
     disclaimer: str
+
+
+# ---------------------------------------------------------------- learning loop (§12.12)
+
+
+class Snapshot(_Strict):
+    """The parts of a result that a lab result can change (for before/after)."""
+
+    verdict: VerdictLabel
+    grade: DecisionGrade
+    p_go: Value | None
+    best_chain: str | None
+    best_p_spec: Value | None
+    recommended_test: str | None
+    evppi: list[Evppi]
+
+
+class UpdateEvidenceRequest(_Strict):
+    request: AnalyzeRequest
+    input: str = Field(description="engine input key from the EVPPI list, or 'gate.G1.u' for aflatoxin")
+    value: float | None = Field(default=None, ge=0, description="measured value in the input's unit")
+    cv: float | None = Field(
+        default=None, gt=0, le=1, description="assay coefficient of variation (fraction)"
+    )
+    result: Literal["positive", "negative"] | None = Field(
+        default=None, description="ELISA screen result (G1)"
+    )
+    method: str | None = Field(default=None, max_length=200)
+
+
+class UpdateEvidenceResponse(_Strict):
+    input: str
+    label: str
+    prior: Range | Value | None
+    measurement: Value | None
+    posterior: Range | Value | None
+    note: str
+    before: Snapshot
+    after: Snapshot
+    after_request: AnalyzeRequest

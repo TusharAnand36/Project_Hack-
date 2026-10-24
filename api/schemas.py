@@ -5,10 +5,10 @@ web/src/api/types.ts is generated from these models (`make types`).
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from compass.contract import *  # noqa: F401,F403
-from compass.contract import AnalyzeRequest, AnalyzeResponse  # noqa: F401
+from compass.contract import AnalyzeRequest, AnalyzeResponse, Plan  # noqa: F401
 
 
 class Health(BaseModel):
@@ -17,3 +17,39 @@ class Health(BaseModel):
     status: str
     engine_version: str
     dataset_version: str
+
+
+class _Api(BaseModel):
+    model_config = ConfigDict(extra="forbid", json_schema_serialization_defaults_required=True)
+
+
+class ExplainRequest(_Api):
+    request: AnalyzeRequest
+    lang: str = "en"
+
+
+class AiText(_Api):
+    text: str
+    llm_used: bool
+    provider: str
+    verifier_passed: bool
+    note: str | None = None
+
+
+class ParseRequest(_Api):
+    text: str = Field(min_length=3, max_length=2000)
+    base: AnalyzeRequest | None = None
+    lang: str = "en"
+
+
+class ParseResponse(_Api):
+    payload: AnalyzeRequest | None
+    changed: list[str]
+    provider: str
+    llm_used: bool
+    message: str
+
+
+class PlanResponse(_Api):
+    plan: Plan | None
+    paragraph: AiText

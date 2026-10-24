@@ -72,17 +72,98 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/update-evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Update */
+        post: operations["update_update_evidence_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/explain": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Explain */
+        post: operations["explain_explain_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Plan */
+        post: operations["plan_plan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/parse-text": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Parse Text */
+        post: operations["parse_text_parse_text_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AiText */
+        AiText: {
+            /** Text */
+            text: string;
+            /** Llm Used */
+            llm_used: boolean;
+            /** Provider */
+            provider: string;
+            /** Verifier Passed */
+            verifier_passed: boolean;
+            /** Note */
+            note: string | null;
+        };
         /** AnalyzeRequest */
-        AnalyzeRequest: {
+        "AnalyzeRequest-Input": {
             /** Byproduct */
             byproduct: string;
             /** Application */
             application: string;
-            targets?: components["schemas"]["Targets"];
+            targets?: components["schemas"]["Targets-Input"];
             /**
              * Market
              * @default domestic
@@ -91,15 +172,15 @@ export interface components {
             market?: "domestic" | "export_EU";
             /** Scale Kg Day */
             scale_kg_day?: number | null;
-            constraints?: components["schemas"]["Constraints"];
-            batch?: components["schemas"]["Batch"];
-            process?: components["schemas"]["Process"];
+            constraints?: components["schemas"]["Constraints-Input"];
+            batch?: components["schemas"]["Batch-Input"];
+            process?: components["schemas"]["Process-Input"];
             /**
              * Claims
              * @description e.g. ["allergen_free"] (gate G6)
              */
             claims?: string[];
-            pea?: components["schemas"]["PeaInputs"];
+            pea?: components["schemas"]["PeaInputs-Input"];
             /**
              * Raw Price Inr Per Kg
              * @description By-product price; overrides the dataset default (convert ₹/quintal or ₹/t first)
@@ -107,10 +188,50 @@ export interface components {
             raw_price_inr_per_kg?: number | null;
             /** Co Product Credit Inr Per Kg Protein */
             co_product_credit_inr_per_kg_protein?: number | null;
+            /** Evidence */
+            evidence?: components["schemas"]["Evidence-Input"][];
             /** Seed */
             seed?: number | null;
             /** N Draws */
             n_draws?: number | null;
+        };
+        /** AnalyzeRequest */
+        "AnalyzeRequest-Output": {
+            /** Byproduct */
+            byproduct: string;
+            /** Application */
+            application: string;
+            targets: components["schemas"]["Targets-Output"];
+            /**
+             * Market
+             * @default domestic
+             * @enum {string}
+             */
+            market: "domestic" | "export_EU";
+            /** Scale Kg Day */
+            scale_kg_day: number | null;
+            constraints: components["schemas"]["Constraints-Output"];
+            batch: components["schemas"]["Batch-Output"];
+            process: components["schemas"]["Process-Output"];
+            /**
+             * Claims
+             * @description e.g. ["allergen_free"] (gate G6)
+             */
+            claims: string[];
+            pea: components["schemas"]["PeaInputs-Output"];
+            /**
+             * Raw Price Inr Per Kg
+             * @description By-product price; overrides the dataset default (convert ₹/quintal or ₹/t first)
+             */
+            raw_price_inr_per_kg: number | null;
+            /** Co Product Credit Inr Per Kg Protein */
+            co_product_credit_inr_per_kg_protein: number | null;
+            /** Evidence */
+            evidence: components["schemas"]["Evidence-Output"][];
+            /** Seed */
+            seed: number | null;
+            /** N Draws */
+            n_draws: number | null;
         };
         /** AnalyzeResponse */
         AnalyzeResponse: {
@@ -138,18 +259,35 @@ export interface components {
          * Batch
          * @description Own batch data. Any field left null falls back to a labelled dataset default.
          */
-        Batch: {
-            protein_pct?: components["schemas"]["PctMeasurement"] | null;
-            moisture_pct?: components["schemas"]["PctMeasurement"] | null;
-            fat_pct?: components["schemas"]["PctMeasurement"] | null;
-            ffa_pct?: components["schemas"]["PctMeasurement"] | null;
-            ash_pct?: components["schemas"]["PctMeasurement"] | null;
+        "Batch-Input": {
+            protein_pct?: components["schemas"]["PctMeasurement-Input"] | null;
+            moisture_pct?: components["schemas"]["PctMeasurement-Input"] | null;
+            fat_pct?: components["schemas"]["PctMeasurement-Input"] | null;
+            ffa_pct?: components["schemas"]["PctMeasurement-Input"] | null;
+            ash_pct?: components["schemas"]["PctMeasurement-Input"] | null;
             /** @description % dry basis */
-            phytate_pct?: components["schemas"]["PctMeasurement"] | null;
-            afb1_ppb?: components["schemas"]["Measurement"] | null;
-            tia?: components["schemas"]["Measurement"] | null;
-            inorganic_as_ppm?: components["schemas"]["Measurement"] | null;
-            cd_ppm?: components["schemas"]["Measurement"] | null;
+            phytate_pct?: components["schemas"]["PctMeasurement-Input"] | null;
+            afb1_ppb?: components["schemas"]["Measurement-Input"] | null;
+            tia?: components["schemas"]["Measurement-Input"] | null;
+            inorganic_as_ppm?: components["schemas"]["Measurement-Input"] | null;
+            cd_ppm?: components["schemas"]["Measurement-Input"] | null;
+        };
+        /**
+         * Batch
+         * @description Own batch data. Any field left null falls back to a labelled dataset default.
+         */
+        "Batch-Output": {
+            protein_pct: components["schemas"]["PctMeasurement-Output"] | null;
+            moisture_pct: components["schemas"]["PctMeasurement-Output"] | null;
+            fat_pct: components["schemas"]["PctMeasurement-Output"] | null;
+            ffa_pct: components["schemas"]["PctMeasurement-Output"] | null;
+            ash_pct: components["schemas"]["PctMeasurement-Output"] | null;
+            /** @description % dry basis */
+            phytate_pct: components["schemas"]["PctMeasurement-Output"] | null;
+            afb1_ppb: components["schemas"]["Measurement-Output"] | null;
+            tia: components["schemas"]["Measurement-Output"] | null;
+            inorganic_as_ppm: components["schemas"]["Measurement-Output"] | null;
+            cd_ppm: components["schemas"]["Measurement-Output"] | null;
         };
         /** Budget */
         Budget: {
@@ -212,7 +350,7 @@ export interface components {
             badges: string[];
         };
         /** Constraints */
-        Constraints: {
+        "Constraints-Input": {
             /** Exclude Treatments */
             exclude_treatments?: string[];
             /**
@@ -231,6 +369,27 @@ export interface components {
             water_inr_per_m3?: number | null;
             /** Labour Inr Per H */
             labour_inr_per_h?: number | null;
+        };
+        /** Constraints */
+        "Constraints-Output": {
+            /** Exclude Treatments */
+            exclude_treatments: string[];
+            /**
+             * No Solvents
+             * @default false
+             */
+            no_solvents: boolean;
+            /**
+             * Equipment
+             * @description Available equipment. Empty = not stated (no equipment filter).
+             */
+            equipment: string[];
+            /** Electricity Inr Per Kwh */
+            electricity_inr_per_kwh: number | null;
+            /** Water Inr Per M3 */
+            water_inr_per_m3: number | null;
+            /** Labour Inr Per H */
+            labour_inr_per_h: number | null;
         };
         /** Criterion */
         Criterion: {
@@ -278,11 +437,93 @@ export interface components {
             note: string | null;
         };
         /**
+         * Dist
+         * @description A probability distribution described by low / mode / high.
+         */
+        "Dist-Input": {
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "pert" | "triangular" | "uniform" | "lognormal";
+            /** Low */
+            low: number;
+            /** Mode */
+            mode?: number | null;
+            /** High */
+            high: number;
+        };
+        /**
+         * Dist
+         * @description A probability distribution described by low / mode / high.
+         */
+        "Dist-Output": {
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "pert" | "triangular" | "uniform" | "lognormal";
+            /** Low */
+            low: number;
+            /** Mode */
+            mode: number | null;
+            /** High */
+            high: number;
+        };
+        /**
          * DutyMode
          * @description Import duty stack on HS 3504 (sources disagree; source plan §12.8).
          * @enum {string}
          */
         DutyMode: "full_stack_44" | "full_stack_49" | "bcd_only_igst_credited_22";
+        /**
+         * Evidence
+         * @description A lab result folded into the analysis (source plan §12.12): replaces one input's distribution.
+         *
+         *     `input` is an engine input key (e.g. "cmp.phytic_acid", "t.phytase.m", "bp.protein") or "gate.G1"
+         *     for an updated aflatoxin prior. Produced by /update-evidence; the client sends it back unchanged.
+         */
+        "Evidence-Input": {
+            /** Input */
+            input: string;
+            /** Value */
+            value?: number | null;
+            dist?: components["schemas"]["Dist-Input"] | null;
+            /** P Fail */
+            p_fail?: number | null;
+            /** Unit */
+            unit: string;
+            /** @default measured */
+            tag?: components["schemas"]["Tag"];
+            /** @default A */
+            grade?: components["schemas"]["Grade"] | null;
+            /** Note */
+            note?: string | null;
+        };
+        /**
+         * Evidence
+         * @description A lab result folded into the analysis (source plan §12.12): replaces one input's distribution.
+         *
+         *     `input` is an engine input key (e.g. "cmp.phytic_acid", "t.phytase.m", "bp.protein") or "gate.G1"
+         *     for an updated aflatoxin prior. Produced by /update-evidence; the client sends it back unchanged.
+         */
+        "Evidence-Output": {
+            /** Input */
+            input: string;
+            /** Value */
+            value: number | null;
+            dist: components["schemas"]["Dist-Output"] | null;
+            /** P Fail */
+            p_fail: number | null;
+            /** Unit */
+            unit: string;
+            /** @default measured */
+            tag: components["schemas"]["Tag"];
+            /** @default A */
+            grade: components["schemas"]["Grade"] | null;
+            /** Note */
+            note: string | null;
+        };
         /**
          * Evppi
          * @description Expected value of perfectly learning one input (or one test's group of inputs).
@@ -299,6 +540,15 @@ export interface components {
             grade: string | null;
             /** Note */
             note: string | null;
+        };
+        /** ExplainRequest */
+        ExplainRequest: {
+            request: components["schemas"]["AnalyzeRequest-Input"];
+            /**
+             * Lang
+             * @default en
+             */
+            lang?: string;
         };
         /** Gate */
         Gate: {
@@ -367,7 +617,7 @@ export interface components {
          * Measurement
          * @description A batch measurement on the material as received. Defaults to tag `measured`.
          */
-        Measurement: {
+        "Measurement-Input": {
             /** Value */
             value: number;
             /** @default measured */
@@ -377,6 +627,21 @@ export interface components {
              * @description Protein only: N-to-protein factor used
              */
             n_factor?: number | null;
+        };
+        /**
+         * Measurement
+         * @description A batch measurement on the material as received. Defaults to tag `measured`.
+         */
+        "Measurement-Output": {
+            /** Value */
+            value: number;
+            /** @default measured */
+            tag: components["schemas"]["Tag"];
+            /**
+             * N Factor
+             * @description Protein only: N-to-protein factor used
+             */
+            n_factor: number | null;
         };
         /** Meta */
         Meta: {
@@ -423,8 +688,31 @@ export interface components {
             /** Acceptance */
             acceptance: string;
         };
+        /** ParseRequest */
+        ParseRequest: {
+            /** Text */
+            text: string;
+            base?: components["schemas"]["AnalyzeRequest-Input"] | null;
+            /**
+             * Lang
+             * @default en
+             */
+            lang?: string;
+        };
+        /** ParseResponse */
+        ParseResponse: {
+            payload: components["schemas"]["AnalyzeRequest-Output"] | null;
+            /** Changed */
+            changed: string[];
+            /** Provider */
+            provider: string;
+            /** Llm Used */
+            llm_used: boolean;
+            /** Message */
+            message: string;
+        };
         /** PctMeasurement */
-        PctMeasurement: {
+        "PctMeasurement-Input": {
             /** Value */
             value: number;
             /** @default measured */
@@ -434,6 +722,18 @@ export interface components {
              * @description Protein only: N-to-protein factor used
              */
             n_factor?: number | null;
+        };
+        /** PctMeasurement */
+        "PctMeasurement-Output": {
+            /** Value */
+            value: number;
+            /** @default measured */
+            tag: components["schemas"]["Tag"];
+            /**
+             * N Factor
+             * @description Protein only: N-to-protein factor used
+             */
+            n_factor: number | null;
         };
         /** Pea */
         Pea: {
@@ -455,7 +755,7 @@ export interface components {
          * PeaInputs
          * @description Imported pea isolate parameters. Null = dataset default (labelled).
          */
-        PeaInputs: {
+        "PeaInputs-Input": {
             /** Base Usd Per Kg */
             base_usd_per_kg?: number | null;
             /** Protein Pct */
@@ -466,6 +766,22 @@ export interface components {
             duty_mode?: components["schemas"]["DutyMode"];
             /** Usd Inr */
             usd_inr?: number | null;
+        };
+        /**
+         * PeaInputs
+         * @description Imported pea isolate parameters. Null = dataset default (labelled).
+         */
+        "PeaInputs-Output": {
+            /** Base Usd Per Kg */
+            base_usd_per_kg: number | null;
+            /** Protein Pct */
+            protein_pct: number | null;
+            /** Freight Pct */
+            freight_pct: number | null;
+            /** @default full_stack_44 */
+            duty_mode: components["schemas"]["DutyMode"];
+            /** Usd Inr */
+            usd_inr: number | null;
         };
         /** Picks */
         Picks: {
@@ -497,6 +813,11 @@ export interface components {
             /** Output */
             output: string;
         };
+        /** PlanResponse */
+        PlanResponse: {
+            plan: components["schemas"]["Plan"] | null;
+            paragraph: components["schemas"]["AiText"];
+        };
         /** PlanTest */
         PlanTest: {
             /** Test Id */
@@ -517,7 +838,7 @@ export interface components {
             why: string;
         };
         /** Process */
-        Process: {
+        "Process-Input": {
             /** Oil Route */
             oil_route?: ("cold_pressed" | "expeller" | "solvent") | null;
             /** Hours Since Milling */
@@ -534,6 +855,25 @@ export interface components {
             solvent_extracted?: boolean | null;
             /** Hexane Cert */
             hexane_cert?: boolean | null;
+        };
+        /** Process */
+        "Process-Output": {
+            /** Oil Route */
+            oil_route: ("cold_pressed" | "expeller" | "solvent") | null;
+            /** Hours Since Milling */
+            hours_since_milling: number | null;
+            /** Stabilised */
+            stabilised: boolean | null;
+            /** Storage */
+            storage: ("hygienic" | "open") | null;
+            /** Food Grade Supply */
+            food_grade_supply: boolean | null;
+            /** Sorted Food Grade Supply */
+            sorted_food_grade_supply: boolean | null;
+            /** Solvent Extracted */
+            solvent_extracted: boolean | null;
+            /** Hexane Cert */
+            hexane_cert: boolean | null;
         };
         /**
          * Range
@@ -583,6 +923,22 @@ export interface components {
             landed: components["schemas"]["Range"];
         };
         /**
+         * Snapshot
+         * @description The parts of a result that a lab result can change (for before/after).
+         */
+        Snapshot: {
+            verdict: components["schemas"]["VerdictLabel"];
+            grade: components["schemas"]["DecisionGrade"];
+            p_go: components["schemas"]["Value"] | null;
+            /** Best Chain */
+            best_chain: string | null;
+            best_p_spec: components["schemas"]["Value"] | null;
+            /** Recommended Test */
+            recommended_test: string | null;
+            /** Evppi */
+            evppi: components["schemas"]["Evppi"][];
+        };
+        /**
          * Tag
          * @description Where a number came from.
          * @enum {string}
@@ -592,7 +948,7 @@ export interface components {
          * Targets
          * @description Targets per kg protein. Null = the application's default tolerance.
          */
-        Targets: {
+        "Targets-Input": {
             /** Min Protein Pct */
             min_protein_pct?: number | null;
             /** Max Cost Inr Per Kg Protein */
@@ -601,6 +957,20 @@ export interface components {
             max_offflavour_index?: number | null;
             /** Max Phytate Pct */
             max_phytate_pct?: number | null;
+        };
+        /**
+         * Targets
+         * @description Targets per kg protein. Null = the application's default tolerance.
+         */
+        "Targets-Output": {
+            /** Min Protein Pct */
+            min_protein_pct: number | null;
+            /** Max Cost Inr Per Kg Protein */
+            max_cost_inr_per_kg_protein: number | null;
+            /** Max Offflavour Index */
+            max_offflavour_index: number | null;
+            /** Max Phytate Pct */
+            max_phytate_pct: number | null;
         };
         /** TestValue */
         TestValue: {
@@ -621,6 +991,49 @@ export interface components {
              * @enum {string}
              */
             worth_it: "yes" | "no" | "unknown";
+        };
+        /** UpdateEvidenceRequest */
+        UpdateEvidenceRequest: {
+            request: components["schemas"]["AnalyzeRequest-Input"];
+            /**
+             * Input
+             * @description engine input key from the EVPPI list, or 'gate.G1.u' for aflatoxin
+             */
+            input: string;
+            /**
+             * Value
+             * @description measured value in the input's unit
+             */
+            value?: number | null;
+            /**
+             * Cv
+             * @description assay coefficient of variation (fraction)
+             */
+            cv?: number | null;
+            /**
+             * Result
+             * @description ELISA screen result (G1)
+             */
+            result?: ("positive" | "negative") | null;
+            /** Method */
+            method?: string | null;
+        };
+        /** UpdateEvidenceResponse */
+        UpdateEvidenceResponse: {
+            /** Input */
+            input: string;
+            /** Label */
+            label: string;
+            /** Prior */
+            prior: components["schemas"]["Range"] | components["schemas"]["Value"] | null;
+            measurement: components["schemas"]["Value"] | null;
+            /** Posterior */
+            posterior: components["schemas"]["Range"] | components["schemas"]["Value"] | null;
+            /** Note */
+            note: string;
+            before: components["schemas"]["Snapshot"];
+            after: components["schemas"]["Snapshot"];
+            after_request: components["schemas"]["AnalyzeRequest-Output"];
         };
         /**
          * Utility
@@ -783,7 +1196,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AnalyzeRequest"];
+                "application/json": components["schemas"]["AnalyzeRequest-Input"];
             };
         };
         responses: {
@@ -794,6 +1207,138 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AnalyzeResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_update_evidence_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateEvidenceRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdateEvidenceResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    explain_explain_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExplainRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AiText"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    plan_plan_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExplainRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    parse_text_parse_text_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ParseRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ParseResponse"];
                 };
             };
             /** @description Validation Error */

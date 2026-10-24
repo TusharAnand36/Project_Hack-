@@ -78,6 +78,12 @@ def _measured_prov(tag: Tag) -> Provenance:
 def build_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sampler:
     bp = ds.byproducts[req.byproduct]
     s = Sampler(n, seed, k=_cfg(ds, "engine", "extrapolation_k"), lam=_cfg(ds, "engine", "pert_lambda"))
+    for e in req.evidence:
+        if e.input.startswith("gate."):
+            continue  # gate priors are handled by the gate itself
+        s.overrides[e.input] = Param(
+            value=e.value, dist=e.dist, unit=e.unit, tag=e.tag, grade=e.grade, source_id=None, notes=e.note
+        )
     # protein and N factor
     if req.batch.protein_pct is not None:
         s.add_value("bp.protein", req.batch.protein_pct.value, "%", _measured_prov(req.batch.protein_pct.tag))
@@ -190,7 +196,11 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
     bp, app = ds.byproducts[req.byproduct], ds.applications[req.application]
     n = req.n_draws or int(_cfg(ds, "engine", "n_draws"))
     seed = req.seed if req.seed is not None else int(_cfg(ds, "engine", "seed"))
-    d = build_sampler(req, ds, n, seed).sample()
+    sampler = build_sampler(req, ds, n, seed)
+    unused = sorted(set(sampler.overrides) - sampler.used_overrides)
+    if unused:
+        raise AnalyzeError(f"evidence for unknown or batch-overridden input(s): {unused}")
+    d = sampler.sample()
     limitations: list[str] = [
         "Inputs are sampled independently (no correlations between inputs).",
         "Functionality fit (solubility, emulsification, gelation) is a qualitative flag, not a computed score.",

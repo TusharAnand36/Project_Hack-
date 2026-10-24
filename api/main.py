@@ -1,34 +1,58 @@
 """Upcycle Compass HTTP API (source plan §14.1).
 
-GET  /health          keep-alive and versions
-GET  /presets         the three one-click presets with full payloads
-GET  /data/{file}     read-only dataset files (allow-listed) and /data/report
-POST /analyze         the decision pipeline; returns the §14.2 result
-
-Phase 6 adds /parse-text, /explain, /update-evidence and /plan.
+GET  /health            keep-alive and versions (and which LLM provider is active)
+GET  /presets           the three one-click presets with full payloads
+GET  /data/{file}       read-only dataset files (allow-listed) and /data/report
+POST /analyze           the decision pipeline; returns the §14.2 result
+POST /update-evidence   enter one lab result -> posterior -> before/after (§12.12)
+POST /explain           plain-language explanation, numbers verified (LLM or template)
+POST /plan              validation plan + next-experiment paragraph
+POST /parse-text        free text -> filled form payload; never analyses by itself
 """
 
 from __future__ import annotations
 
+import json
+import logging
 import os
+import time
+from collections import OrderedDict, defaultdict, deque
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from api.schemas import AnalyzeRequest, AnalyzeResponse, Health
+from api.llm import service
+from api.llm.client import LLMClient
+from api.schemas import (
+    AiText,
+    AnalyzeRequest,
+    AnalyzeResponse,
+    ExplainRequest,
+    Health,
+    ParseRequest,
+    ParseResponse,
+    PlanResponse,
+    UpdateEvidenceRequest,
+    UpdateEvidenceResponse,
+)
 from compass import __version__
 from compass.analyze import AnalyzeError
 from compass.analyze import analyze as run_analysis
 from compass.data import FILES, load_dataset, read_raw, report
+from compass.learning import update_evidence
 
+logging.basicConfig(level=logging.INFO)
 CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",") if o.strip()]
 MAX_BODY_BYTES = 64 * 1024  # website plan §9.1
+AI_RATE_PER_MIN = 10  # website plan §9.1
 
 # Load and validate /data at startup: a bad dataset stops the server with the file and row id.
 DATASET = load_dataset()
 DATASET_VERSION = DATASET.version
+SOURCES = set(DATASET.sources)
+LLM = LLMClient()
 
 app = FastAPI(title="Upcycle Compass API", version=__version__)
 app.add_middleware(
@@ -45,6 +69,39 @@ async def limit_body(request: Request, call_next):
     if size is not None and int(size) > MAX_BODY_BYTES:
         return JSONResponse({"detail": f"request body over {MAX_BODY_BYTES // 1024} KB"}, status_code=413)
     return await call_next(request)
+
+
+_hits: dict[str, deque] = defaultdict(deque)
+
+
+def _rate_limit(request: Request) -> None:
+    ip = request.client.host if request.client else "?"
+    now = time.monotonic()
+    q = _hits[ip]
+    while q and now - q[0] > 60:
+        q.popleft()
+    if len(q) >= AI_RATE_PER_MIN:
+        raise HTTPException(429, "too many AI requests; try again in a minute")
+    q.append(now)
+
+
+_cache: OrderedDict[str, AnalyzeResponse] = OrderedDict()
+
+
+def _analyze(req: AnalyzeRequest) -> AnalyzeResponse:
+    """Analysis results are deterministic for a request, so cache the last few (sliders, explain)."""
+    key = json.dumps(req.model_dump(mode="json"), sort_keys=True)
+    if key in _cache:
+        _cache.move_to_end(key)
+        return _cache[key]
+    try:
+        r = run_analysis(req, DATASET)
+    except AnalyzeError as e:
+        raise HTTPException(422, str(e)) from e
+    _cache[key] = r
+    if len(_cache) > 64:
+        _cache.popitem(last=False)
+    return r
 
 
 @app.get("/health", response_model=Health)
@@ -68,7 +125,32 @@ def data_file(name: str) -> Any:
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
+    return _analyze(req)
+
+
+@app.post("/update-evidence", response_model=UpdateEvidenceResponse)
+def update(body: UpdateEvidenceRequest) -> UpdateEvidenceResponse:
     try:
-        return run_analysis(req, DATASET)
+        return update_evidence(body, DATASET)
     except AnalyzeError as e:
         raise HTTPException(422, str(e)) from e
+
+
+@app.post("/explain", response_model=AiText)
+def explain(body: ExplainRequest, request: Request) -> AiText:
+    _rate_limit(request)
+    r = _analyze(body.request)
+    return AiText(**service.explain(r, body.request, LLM, SOURCES, body.lang))
+
+
+@app.post("/plan", response_model=PlanResponse)
+def plan(body: ExplainRequest, request: Request) -> PlanResponse:
+    _rate_limit(request)
+    r = _analyze(body.request)
+    return PlanResponse(plan=r.plan, paragraph=AiText(**service.plan_paragraph(r, LLM, SOURCES, body.lang)))
+
+
+@app.post("/parse-text", response_model=ParseResponse)
+def parse_text(body: ParseRequest, request: Request) -> ParseResponse:
+    _rate_limit(request)
+    return ParseResponse(**service.parse_text(body.text, body.base, LLM, DATASET))

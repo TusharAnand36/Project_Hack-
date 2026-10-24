@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import type { AnalyzeResponse } from "@/api/client";
 import { Tornado } from "@/charts/Tornado";
+import { LabResult } from "@/components/LabResult";
 import { Num } from "@/components/Num";
 import { ScreenHeader } from "@/components/States";
 import { Button } from "@/components/ui/button";
@@ -294,6 +295,7 @@ export function NextScreen({ data }: { data: AnalyzeResponse }) {
     <section className="space-y-4">
       <ScreenHeader title={t("next.title")} summary={t("next.summary")} />
       <Voi data={data} />
+      <LabResult data={data} />
       <Readiness data={data} />
       <Card>
         <h3 className="font-medium">{t("next.actions")}</h3>
