@@ -2,7 +2,7 @@
 PY      ?= .venv/bin/python
 API_URL ?= http://localhost:8000
 
-.PHONY: setup api web test types snapshots lint data todo
+.PHONY: setup api web test types snapshots lint data todo bench
 
 setup:
 	python3 -m venv .venv
@@ -35,3 +35,6 @@ data:
 
 todo:
 	cd engine && ../$(PY) -m compass.data --todo ../DATA_TODO.md && ../$(PY) -m compass.data --schema ../data/schema
+
+bench:
+	PYTHONPATH=engine $(PY) scripts/bench_engine.py

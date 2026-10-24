@@ -100,3 +100,48 @@ The gate, verdict and pea-parity paths have their inputs. The cost model and the
 - Use only references cited in the team's documents (source plan, website plan, review drafts, research plan, PhD report) and the organiser resource list.
 - The organiser resources are now in `sources.json` as `faostat`, `ifct2017`, `usda_fdc`, `foodb`, `openfoodfacts`, `agmarknet`, `datagov_mandi_daily` and `datagov_mandi_variety`.
 - All 6 desk-research sources and their 9 staged candidates were removed. Dataset version: `2026-10-24.3`.
+
+## Phase 2: Engine core
+
+**Implemented**
+- `sampling.py`:
+  - PERT (λ = 4), triangular, uniform and lognormal, sampled by inverse CDF from one seeded Sobol point set (Latin hypercube optional).
+  - Extrapolation penalty: the range is widened by 1 + k(1 − α) around the mode and clipped to the unit's physical bounds.
+  - Provenance propagation: a derived number takes the weakest tag and grade, the lowest α and the union of all sources.
+  - P10/P50/P90 summaries returned as tagged `Range` / `Value` objects.
+- `effects.py`:
+  - Wet-to-dry-basis conversion and true protein = N × f.
+  - Proximate-sum warning when the parts don't add up to 100 ± 5%.
+  - First-order compound reduction with a floor. No synergy terms.
+  - Mass and protein balance: process steps (M·m, P·ρ) and fractionation (P·ρ, M = P/π), with protein fraction capped at 0.95.
+  - Tier assignment by final protein %.
+- `cost.py`: energy, water, chemicals, labour and capital per step. Capital uses the six-tenths rule and CRF at 12% over 10 years, on 300 days at 80% utilisation. Adds QA and overhead, then converts to ₹/kg protein, kWh/kg protein and L/kg protein.
+- `pea.py`: landed cost per kg product and per kg protein, price we can charge, margin, closed-form break-even base price, and shock scenarios (set or scale a field).
+- `scripts/bench_engine.py` (`make bench`): groundnut cake → phytase → AE-IEP at 8,192 draws.
+
+**Missing-data policy (stated assumptions)**
+- A missing fraction or probability (yields, protein retention, AE-IEP partition) is sampled from its full feasible range U(0, 1) and tagged `assumed`, grade D, status `no_data`. Ranges stay wide, so value-of-information analysis will point at measuring them.
+- Any other missing quantity (₹, kWh, litres, hours) is not computable. The cost model leaves it out, names it in `missing`, and the total becomes a lower bound that the API must label as such. No numbers are invented.
+- A missing compound floor is treated as 0.
+- Lognormal rows read low/high as P5/P95.
+- Overhead is a share of processing cost, excluding raw material.
+
+**Tested**
+- pytest: 53 passing, of which 24 are new. Covers:
+  - PERT mean within 1% of the analytic value, and draws within bounds (hypothesis).
+  - Lognormal P5/P95, widening and clipping, and same seed → same draws.
+  - Missing-data policy and provenance combination.
+  - Protein out ≤ protein in; fraction ≤ 0.95; no NaN (hypothesis).
+  - Reduction stays between the floor and the start level; steps compose without synergy.
+  - Normalisation and tiers.
+  - CRF and the six-tenths rule; cost ≥ raw cost (hypothesis); missing components named; larger scale lowers capital per kg.
+  - The §12.8 sanity example: ₹562 and ₹476 per kg protein.
+  - Break-even inverts landed cost; a higher pea price never lowers the margin; scenarios.
+- `make bench`: 0.08–0.11 s at 8,192 draws (target < 1 s). Its process inputs are synthetic timing values defined in the script only.
+- The engine imports no web or LLM code.
+
+**Exit gate: met.** Mass-balance and pea tests pass.
+
+**Known limits**
+- Inputs are independent (identity correlation), as in §12.9; this is listed as a limitation.
+- A point value with α < 1 has no range to widen, so it stays constant; the moist-heat TIA value has α = 1 anyway.
