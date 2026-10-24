@@ -11,7 +11,8 @@
     "format": "prettier --write src",
     "test": "vitest run --passWithNoTests && node scripts/check-locales.mjs",
     "e2e": "node e2e/run.mjs",
-    "locales": "node scripts/check-locales.mjs"
+    "locales": "node scripts/check-locales.mjs",
+    "e2e:offline": "npm run build && node e2e/offline.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "3.9.1",

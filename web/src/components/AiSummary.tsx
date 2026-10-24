@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { api, type AnalyzeRequest } from "@/api/client";
 import { useReadAloud } from "@/hooks/useReadAloud";
+import { useStore } from "@/store";
 
 import { Button } from "./ui/button";
 import { Card, Skeleton } from "./ui/card";
@@ -13,15 +14,16 @@ export function AiSummary({ request }: { request: AnalyzeRequest }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [showEnglish, setShowEnglish] = useState(false);
+  const presetId = useStore((s) => s.presetId);
   const q = useQuery({
     queryKey: ["explain", request, lang],
-    queryFn: () => api.explain(request, lang),
+    queryFn: () => api.explain(request, lang, presetId),
     staleTime: Infinity,
     retry: false,
   });
   const english = useQuery({
     queryKey: ["explain", request, "en"],
-    queryFn: () => api.explain(request, "en"),
+    queryFn: () => api.explain(request, "en", presetId),
     staleTime: Infinity,
     retry: false,
     enabled: lang !== "en" && showEnglish,

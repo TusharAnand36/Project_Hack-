@@ -69,7 +69,10 @@ describe("useSpeechInput", () => {
   });
 
   it("hides the mic when the browser has no speech recognition (e.g. Firefox)", () => {
-    vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("offline"))));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.reject(new Error("offline"))),
+    );
     renderWithProviders(<VoiceInput onTranscript={vi.fn()} onTypeInstead={vi.fn()} />);
     expect(screen.queryByTestId("voice")).toBeNull();
   });

@@ -9,7 +9,8 @@
     "analysisUpdated": "Analysis updated",
     "needInput": "Choose a preset or fill the form first.",
     "goToInput": "Go to input",
-    "safetyEnglish": "Safety wording (verdict labels, gate states, disclaimers) stays in English until a Hindi-reading reviewer has checked it."
+    "safetyEnglish": "Safety wording (verdict labels, gate states, disclaimers) stays in English until a Hindi-reading reviewer has checked it.",
+    "snapshotStamp": "generated {{date}} UTC, dataset {{dataset}}"
   },
   "nav": {
     "label": "Screens",
@@ -324,7 +325,8 @@
     "disclaimer": "Decision support only. Not a regulatory approval. Confirm FSSAI classification and limits.",
     "poc": "Proof of concept. Not a substitute for laboratory validation.",
     "privacy": "No accounts and no personal data. Only your language choice is stored in this browser.",
-    "limitations": "Limitations"
+    "limitations": "Limitations",
+    "dataPack": "Open data pack (JSON + sources)"
   },
   "ai": {
     "summary": "Summary",
@@ -396,5 +398,24 @@
   "readAloud": {
     "play": "Read aloud",
     "stop": "Stop reading"
+  },
+  "memo": {
+    "title": "Decision memo",
+    "open": "Decision memo (print / PDF)",
+    "print": "Print or save as PDF",
+    "back": "Back",
+    "date": "Date",
+    "batch": "Batch and use",
+    "verdict": "Verdict",
+    "why": "Why",
+    "gates": "Safety gates",
+    "chain": "Recommended route",
+    "vsPea": "Cost vs imported pea isolate",
+    "test": "Test to buy first",
+    "readiness": "Decision readiness",
+    "limits": "Key limitations",
+    "sources": "Sources",
+    "notes": "Every number carries a label: M measured, P published, A assumed, S synthetic.",
+    "noChain": "No chain is ranked (a safety gate failed)."
   }
 }

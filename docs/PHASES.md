@@ -426,3 +426,79 @@ The gate, verdict and pea-parity paths have their inputs. The cost model and the
 - A Hindi-reading teammate should review `hi.json` (all UI strings were drafted by the coding assistant). They should then write the 14 safety strings, add them to `hi.json` and set `reviewed` in `review.json`.
 - Manual voice tests on Chrome desktop, Chrome Android and Safari iOS, in quiet and noisy rooms.
 - Hindi snapshots (`<preset>.hi.json`) are produced by the Phase 8 snapshot script.
+
+## Phase 8: Hardening, accessibility, snapshots and deployment
+
+**Implemented**
+- **Snapshots (`scripts/build_snapshots.py`, `make snapshots`):**
+  - Runs `/analyze` and the template `/explain` for each preset × {en, hi}.
+  - Writes `web/public/snapshots/<preset>.<lang>.json` and `.explain.json`, plus `presets.json`.
+  - Writes `web/public/offline-data/`, the form options used when the API cannot be reached.
+  - Every file is stamped with `engine_version` (now 0.5.0), `dataset_version` and `generated_at`.
+- **Frontend fallback (`api/client.ts`, `withFallback`):**
+  - If `/analyze`, `/presets`, `/data/*` or `/explain` fails or takes longer than 8 s, the app loads the matching snapshot or offline file.
+  - A "Demo snapshot (offline)" badge shows the version stamp.
+  - The fallback only applies to unmodified presets (`presetId` in the store), so an edited request is never answered with a preset's result.
+- **Decision memo (`MemoScreen`, print CSS):**
+  - One A4 page: verdict, reasons, best chain, cost compared with pea, test to buy first, sources and limitations.
+  - "Print / save as PDF" button. The offline test checks that the PDF has exactly 1 page.
+- **Open data pack:** `web/public/open-data-pack.zip`, linked in the footer.
+  - Contents: `/data` files, `sources.json`, schemas, `DATA_TODO.md` and a README with a licence note. The team has not chosen a licence yet.
+  - Unpublished team documents are cited but not included.
+- **Performance:**
+  - The Chains (Pareto), Cost, Diagnosis, Next (EVPPI), Memo screens and the Hindi bundle are code-split; the Devanagari font loads only in Hindi.
+  - Initial JS is 143 KB gzipped.
+  - Lighthouse mobile, served with compression (`docs/reports/lighthouse-mobile.report.html`):
+
+    | Score | Result |
+    |---|---|
+    | Performance | 94 |
+    | Accessibility | 100 |
+    | Best practices | 100 |
+    | Time to interactive | 2.2 s |
+    | Page weight | 161 KiB |
+- **Accessibility fixes:**
+  - The provenance hover popover no longer blocks clicks underneath it (`pointer-events-none` while peeking).
+  - Scroll wrappers can be reached by keyboard, and there is no horizontal page scroll at 360 px.
+- **Security audit:**
+  - `pip-audit` found 7 advisories in starlette 0.41.3. Now pinned to `fastapi==0.143.0` and `starlette==1.3.1`; `pip-audit` reports no known vulnerabilities.
+  - `pip-audit==2.7.3` was added to `requirements-dev.txt`.
+  - `npm audit --omit=dev` reports 1 high advisory in zod 3.24.1 (GHSA-mrhx-c7xc-m3w5). It is recorded as an accepted risk in the README, for three reasons:
+    - zod runs only in the browser, on the app's own input form;
+    - the form's arrays are bounded checkbox lists;
+    - the fix is a breaking major released less than two weeks ago.
+  - Secret scan of tracked files, the full git history, `web/public` and `docs`: no AWS, Groq, OpenAI or GitHub keys and no private keys. `.env*` (except `.env.example`) and `.aws/` are git-ignored.
+- **Deployment config (`docs/DEPLOY.md`):**
+  - `web/vercel.json`:
+    - SPA rewrite; `/api/*` rewritten to the Render API, so the browser stays on one origin;
+    - security headers, with the microphone allowed for this origin only;
+    - immutable caching for hashed assets;
+    - missing snapshots still return 404.
+  - `render.yaml`: Python 3.11 service, `LLM_PROVIDER=template`, no LLM keys, `/health` health check.
+  - `.github/workflows/keep-alive.yml`: pings `/health` every 10 minutes once the repository variable `API_HEALTH_URL` is set.
+- **README:** run steps, architecture, PoC disclaimer, limitations, data labels, AI tools used, and how to regenerate snapshots.
+
+**Tested**
+- pytest: 102 passing (GT1–GT8 and the regression snapshot). ruff and black are clean.
+- vitest: 14 passing. Locale check: 349 Hindi strings, 14 kept in English. ESLint is clean; the build passes.
+- e2e (`npm run e2e`): all checks pass.
+  - J1 by keyboard only at 1280 px; every screen at 360 px and 1280 px.
+  - axe: 0 serious/critical on every screen, including Hindi and the lab-result update.
+  - No horizontal scroll.
+- Wi-Fi-off rehearsal (`npm run e2e:offline`, built app served with no API): all checks pass.
+  - The 3 presets load from snapshots with the stamp; summaries in English and Hindi; the Next screen.
+  - One-page memo PDF (`docs/screenshots/decision-memo.pdf`).
+  - Offline form options; the data pack downloads.
+- Timing: groundnut_beverage 834 ms, rice_bran_snack 198 ms, almond_meat 89 ms (target: under 3 s).
+- The Render start command was run locally with `APP_ENV=public LLM_PROVIDER=template`: `/health` returns ok.
+
+**Exit gate: met for the offline rehearsal; deployment is waiting on accounts.**
+- The "Wi-Fi off" rehearsal passes. It was run here against the built app with no API; repeat `npm run e2e:offline` on the demo laptop.
+- "Deployed URL works" needs the team's Vercel and Render accounts. The configs are ready and the steps are in `docs/DEPLOY.md`.
+
+**Not done / needs the team**
+- Deploy to Vercel and Render, set `CORS_ORIGINS` and `API_HEALTH_URL`, and record the URLs in `docs/DEPLOY.md`.
+- Manual screen-reader pass (NVDA or VoiceOver) on J1. It could not be run in this environment; axe and the keyboard walk-through are automated.
+- Choose a licence for the open data pack.
+- Upgrade zod to 4, together with `@hookform/resolvers`, once the release is older than two weeks.
+- From Phase 7: Hindi review of `hi.json` and the safety strings; manual voice tests on real devices.

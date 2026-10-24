@@ -70,3 +70,50 @@ body {
     display: none !important;
   }
 }
+
+/* Decision memo: one A4 page (FR-19) */
+@page {
+  size: A4;
+  margin: 12mm;
+}
+@media print {
+  header.sticky,
+  footer,
+  .no-print,
+  [data-testid="safety-note"],
+  [data-testid="offline-badge"] {
+    display: none !important;
+  }
+  body {
+    font-size: 9pt;
+    line-height: 1.3;
+    background: #fff;
+    color: #000;
+  }
+  main {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .min-h-screen {
+    min-height: 0 !important; /* otherwise the full-viewport app shell adds a blank second page */
+  }
+  .memo {
+    max-width: none;
+  }
+  .memo > * + * {
+    margin-top: 0.35rem !important;
+  }
+  .memo .memo-sources {
+    columns: 2;
+    column-gap: 1.5rem;
+    font-size: 7.5pt;
+  }
+  .memo button {
+    text-decoration: none;
+  }
+}
+
+/* A hover preview (<Num/> not pinned) must never block clicks: its positioning wrapper ignores the pointer too. */
+[data-radix-popper-content-wrapper]:has(> .pointer-events-none) {
+  pointer-events: none;
+}

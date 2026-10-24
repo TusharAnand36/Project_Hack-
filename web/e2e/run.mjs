@@ -40,6 +40,7 @@ async function untaggedNumbers(page) {
 }
 
 const browser = await chromium.launch();
+let current = null; // page under test, for a failure screenshot
 try {
   // ---------- mobile 360 px: J1 up to the cost screen
   const ctx = await browser.newContext({ viewport: { width: 360, height: 800 } });
@@ -91,6 +92,7 @@ try {
   // ---------- desktop 1280 px: keyboard-only J1 + diagnosis and chain detail
   const dctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const d = await dctx.newPage();
+  current = d;
   await d.goto(URL);
   await d.getByTestId("health").filter({ hasText: "ok" }).waitFor({ timeout: 15000 });
   let reached = false;
@@ -178,6 +180,9 @@ try {
   const overflow = await d.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   check(!overflow, "no horizontal page scroll at 1280 px");
   await dctx.close();
+} catch (e) {
+  if (current) await current.screenshot({ path: `${SHOTS}/failure.png`, fullPage: true }).catch(() => {});
+  throw e;
 } finally {
   await browser.close();
 }

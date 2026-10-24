@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 import type { AnalyzeRequest } from "@/api/client";
 
-export type Screen = "input" | "verdict" | "diagnosis" | "chains" | "cost" | "next";
+export type Screen = "input" | "verdict" | "diagnosis" | "chains" | "cost" | "next" | "memo";
 export const SCREENS: Screen[] = ["input", "verdict", "diagnosis", "chains", "cost", "next"];
 
 interface UiState {

@@ -12,6 +12,7 @@ const ICON: Record<Screen, string> = {
   chains: "⛓",
   cost: "₹",
   next: "→",
+  memo: "🖨",
 };
 
 export function TopBar() {
@@ -149,9 +150,19 @@ export function Footer() {
       <p>{t("footer.disclaimer")}</p>
       <p>{t("footer.poc")}</p>
       <p>{t("footer.privacy")}</p>
-      <button type="button" className="mt-1 min-h-9 underline" onClick={() => setScreen("next")}>
-        {t("footer.limitations")}
-      </button>
+      <div className="mt-1 flex flex-wrap gap-4">
+        <button type="button" className="min-h-9 underline" onClick={() => setScreen("next")}>
+          {t("footer.limitations")}
+        </button>
+        <a
+          className="inline-flex min-h-9 items-center underline"
+          href="/open-data-pack.zip"
+          download
+          data-testid="data-pack"
+        >
+          {t("footer.dataPack")}
+        </a>
+      </div>
     </footer>
   );
 }

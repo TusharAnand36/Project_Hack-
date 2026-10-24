@@ -2,7 +2,6 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import en from "./locales/en.json";
-import hi from "./locales/hi.json";
 
 const SUPPORTED = ["en", "hi"] as const;
 const DEVANAGARI_FONT =
@@ -28,13 +27,24 @@ function ensureFont(lng: string) {
   document.head.appendChild(link);
 }
 
+/** Hindi strings are a separate chunk, fetched only when Hindi is chosen. */
+async function ensureStrings(lng: string) {
+  if (lng !== "hi" || i18n.hasResourceBundle("hi", "translation")) return;
+  const hi = (await import("./locales/hi.json")).default;
+  i18n.addResourceBundle("hi", "translation", hi);
+  await i18n.reloadResources("hi");
+  i18n.emit("languageChanged", "hi"); // re-render with the loaded strings
+}
+
 function applyLanguage(lng: string) {
   document.documentElement.lang = lng;
   ensureFont(lng);
+  void ensureStrings(lng);
 }
 
 void i18n.use(initReactI18next).init({
-  resources: { en: { translation: en }, hi: { translation: hi } },
+  resources: { en: { translation: en } },
+  partialBundledLanguages: true,
   lng: initialLanguage(),
   // Safety wording is kept in English until reviewed (locales/review.json): missing Hindi keys fall back to English.
   fallbackLng: "en",

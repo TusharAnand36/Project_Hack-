@@ -46,7 +46,7 @@ export interface DataReport {
 
 /** An analysis plus where it came from (live API or the offline demo snapshot). */
 export interface AnalysisResult {
-  data: AnalyzeResponse;
+  data: AnalyzeResponse & { snapshot?: SnapshotStamp };
   offline: boolean;
 }
 
@@ -91,23 +91,59 @@ function post<T>(path: string, body: unknown, timeoutMs?: number): Promise<T> {
   return request<T>(path, { method: "POST", body: JSON.stringify(body) }, timeoutMs);
 }
 
-async function snapshot(presetId: string, lang: string): Promise<AnalyzeResponse | null> {
+async function staticJson<T>(path: string): Promise<T | null> {
+  try {
+    const res = await fetch(path);
+    return res.ok ? ((await res.json()) as T) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function snapshot<T>(presetId: string, lang: string, suffix = ""): Promise<T | null> {
   for (const l of [lang, "en"]) {
-    try {
-      const res = await fetch(`/snapshots/${presetId}.${l}.json`);
-      if (res.ok) return (await res.json()) as AnalyzeResponse;
-    } catch {
-      /* try next */
-    }
+    const s = await staticJson<T>(`/snapshots/${presetId}.${l}${suffix}.json`);
+    if (s) return s;
   }
   return null;
 }
 
+/** Live call first; if the API cannot be reached (not a 422), use the static file built by `make snapshots`. */
+async function withFallback<T>(live: () => Promise<T>, fallback: () => Promise<T | null>): Promise<T> {
+  try {
+    return await live();
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 422) throw e;
+    const f = await fallback();
+    if (f) return f;
+    throw e;
+  }
+}
+
+export interface SnapshotStamp {
+  engine_version: string;
+  dataset_version: string;
+  generated_at: string;
+  lang: string;
+}
+
 export const api = {
   health: () => request<Health>("/health", undefined, 4000),
-  presets: () => request<Preset[]>("/presets"),
-  dataFile: <T>(name: string) => request<T>(`/data/${name}`),
-  explain: (request: AnalyzeRequest, lang: string) => post<AiText>("/explain", { request, lang }, 30000),
+  presets: () =>
+    withFallback(
+      () => request<Preset[]>("/presets"),
+      () => staticJson<Preset[]>("/snapshots/presets.json"),
+    ),
+  dataFile: <T>(name: string) =>
+    withFallback(
+      () => request<T>(`/data/${name}`),
+      () => staticJson<T>(`/offline-data/${name}.json`),
+    ),
+  explain: (request: AnalyzeRequest, lang: string, presetId: string | null = null) =>
+    withFallback(
+      () => post<AiText>("/explain", { request, lang }, 30000),
+      async () => (presetId ? snapshot<AiText>(presetId, lang, ".explain") : null),
+    ),
   plan: (request: AnalyzeRequest, lang: string) => post<PlanResponse>("/plan", { request, lang }, 30000),
   parseText: (text: string, base: AnalyzeRequest | null, lang: string) =>
     post<ParseResponse>("/parse-text", { text, base, lang }, 30000),
@@ -122,7 +158,7 @@ export const api = {
       };
     } catch (e) {
       if (e instanceof ApiError && e.status === 422) throw e; // the request itself is wrong
-      const snap = presetId ? await snapshot(presetId, lang) : null;
+      const snap = presetId ? await snapshot<AnalysisResult["data"]>(presetId, lang) : null;
       if (snap) return { data: snap, offline: true };
       throw e;
     }

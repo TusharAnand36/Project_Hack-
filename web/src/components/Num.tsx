@@ -80,7 +80,10 @@ export function Num({ v, kind, showRange = true, className, label }: NumProps) {
           sideOffset={6}
           onOpenAutoFocus={(e) => !pinned && e.preventDefault()}
           collisionPadding={16}
-          className="z-50 w-[min(22rem,calc(100vw-2rem))] rounded-lg border border-border bg-background p-3 text-sm shadow-lg"
+          className={cn(
+            "z-50 w-[min(22rem,calc(100vw-2rem))] rounded-lg border border-border bg-background p-3 text-sm shadow-lg",
+            !pinned && "pointer-events-none", // a hover preview never blocks clicks underneath
+          )}
         >
           <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
             <dt className="text-muted-foreground">{label ?? t("num.details")}</dt>

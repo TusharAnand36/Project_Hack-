@@ -1,18 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import type { AnalyzeResponse } from "@/api/client";
 import { useAnalysis } from "@/api/hooks";
 import { BottomBar, Footer, SafetyNote, Stepper, TopBar } from "@/components/Layout";
 import { ErrorCard, LoadingScreen } from "@/components/States";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChainsScreen } from "@/screens/ChainsScreen";
-import { CostScreen } from "@/screens/CostScreen";
-import { DiagnosisScreen } from "@/screens/DiagnosisScreen";
 import { InputScreen } from "@/screens/InputScreen";
-import { NextScreen } from "@/screens/NextScreen";
 import { VerdictScreen } from "@/screens/VerdictScreen";
 import { useStore } from "@/store";
+
+// screens with charts and tables load on first use (bundle budget, website plan Phase 8)
+const named = <K extends string>(
+  p: Promise<Record<K, React.ComponentType<{ data: AnalyzeResponse }>>>,
+  k: K,
+) => p.then((m) => ({ default: m[k] }));
+const DiagnosisScreen = lazy(() => named(import("@/screens/DiagnosisScreen"), "DiagnosisScreen"));
+const ChainsScreen = lazy(() => named(import("@/screens/ChainsScreen"), "ChainsScreen"));
+const CostScreen = lazy(() => named(import("@/screens/CostScreen"), "CostScreen"));
+const NextScreen = lazy(() => named(import("@/screens/NextScreen"), "NextScreen"));
+const MemoScreen = lazy(() => named(import("@/screens/MemoScreen"), "MemoScreen"));
 
 export default function App() {
   const { t } = useTranslation();
@@ -54,6 +62,7 @@ export default function App() {
       chains: <ChainsScreen data={d} />,
       cost: <CostScreen data={d} />,
       next: <NextScreen data={d} />,
+      memo: <MemoScreen data={d} />,
     }[screen];
   }
 
@@ -76,12 +85,14 @@ export default function App() {
             data-testid="offline-badge"
           >
             {t("state.errorSnapshot")} · {t("app.offline")}
+            {result.data.snapshot &&
+              ` · ${t("app.snapshotStamp", { date: result.data.snapshot.generated_at.slice(0, 16).replace("T", " "), dataset: result.data.snapshot.dataset_version })}`}
           </p>
         )}
         {analysis.isFetching && result && screen !== "input" && (
           <p className="mb-2 text-xs text-muted-foreground">{t("state.loading")}</p>
         )}
-        {body}
+        <Suspense fallback={<LoadingScreen />}>{body}</Suspense>
       </main>
       <div aria-live="polite" className="sr-only">
         {announce}

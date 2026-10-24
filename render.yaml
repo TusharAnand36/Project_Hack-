@@ -1,0 +1,25 @@
+# Public API for the deployed demo (website plan, Phase 8 task 7).
+# Template text only: no LLM keys on the public server. The demo laptop runs the local API with Bedrock.
+services:
+  - type: web
+    name: upcycle-compass-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: PYTHONPATH=engine:. uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: APP_ENV
+        value: public
+      - key: LLM_PROVIDER
+        value: template
+      - key: ENGINE_SEED
+        value: "42"
+      - key: ENGINE_DRAWS
+        value: "8192"
+      # The web app calls the API through Vercel's /api rewrite (same origin), so CORS only
+      # matters for direct calls. Set this to the Vercel URL once it is known.
+      - key: CORS_ORIGINS
+        sync: false

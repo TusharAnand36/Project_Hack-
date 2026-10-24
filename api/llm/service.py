@@ -99,7 +99,12 @@ def _verified_completion(
         log.info("llm endpoint=%s provider=%s verifier_passed=%s", endpoint, c.provider, v.ok)
         if v.ok:
             return _result(
-                c.text, True, c.provider, True, "AI-written summary; numbers checked against the engine.", lang
+                c.text,
+                True,
+                c.provider,
+                True,
+                "AI-written summary; numbers checked against the engine.",
+                lang,
             )
         return None
     except LLMUnavailable:

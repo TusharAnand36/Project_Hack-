@@ -26,7 +26,7 @@ types:
 	API_URL=$(API_URL) ./scripts/gen_types.sh
 
 snapshots:
-	@echo "snapshots: implemented in Phase 8 (scripts/build_snapshots.py)"
+	$(PY) scripts/build_snapshots.py
 
 lint:
 	$(PY) -m ruff check engine api

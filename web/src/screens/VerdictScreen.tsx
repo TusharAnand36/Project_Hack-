@@ -65,9 +65,14 @@ export function VerdictScreen({ data }: { data: AnalyzeResponse }) {
           <GateCard key={g.id} gate={g} />
         ))}
       </div>
-      <Button variant="outline" className="mt-4" onClick={() => setScreen("diagnosis")}>
-        {t("verdict.seeDiagnosis")}
-      </Button>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button variant="outline" onClick={() => setScreen("diagnosis")}>
+          {t("verdict.seeDiagnosis")}
+        </Button>
+        <Button variant="outline" onClick={() => setScreen("memo")} data-testid="open-memo">
+          {t("memo.open")}
+        </Button>
+      </div>
     </section>
   );
 }
