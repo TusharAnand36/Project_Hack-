@@ -1,0 +1,47 @@
+# Upcycle Compass
+
+For one food by-product batch and one target use, Upcycle Compass answers **Go / No-go / Test-first**. It also says which treatment chain to use, what a kg of protein costs compared with imported pea isolate, and which single lab test to buy first. Every number carries a provenance tag: `measured`, `published`, `assumed` or `synthetic`.
+
+> **Proof of concept, Hack the Fork 2026 (Problem Statement 2).** Decision support only. Not a regulatory approval. Confirm FSSAI classification and limits.
+> **Phase 0 status:** the `/analyze` endpoint is a **stub**. All of its numbers are placeholders tagged `synthetic`.
+
+## Layout
+
+```
+engine/compass/   pure-Python decision engine (no web/LLM imports)
+  models.py       Tag, Grade, Dist, Param, Range: the provenance types
+engine/tests/
+api/main.py       FastAPI app: /health, /analyze (stub)
+api/llm/          Bedrock client, prompts, number verifier (Phase 6)
+api/tests/
+data/             JSON datasets (Phase 1); data/_staging/ for unreviewed rows
+web/              React 18 + TS + Vite + Tailwind (shadcn/ui conventions)
+  src/api/types.ts  generated from the API's OpenAPI schema; do not edit by hand
+  src/locales/    en.json, hi.json (i18n keys; no hard-coded UI strings)
+  public/snapshots/ offline precomputed results (Phase 8)
+scripts/gen_types.sh
+docs/             plans and phase reports
+```
+
+## Run
+
+Requirements: Python 3.11+, Node 20+.
+
+```bash
+make setup        # venv + pip install + npm ci (once)
+cp .env.example .env
+make api          # http://localhost:8000  (docs at /docs)
+make web          # http://localhost:5173  (shows "API: ok")
+make types        # regenerate web/src/api/types.ts (API must be running)
+make test         # pytest + web build
+make lint
+```
+
+## Rules for contributors
+
+- Never commit secrets. `.env` and `.aws/` are git-ignored. Credentials come from the environment or a local AWS profile only.
+- Never invent numbers. Missing data stays `null` and gets a line in `DATA_TODO.md`.
+- Every numeric output carries a `tag`, plus `grade`, `source_ids` and `alpha` where they apply.
+- After any API change, run `make types` and commit the regenerated `types.ts`.
+
+See `docs/Website_Development_Master_Plan.md` for the phase plan and `docs/PHASES.md` for progress.

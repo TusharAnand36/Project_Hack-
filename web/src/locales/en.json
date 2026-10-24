@@ -1,0 +1,18 @@
+{
+  "app": {
+    "title": "Upcycle Compass",
+    "tagline": "Go / No-go / Test-first for by-product proteins",
+    "skip": "Skip to content"
+  },
+  "health": {
+    "label": "API",
+    "ok": "ok",
+    "checking": "checking…",
+    "down": "unreachable",
+    "engine": "Engine {{engine}} · dataset {{dataset}}"
+  },
+  "footer": {
+    "disclaimer": "Decision support only. Not a regulatory approval. Confirm FSSAI classification and limits.",
+    "poc": "Proof of concept. Numbers shown before Phase 3 are placeholders tagged synthetic."
+  }
+}
