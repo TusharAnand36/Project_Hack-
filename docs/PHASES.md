@@ -502,3 +502,34 @@ The gate, verdict and pea-parity paths have their inputs. The cost model and the
 - Choose a licence for the open data pack.
 - Upgrade zod to 4, together with `@hookform/resolvers`, once the release is older than two weeks.
 - From Phase 7: Hindi review of `hi.json` and the safety strings; manual voice tests on real devices.
+
+## Phase 9: Pitch package
+
+**Implemented (`docs/pitch/`)**
+- **`SLIDES.md`:** the source plan §18.1 slide plan, rewritten for the current build (engine 0.8.0, dataset 2026-10-25.1).
+  - On-screen text, speaker notes and timings that add up to 4:00.
+  - The lead demo is sunflower cake → Protein Rich Flour (display names from `e74f6aa`).
+  - Uncalibrated outputs are not promised: P(GO), Pareto break-even and the EVPPI tornado.
+  - One unsourced claim (">25 Mt oilseed cake") was dropped until it is checked on FAOSTAT.
+- **`REFERENCES.md`:** every source with a clickable link, labelled with the provenance tags its values actually carry in `/data` (counted from the files).
+  - The organiser datasets are labelled "listed, no values drawn yet", because none supplies a value today.
+  - Also lists the AI tools (Bedrock, Groq, Claude Code, Web Speech API; BHASHINI not used) and library versions.
+- **`QA.md`:** the §18.2 answers updated where the build changed, for example backtesting not done, cost not calculable, feedback does not retrain.
+  - Adds the plan's four extra questions (Bedrock, AWS account gone, Hindi review, voice audio) and questions grouped by judge.
+- **`DEMO_SCRIPT.md`:** laptop setup with a disposable feedback database, a 1:50 video script, the 90-second live demo, a rehearsal log and a submission checklist.
+
+**Checked**
+- Demo numbers were taken from the app at this commit:
+  - TEST-FIRST, hypothesis grade, 9 routes;
+  - pea landed ≈ ₹518/kg protein (P10–P90 ₹431–619, assumed);
+  - lead 1.6 mg/kg via `/update-evidence` → NO-GO; lead 0.4 → stays TEST-FIRST.
+- UI labels in the click path match `en.json`.
+
+**Not done / needs the team**
+- Copy the content into the official template.
+- Fill in the Bedrock model id.
+- Record the video (before 3 AM).
+- Rehearse twice and fill in the log.
+- Make the repository public or remove its link.
+- Click every link in the exported PDF.
+- Submit by 7:30 AM.
