@@ -71,6 +71,30 @@ make api          # http://localhost:8000  (OpenAPI docs at /docs)
 make web          # http://localhost:5173
 ```
 
+On Windows (PowerShell), use Python 3.11–3.13 for the pinned dependencies:
+
+```powershell
+uv venv --python 3.13 .venv
+uv pip install --python .venv/Scripts/python.exe -r requirements-dev.txt
+cd web
+npm.cmd ci
+cd ..
+$env:PYTHONPATH = "engine;."
+$env:LLM_PROVIDER = "template"
+.\.venv\Scripts\python.exe -m uvicorn api.main:app --host 127.0.0.1 --port 8001
+```
+
+In a second PowerShell terminal, from the repository folder:
+
+```powershell
+$env:API_PROXY_TARGET = "http://127.0.0.1:8001"
+cd web
+npm.cmd run dev -- --host 127.0.0.1
+```
+
+Open http://127.0.0.1:5173. Port 8001 avoids conflicts with another API on 8000.
+The Windows setup uses [uv](https://docs.astral.sh/uv/) to install a compatible Python.
+
 Other targets:
 
 ```bash
