@@ -1,0 +1,315 @@
+{
+  "$defs": {
+    "Dist": {
+      "additionalProperties": false,
+      "description": "A probability distribution described by low / mode / high.",
+      "properties": {
+        "type": {
+          "enum": [
+            "pert",
+            "triangular",
+            "uniform",
+            "lognormal"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "low": {
+          "title": "Low",
+          "type": "number"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mode"
+        },
+        "high": {
+          "title": "High",
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "low",
+        "high"
+      ],
+      "title": "Dist",
+      "type": "object"
+    },
+    "Grade": {
+      "description": "Evidence grade, A (strongest) to D (weakest).",
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "title": "Grade",
+      "type": "string"
+    },
+    "Param": {
+      "additionalProperties": false,
+      "description": "One input parameter: a point value or a distribution, with provenance.\n\nBoth `value` and `dist` may be missing (null); that means \"no data yet\" and\nthe row must appear in DATA_TODO.md (source plan \u00a711.1). The data files use\nthe source plan's names `evidence_grade` / `applicability`; both spellings load.",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "dist": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Dist"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "tag": {
+          "$ref": "#/$defs/Tag"
+        },
+        "evidence_grade": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Grade"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Id"
+        },
+        "applicability": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applicability"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conditions"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "unit",
+        "tag"
+      ],
+      "title": "Param",
+      "type": "object"
+    },
+    "Scenario": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "set": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Set",
+          "type": "object"
+        },
+        "scale": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Scale",
+          "type": "object"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Id"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "Scenario",
+      "type": "object"
+    },
+    "Tag": {
+      "description": "Where a number came from.",
+      "enum": [
+        "measured",
+        "published",
+        "assumed",
+        "synthetic"
+      ],
+      "title": "Tag",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "utilities": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Param"
+      },
+      "title": "Utilities",
+      "type": "object"
+    },
+    "capital": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Param"
+      },
+      "title": "Capital",
+      "type": "object"
+    },
+    "overheads": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Param"
+      },
+      "title": "Overheads",
+      "type": "object"
+    },
+    "pea": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Param"
+      },
+      "title": "Pea",
+      "type": "object"
+    },
+    "duty_modes": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Param"
+      },
+      "title": "Duty Modes",
+      "type": "object"
+    },
+    "scenarios": {
+      "items": {
+        "$ref": "#/$defs/Scenario"
+      },
+      "title": "Scenarios",
+      "type": "array"
+    },
+    "decision": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Param"
+      },
+      "title": "Decision",
+      "type": "object"
+    },
+    "engine": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Param"
+      },
+      "title": "Engine",
+      "type": "object"
+    },
+    "readiness": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Param"
+      },
+      "title": "Readiness",
+      "type": "object"
+    }
+  },
+  "required": [
+    "utilities",
+    "capital",
+    "overheads",
+    "pea",
+    "duty_modes",
+    "scenarios",
+    "decision",
+    "engine",
+    "readiness"
+  ],
+  "title": "CostsFile",
+  "type": "object"
+}

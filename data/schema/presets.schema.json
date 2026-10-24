@@ -1,0 +1,48 @@
+{
+  "$defs": {
+    "Preset": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "story": {
+          "title": "Story",
+          "type": "string"
+        },
+        "payload": {
+          "title": "Payload",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "story",
+        "payload"
+      ],
+      "title": "Preset",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "presets": {
+      "items": {
+        "$ref": "#/$defs/Preset"
+      },
+      "title": "Presets",
+      "type": "array"
+    }
+  },
+  "required": [
+    "presets"
+  ],
+  "title": "PresetsFile",
+  "type": "object"
+}

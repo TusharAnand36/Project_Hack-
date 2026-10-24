@@ -1,0 +1,544 @@
+{
+  "$defs": {
+    "Dist": {
+      "additionalProperties": false,
+      "description": "A probability distribution described by low / mode / high.",
+      "properties": {
+        "type": {
+          "enum": [
+            "pert",
+            "triangular",
+            "uniform",
+            "lognormal"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "low": {
+          "title": "Low",
+          "type": "number"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mode"
+        },
+        "high": {
+          "title": "High",
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "low",
+        "high"
+      ],
+      "title": "Dist",
+      "type": "object"
+    },
+    "Effect": {
+      "additionalProperties": false,
+      "properties": {
+        "compound": {
+          "title": "Compound",
+          "type": "string"
+        },
+        "applies_to": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Applies To",
+          "type": "array"
+        },
+        "reduction": {
+          "$ref": "#/$defs/Param"
+        }
+      },
+      "required": [
+        "compound",
+        "applies_to",
+        "reduction"
+      ],
+      "title": "Effect",
+      "type": "object"
+    },
+    "Grade": {
+      "description": "Evidence grade, A (strongest) to D (weakest).",
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "title": "Grade",
+      "type": "string"
+    },
+    "Param": {
+      "additionalProperties": false,
+      "description": "One input parameter: a point value or a distribution, with provenance.\n\nBoth `value` and `dist` may be missing (null); that means \"no data yet\" and\nthe row must appear in DATA_TODO.md (source plan \u00a711.1). The data files use\nthe source plan's names `evidence_grade` / `applicability`; both spellings load.",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "dist": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Dist"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "tag": {
+          "$ref": "#/$defs/Tag"
+        },
+        "evidence_grade": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Grade"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Id"
+        },
+        "applicability": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applicability"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conditions"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "unit",
+        "tag"
+      ],
+      "title": "Param",
+      "type": "object"
+    },
+    "Precedence": {
+      "additionalProperties": false,
+      "description": "Ordering rules from source plan \u00a712.4.",
+      "properties": {
+        "max_length": {
+          "title": "Max Length",
+          "type": "integer"
+        },
+        "first_for": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "First For",
+          "type": "object"
+        },
+        "before": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Before",
+          "type": "array"
+        },
+        "forbidden_sequences": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Forbidden Sequences",
+          "type": "array"
+        },
+        "mutually_exclusive": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Mutually Exclusive",
+          "type": "array"
+        },
+        "max_fractionation": {
+          "title": "Max Fractionation",
+          "type": "integer"
+        },
+        "after_fractionation_allowed": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "After Fractionation Allowed",
+          "type": "object"
+        },
+        "not_between": {
+          "items": {
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Not Between",
+          "type": "array"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "max_length",
+        "first_for",
+        "before",
+        "forbidden_sequences",
+        "mutually_exclusive",
+        "max_fractionation",
+        "after_fractionation_allowed",
+        "not_between"
+      ],
+      "title": "Precedence",
+      "type": "object"
+    },
+    "Resources": {
+      "additionalProperties": false,
+      "properties": {
+        "kwh_per_kg": {
+          "$ref": "#/$defs/Param"
+        },
+        "water_l_per_kg": {
+          "$ref": "#/$defs/Param"
+        },
+        "chem_inr_per_kg": {
+          "$ref": "#/$defs/Param"
+        },
+        "labour_h_per_t": {
+          "$ref": "#/$defs/Param"
+        },
+        "time_h": {
+          "$ref": "#/$defs/Param"
+        },
+        "capex_ref_inr": {
+          "$ref": "#/$defs/Param"
+        },
+        "capex_ref_scale_kg_day": {
+          "$ref": "#/$defs/Param"
+        }
+      },
+      "required": [
+        "kwh_per_kg",
+        "water_l_per_kg",
+        "chem_inr_per_kg",
+        "labour_h_per_t",
+        "time_h",
+        "capex_ref_inr",
+        "capex_ref_scale_kg_day"
+      ],
+      "title": "Resources",
+      "type": "object"
+    },
+    "SideEffect": {
+      "additionalProperties": false,
+      "properties": {
+        "flavour_class": {
+          "title": "Flavour Class",
+          "type": "string"
+        },
+        "addition": {
+          "$ref": "#/$defs/Param"
+        }
+      },
+      "required": [
+        "flavour_class",
+        "addition"
+      ],
+      "title": "SideEffect",
+      "type": "object"
+    },
+    "Tag": {
+      "description": "Where a number came from.",
+      "enum": [
+        "measured",
+        "published",
+        "assumed",
+        "synthetic"
+      ],
+      "title": "Tag",
+      "type": "string"
+    },
+    "Treatment": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "process",
+            "fractionation"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "wet": {
+          "title": "Wet",
+          "type": "boolean"
+        },
+        "uses_solvent": {
+          "title": "Uses Solvent",
+          "type": "boolean"
+        },
+        "requires_equipment": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Requires Equipment",
+          "type": "array"
+        },
+        "effects": {
+          "items": {
+            "$ref": "#/$defs/Effect"
+          },
+          "title": "Effects",
+          "type": "array"
+        },
+        "mass_yield": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Param"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "protein_retention": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Param"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "purity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Param"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "recovery": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Param"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "resources": {
+          "$ref": "#/$defs/Resources"
+        },
+        "side_effects": {
+          "items": {
+            "$ref": "#/$defs/SideEffect"
+          },
+          "title": "Side Effects",
+          "type": "array"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "wet",
+        "uses_solvent",
+        "requires_equipment",
+        "effects",
+        "resources"
+      ],
+      "title": "Treatment",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "equipment": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Equipment",
+      "type": "array"
+    },
+    "treatments": {
+      "items": {
+        "$ref": "#/$defs/Treatment"
+      },
+      "title": "Treatments",
+      "type": "array"
+    },
+    "precedence": {
+      "$ref": "#/$defs/Precedence"
+    }
+  },
+  "required": [
+    "equipment",
+    "treatments",
+    "precedence"
+  ],
+  "title": "TreatmentsFile",
+  "type": "object"
+}

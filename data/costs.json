@@ -1,0 +1,302 @@
+{
+  "utilities": {
+    "electricity_inr_per_kwh": {
+      "unit": "INR/kWh",
+      "tag": "assumed",
+      "notes": "MISSING: industrial electricity tariff (state-specific)"
+    },
+    "water_inr_per_m3": {
+      "unit": "INR/m3",
+      "tag": "assumed",
+      "notes": "MISSING: industrial water price"
+    },
+    "labour_inr_per_h": {
+      "unit": "INR/h",
+      "tag": "assumed",
+      "notes": "MISSING: plant labour wage"
+    }
+  },
+  "capital": {
+    "discount_rate": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "value": 0.12,
+      "evidence_grade": "D",
+      "notes": "CRF discount rate (source plan §12.7)"
+    },
+    "life_years": {
+      "unit": "years",
+      "tag": "assumed",
+      "value": 10,
+      "evidence_grade": "D",
+      "notes": "CRF equipment life (source plan §12.7)"
+    },
+    "operating_days": {
+      "unit": "days/year",
+      "tag": "assumed",
+      "value": 300,
+      "evidence_grade": "D",
+      "notes": "source plan §12.7"
+    },
+    "utilisation": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "value": 0.8,
+      "evidence_grade": "D",
+      "notes": "source plan §12.7"
+    },
+    "scale_exponent": {
+      "unit": "dimensionless",
+      "tag": "assumed",
+      "value": 0.6,
+      "evidence_grade": "D",
+      "notes": "six-tenths rule (source plan §12.7)"
+    }
+  },
+  "overheads": {
+    "qa_inr_per_kg_raw": {
+      "unit": "INR/kg raw",
+      "tag": "assumed",
+      "notes": "MISSING: QA cost per kg raw cake"
+    },
+    "overhead_frac": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "notes": "MISSING: overhead share of processing cost"
+    }
+  },
+  "pea": {
+    "base_usd_per_kg": {
+      "unit": "USD/kg",
+      "tag": "published",
+      "dist": {
+        "type": "pert",
+        "low": 2.3,
+        "mode": 3.2,
+        "high": 4.6
+      },
+      "evidence_grade": "C",
+      "source_id": "tridge_pea_cn",
+      "notes": "China export price, pea protein 80-85%, 2023-24; mode 3.2 is the source plan default"
+    },
+    "protein_frac": {
+      "unit": "fraction",
+      "tag": "published",
+      "dist": {
+        "type": "uniform",
+        "low": 0.8,
+        "high": 0.85
+      },
+      "evidence_grade": "C",
+      "source_id": "tridge_pea_cn",
+      "notes": "product grade 80-85% protein"
+    },
+    "freight_frac": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "dist": {
+        "type": "pert",
+        "low": 0.04,
+        "mode": 0.08,
+        "high": 0.14
+      },
+      "evidence_grade": "D",
+      "notes": "source plan §11.3"
+    },
+    "usd_inr": {
+      "unit": "INR/USD",
+      "tag": "published",
+      "dist": {
+        "type": "pert",
+        "low": 90,
+        "mode": 96,
+        "high": 105
+      },
+      "evidence_grade": "C",
+      "source_id": "banklive_usdinr",
+      "notes": "mode from Oct 2026 quotes (95-97); range 90-105 is a planning assumption"
+    },
+    "buyer_discount": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "value": 0.1,
+      "evidence_grade": "D",
+      "notes": "source plan §12.8"
+    },
+    "clearing_frac": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "notes": "MISSING: optional clearing/holding cost on landed price"
+    },
+    "india_b2b_inr_per_kg_product": {
+      "unit": "INR/kg product",
+      "tag": "published",
+      "dist": {
+        "type": "uniform",
+        "low": 300,
+        "high": 450
+      },
+      "evidence_grade": "C",
+      "source_id": "indiamart_pea_isolate",
+      "notes": "cross-check only (website plan A4); B2B listings; verify"
+    }
+  },
+  "duty_modes": {
+    "full_stack_44": {
+      "unit": "fraction",
+      "tag": "published",
+      "value": 0.4396,
+      "evidence_grade": "C",
+      "source_id": "hs3504_tariff",
+      "notes": "BCD 20% + SWS + IGST 18%; the two sources disagree (43.96% vs 49.15%)"
+    },
+    "full_stack_49": {
+      "unit": "fraction",
+      "tag": "published",
+      "value": 0.4915,
+      "evidence_grade": "C",
+      "source_id": "hs3504_tariff",
+      "notes": "BCD 20% + SWS + IGST 18%; the two sources disagree (43.96% vs 49.15%)"
+    },
+    "bcd_only_igst_credited_22": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "value": 0.22,
+      "evidence_grade": "D",
+      "notes": "BCD + SWS only, if a GST-registered buyer credits IGST; confirm with a CA/customs source"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "inr_105",
+      "name": "INR depreciates to 105 per USD",
+      "set": {
+        "usd_inr": 105
+      }
+    },
+    {
+      "id": "freight_plus_20",
+      "name": "Freight +20%",
+      "scale": {
+        "freight_frac": 1.2
+      }
+    },
+    {
+      "id": "pea_base_plus_25",
+      "name": "Pea base +25% (anti-dumping diversion)",
+      "scale": {
+        "base_usd_per_kg": 1.25
+      },
+      "source_id": "eu_pea_provisional"
+    }
+  ],
+  "decision": {
+    "campaign_kg_cake": {
+      "unit": "kg",
+      "tag": "assumed",
+      "value": 10000,
+      "evidence_grade": "D",
+      "notes": "one pilot campaign (10 t cake), source plan §12.9"
+    },
+    "co_product_credit_inr_per_kg_protein": {
+      "unit": "INR/kg protein",
+      "tag": "assumed",
+      "value": 0,
+      "evidence_grade": "D",
+      "notes": "conservative default (source plan §8.3)"
+    },
+    "default_scale_kg_day": {
+      "unit": "kg/day",
+      "tag": "assumed",
+      "value": 500,
+      "evidence_grade": "D",
+      "notes": "from the source plan §8.3 example payload"
+    },
+    "user_risk_tolerance_p_fail": {
+      "unit": "probability",
+      "tag": "assumed",
+      "notes": "MISSING: acceptable prior gate risk for rule §12.14-2 (user-set)"
+    }
+  },
+  "engine": {
+    "seed": {
+      "unit": "count",
+      "tag": "assumed",
+      "value": 42,
+      "notes": "config: random seed"
+    },
+    "n_draws": {
+      "unit": "count",
+      "tag": "assumed",
+      "value": 8192,
+      "notes": "config: Sobol draws (2^13)"
+    },
+    "pert_lambda": {
+      "unit": "dimensionless",
+      "tag": "assumed",
+      "value": 4,
+      "notes": "config: PERT shape"
+    },
+    "extrapolation_k": {
+      "unit": "dimensionless",
+      "tag": "assumed",
+      "value": 1.0,
+      "notes": "config: range widening 1 + k(1-alpha)"
+    },
+    "evppi_bins": {
+      "unit": "count",
+      "tag": "assumed",
+      "value": 25,
+      "notes": "config: EVPPI bins"
+    },
+    "max_chains": {
+      "unit": "count",
+      "tag": "assumed",
+      "value": 60,
+      "notes": "config: chain cap"
+    },
+    "max_protein_frac": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "value": 0.95,
+      "notes": "config: cap on protein fraction"
+    },
+    "elisa_cv_default": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "notes": "MISSING: assay CV when a lab test lacks one"
+    }
+  },
+  "readiness": {
+    "decision_p_spec_min": {
+      "unit": "probability",
+      "tag": "assumed",
+      "value": 0.8,
+      "notes": "config: decision-grade P(spec)"
+    },
+    "decision_evpi_ratio_max": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "value": 0.15,
+      "notes": "config: decision-grade EVPI/|E_now|"
+    },
+    "decision_ab_driver_share_min": {
+      "unit": "fraction",
+      "tag": "assumed",
+      "value": 0.7,
+      "notes": "config: share of top drivers graded A/B"
+    },
+    "top_drivers": {
+      "unit": "count",
+      "tag": "assumed",
+      "value": 5,
+      "notes": "config: number of value drivers checked"
+    },
+    "not_viable_p_spec_max": {
+      "unit": "probability",
+      "tag": "assumed",
+      "value": 0.2,
+      "notes": "config: best P(spec) below this = not viable"
+    }
+  }
+}

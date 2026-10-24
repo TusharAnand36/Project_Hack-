@@ -68,10 +68,10 @@ class Param(_Strict):
     dist: Dist | None = None
     unit: str
     tag: Tag
-    grade: Grade | None = Field(default=None, validation_alias=AliasChoices("grade", "evidence_grade"))
+    grade: Grade | None = Field(default=None, validation_alias=AliasChoices("evidence_grade", "grade"))
     source_id: str | None = None
     alpha: float | None = Field(
-        default=None, ge=0.0, le=1.0, validation_alias=AliasChoices("alpha", "applicability")
+        default=None, ge=0.0, le=1.0, validation_alias=AliasChoices("applicability", "alpha")
     )
     conditions: Conditions | None = None
     notes: str | None = None

@@ -1,0 +1,80 @@
+{
+  "presets": [
+    {
+      "id": "groundnut_beverage",
+      "title": "Groundnut cake → beverage protein",
+      "story": "Shows the aflatoxin safety gate (prior risk) and the chain Pareto. Batch protein and moisture are synthetic demo values (source plan §8.3 example), not measurements.",
+      "payload": {
+        "byproduct": "groundnut_cake",
+        "application": "beverage",
+        "targets": {
+          "min_protein_pct": 60,
+          "max_cost_inr_per_kg_protein": 300,
+          "max_offflavour_index": 3.0
+        },
+        "market": "domestic",
+        "scale_kg_day": 500,
+        "constraints": {
+          "exclude_treatments": [
+            "ethanol_wash"
+          ],
+          "equipment": [
+            "extruder",
+            "spray_dryer"
+          ]
+        },
+        "batch": {
+          "protein_pct": {
+            "value": 48,
+            "n_factor": 6.25,
+            "tag": "synthetic"
+          },
+          "moisture_pct": {
+            "value": 8,
+            "tag": "synthetic"
+          },
+          "afb1_ppb": null
+        },
+        "pea": {
+          "protein_pct": 85,
+          "duty_mode": "bcd_only_igst_credited_22"
+        }
+      }
+    },
+    {
+      "id": "rice_bran_snack",
+      "title": "De-oiled rice bran → extruded snack",
+      "story": "Shows the stability gate and the low-protein reality.",
+      "payload": {
+        "byproduct": "deoiled_rice_bran",
+        "application": "extruded_snack",
+        "market": "domestic",
+        "scale_kg_day": 500,
+        "constraints": {
+          "equipment": [
+            "extruder"
+          ]
+        },
+        "process": {
+          "solvent_extracted": true
+        }
+      }
+    },
+    {
+      "id": "almond_meat",
+      "title": "Almond cake → meat analogue",
+      "story": "Shows 'no treatment needed' with allergen and price flags.",
+      "payload": {
+        "byproduct": "almond_cake",
+        "application": "meat_analogue",
+        "market": "domestic",
+        "scale_kg_day": 500,
+        "constraints": {
+          "equipment": [
+            "extruder"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,330 @@
+{
+  "$defs": {
+    "Byproduct": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "core",
+            "control",
+            "stretch"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "allergen": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Allergen"
+        },
+        "oil_routes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Oil Routes",
+          "type": "array"
+        },
+        "gates": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Gates",
+          "type": "array"
+        },
+        "composition": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Param"
+          },
+          "title": "Composition",
+          "type": "object"
+        },
+        "compounds": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Param"
+          },
+          "title": "Compounds",
+          "type": "object"
+        },
+        "flavour_baseline": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Param"
+          },
+          "title": "Flavour Baseline",
+          "type": "object"
+        },
+        "limiting_amino_acid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Limiting Amino Acid"
+        },
+        "price_inr_per_kg": {
+          "$ref": "#/$defs/Param"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "role",
+        "gates",
+        "composition",
+        "compounds",
+        "flavour_baseline",
+        "price_inr_per_kg"
+      ],
+      "title": "Byproduct",
+      "type": "object"
+    },
+    "Dist": {
+      "additionalProperties": false,
+      "description": "A probability distribution described by low / mode / high.",
+      "properties": {
+        "type": {
+          "enum": [
+            "pert",
+            "triangular",
+            "uniform",
+            "lognormal"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "low": {
+          "title": "Low",
+          "type": "number"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mode"
+        },
+        "high": {
+          "title": "High",
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "low",
+        "high"
+      ],
+      "title": "Dist",
+      "type": "object"
+    },
+    "Grade": {
+      "description": "Evidence grade, A (strongest) to D (weakest).",
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "title": "Grade",
+      "type": "string"
+    },
+    "Param": {
+      "additionalProperties": false,
+      "description": "One input parameter: a point value or a distribution, with provenance.\n\nBoth `value` and `dist` may be missing (null); that means \"no data yet\" and\nthe row must appear in DATA_TODO.md (source plan \u00a711.1). The data files use\nthe source plan's names `evidence_grade` / `applicability`; both spellings load.",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "dist": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Dist"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "tag": {
+          "$ref": "#/$defs/Tag"
+        },
+        "evidence_grade": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Grade"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Id"
+        },
+        "applicability": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applicability"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conditions"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "unit",
+        "tag"
+      ],
+      "title": "Param",
+      "type": "object"
+    },
+    "Tag": {
+      "description": "Where a number came from.",
+      "enum": [
+        "measured",
+        "published",
+        "assumed",
+        "synthetic"
+      ],
+      "title": "Tag",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "defaults": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Param"
+      },
+      "title": "Defaults",
+      "type": "object"
+    },
+    "reference_species": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reference Species",
+      "type": "array"
+    },
+    "byproducts": {
+      "items": {
+        "$ref": "#/$defs/Byproduct"
+      },
+      "title": "Byproducts",
+      "type": "array"
+    }
+  },
+  "required": [
+    "defaults",
+    "reference_species",
+    "byproducts"
+  ],
+  "title": "ByproductsFile",
+  "type": "object"
+}

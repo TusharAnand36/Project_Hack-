@@ -2,7 +2,7 @@
 PY      ?= .venv/bin/python
 API_URL ?= http://localhost:8000
 
-.PHONY: setup api web test types snapshots lint
+.PHONY: setup api web test types snapshots lint data todo
 
 setup:
 	python3 -m venv .venv
@@ -29,3 +29,9 @@ lint:
 	$(PY) -m ruff check engine api
 	$(PY) -m black --check engine api
 	cd web && npm run lint
+
+data:
+	cd engine && ../$(PY) -m compass.data --report
+
+todo:
+	cd engine && ../$(PY) -m compass.data --todo ../DATA_TODO.md && ../$(PY) -m compass.data --schema ../data/schema

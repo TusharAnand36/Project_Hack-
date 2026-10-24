@@ -1,0 +1,308 @@
+{
+  "$defs": {
+    "Dist": {
+      "additionalProperties": false,
+      "description": "A probability distribution described by low / mode / high.",
+      "properties": {
+        "type": {
+          "enum": [
+            "pert",
+            "triangular",
+            "uniform",
+            "lognormal"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "low": {
+          "title": "Low",
+          "type": "number"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mode"
+        },
+        "high": {
+          "title": "High",
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "low",
+        "high"
+      ],
+      "title": "Dist",
+      "type": "object"
+    },
+    "Grade": {
+      "description": "Evidence grade, A (strongest) to D (weakest).",
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "title": "Grade",
+      "type": "string"
+    },
+    "Param": {
+      "additionalProperties": false,
+      "description": "One input parameter: a point value or a distribution, with provenance.\n\nBoth `value` and `dist` may be missing (null); that means \"no data yet\" and\nthe row must appear in DATA_TODO.md (source plan \u00a711.1). The data files use\nthe source plan's names `evidence_grade` / `applicability`; both spellings load.",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "dist": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Dist"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "tag": {
+          "$ref": "#/$defs/Tag"
+        },
+        "evidence_grade": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Grade"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Id"
+        },
+        "applicability": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applicability"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conditions"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "unit",
+        "tag"
+      ],
+      "title": "Param",
+      "type": "object"
+    },
+    "SafetyGate": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "stop",
+            "flag"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "applies_to": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Applies To",
+          "type": "array"
+        },
+        "inputs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "rule": {
+          "title": "Rule",
+          "type": "string"
+        },
+        "required_tests": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Tests",
+          "type": "array"
+        },
+        "flip_condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Flip Condition"
+        },
+        "limits": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Param"
+          },
+          "title": "Limits",
+          "type": "object"
+        },
+        "params": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Param"
+          },
+          "title": "Params",
+          "type": "object"
+        },
+        "allergens": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Allergens",
+          "type": "object"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "applies_to",
+        "inputs",
+        "rule",
+        "required_tests"
+      ],
+      "title": "SafetyGate",
+      "type": "object"
+    },
+    "Tag": {
+      "description": "Where a number came from.",
+      "enum": [
+        "measured",
+        "published",
+        "assumed",
+        "synthetic"
+      ],
+      "title": "Tag",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "gates": {
+      "items": {
+        "$ref": "#/$defs/SafetyGate"
+      },
+      "title": "Gates",
+      "type": "array"
+    }
+  },
+  "required": [
+    "gates"
+  ],
+  "title": "SafetyGatesFile",
+  "type": "object"
+}

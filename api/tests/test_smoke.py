@@ -70,3 +70,17 @@ def test_analyze_rejects_unknown_fields():
 def test_analyze_rejects_impossible_protein():
     bad = {**EXAMPLE, "batch": {"protein_pct": {"value": 120}}}
     assert client.post("/analyze", json=bad).status_code == 422
+
+
+def test_presets_are_valid_requests():
+    from api.main import DATASET
+    from api.schemas import AnalyzeRequest
+
+    for preset in DATASET.presets.values():
+        AnalyzeRequest.model_validate(preset.payload)
+
+
+def test_health_reports_dataset_version():
+    from api.main import DATASET
+
+    assert client.get("/health").json()["dataset_version"] == DATASET.version

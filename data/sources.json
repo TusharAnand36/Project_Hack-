@@ -1,0 +1,253 @@
+{
+  "dataset_version": "2026-10-24.2",
+  "sources": [
+    {
+      "id": "user_review_draft",
+      "citation": "Team's oilseed-cake review, earlier drafts (draft 1; draft 1 of 28-08-26), unpublished",
+      "kind": "user_draft",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false,
+      "notes": "Superseded by user_review_final for every value used here."
+    },
+    {
+      "id": "user_review_final",
+      "citation": "Team review 'From By-Product to Functional Food: Valorization of Cold-Pressed Oilseed Cakes' (final draft, unpublished), Tables 2, 3, 7, 8, 11",
+      "kind": "user_draft",
+      "accessed": "2026-10-24 (uploaded document)",
+      "verified_by_team": false,
+      "notes": "Secondary: each value cites a primary paper (recorded in the row's conditions.cites)."
+    },
+    {
+      "id": "user_research_plan",
+      "citation": "Team research plan, 5 Aug 2026 (unpublished)",
+      "kind": "user_draft",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false,
+      "notes": "Almond values checked against the uploaded document (24 Oct 2026): match."
+    },
+    {
+      "id": "user_phd_report",
+      "citation": "R. O. Mathur, PhD progress report: LoR and proximate analysis (20 May 2026), unpublished",
+      "kind": "user_draft",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false,
+      "notes": "NOT USED in the main dataset: owner permission not confirmed. Measured values staged in data/_staging/."
+    },
+    {
+      "id": "source_plan_v2",
+      "citation": "Upcycle Compass Master Prompt v2 (team plan), docs/Upcycle_Compass_Master_Prompt.md",
+      "kind": "plan",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false,
+      "notes": "Rules and starting assumptions; not evidence."
+    },
+    {
+      "id": "singh_2022",
+      "citation": "Singh et al. 2022. Protein for human consumption from oilseed cakes. Front. Sustain. Food Syst.",
+      "url": "https://www.frontiersin.org/journals/sustainable-food-systems/articles/10.3389/fsufs.2022.856401",
+      "doi": "10.3389/fsufs.2022.856401",
+      "kind": "review",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "murugeswari_2023",
+      "citation": "Murugeswari 2023. Aflatoxin B1 in feed and feed raw materials in India (5-year survey; 118 groundnut-cake samples)",
+      "url": "https://agris.fao.org/search/fr/records/6851787853e52c13fc76fde0",
+      "kind": "peer_reviewed",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "dubey_2019",
+      "citation": "Dubey et al. 2019. Rice bran stabilization review (citing Tao et al. 1993)",
+      "url": "https://shura.shu.ac.uk/24906/",
+      "kind": "review",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "aau_rice_bran",
+      "citation": "Processing raw rice bran to potential functional food for human consumption. Asian J. Dairy Food Res. (DR-2233)",
+      "url": "https://arccjournals.com/journal/asian-journal-of-dairy-and-food-research/DR-2233",
+      "kind": "peer_reviewed",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "us5753283",
+      "citation": "US Patent 5,753,283: Method of stabilising rice bran",
+      "url": "https://patents.google.com/patent/US5753283",
+      "kind": "patent",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "us12285029",
+      "citation": "US Patent 12,285,029: Microbial protein isolate from oilseed meals",
+      "url": "https://patents.google.com/patent/US12285029",
+      "kind": "patent",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "el_kady_farghaly",
+      "citation": "El-Kady & Farghaly. Aflatoxin inactivation by heat",
+      "url": "https://archive.org/download/biostor-278424/biostor-278424.pdf",
+      "kind": "peer_reviewed",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "shriram_aflatoxin",
+      "citation": "Shriram Institute for Industrial Research. Aflatoxin in Groundnuts (summary)",
+      "url": "https://www.shriraminstitute.org/wp-content/uploads/2022/08/Aflatoxin-in-Groundnuts.pdf",
+      "kind": "web",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false,
+      "notes": "Secondary summary of limits; legal basis must be verified."
+    },
+    {
+      "id": "nature_1966",
+      "citation": "Detoxification of groundnut meals. Nature 209, 406 (1966)",
+      "url": "https://www.nature.com/articles/209406a0",
+      "kind": "peer_reviewed",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "pbfia_agron",
+      "citation": "PBFIA via Agron Food Processing: ~90% of plant-protein ingredients imported; INR 4,500 -> 9,000 crore",
+      "url": "https://agronfoodprocessing.com/?p=31333",
+      "kind": "trade",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "gfi_india_orphan",
+      "citation": "GFI India orphan-crops whitepaper (coverage, vegconomist)",
+      "url": "https://vegconomist.com/agriculture-agribusiness/indias-orphan-crops-could-unlock-new-plant-protein-supply-chain-gfi-india-argues/",
+      "kind": "trade",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "hs3504_tariff",
+      "citation": "India import tariff HS 35040099: eximpe.com and treayo.com (two sources; totals 43.96% and 49.15%)",
+      "url": "https://eximpe.com/hsncode-finder/35040099",
+      "kind": "web",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false,
+      "notes": "Second source: https://treayo.com/en/hs/india/35040099. Which site gives which total is not recorded; both sites unreachable from the agent on 24 Oct 2026."
+    },
+    {
+      "id": "cbsa_pea",
+      "citation": "Canada CBSA: pea protein anti-dumping/countervailing measures",
+      "url": "https://www.cbsa-asfc.gc.ca/sima-lmsi/mif-mev/hpc-eng.html",
+      "kind": "regulatory",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "eu_pea_provisional",
+      "citation": "EU provisional anti-dumping duties on Chinese pea protein (31 Mar 2026), WKO information",
+      "url": "https://www.wko.at/oe/aussenwirtschaft/information-at-provisional-stage-pre-disclosure-1.pdf",
+      "kind": "regulatory",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "expana_2026",
+      "citation": "Expana Plant-Based Protein Report, March 2026",
+      "url": "https://www.mintecglobal.com/hubfs/Expana%20Plant-Based%20Protein%20Report%20-%20March%202026.pdf",
+      "kind": "trade",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "tridge_pea_cn",
+      "citation": "Tridge: pea protein (80-85%) export prices, China, 2023-24",
+      "url": "https://dir.tridge.com/prices/grass-pea-protein/CN",
+      "kind": "trade",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "banklive_usdinr",
+      "citation": "USD/INR quotes, Sep-Oct 2026 (banklive.net)",
+      "url": "https://banklive.net/en/convert/usd-to-inr",
+      "kind": "web",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false
+    },
+    {
+      "id": "indiamart_mahalakshmi",
+      "citation": "IndiaMART trader listing (Mahalakshmi Oils): groundnut cake and de-oiled rice bran prices",
+      "url": "https://m.indiamart.com/mahalakshmi-oils",
+      "kind": "trade",
+      "accessed": "2026-10 (per source plan §19; not re-checked by agent)",
+      "verified_by_team": false,
+      "notes": "Indicative; replace with AGMARKNET / SEA / NCDEX."
+    },
+    {
+      "id": "indiamart_pea_isolate",
+      "citation": "IndiaMART and TradeIndia pea protein isolate B2B listings",
+      "url": "https://www.indiamart.com/proddetail/pea-protein-isolate-23662128530.html",
+      "kind": "trade",
+      "accessed": "2026-10 (per website plan §16)",
+      "verified_by_team": false,
+      "notes": "Second listing: https://www.tradeindia.com/manufacturers/pea-protein.html. Cross-check only."
+    },
+    {
+      "id": "fssai_cts_2015",
+      "citation": "FSSAI Contaminants, Toxins and Residues (Amendment) Regulations 2015, as tabulated by ChemLinked",
+      "url": "https://food.chemlinked.com/news/food-news/india-fssai-revised-limits-contaminants",
+      "kind": "regulatory",
+      "accessed": "2026-10-24 (agent desk research)",
+      "verified_by_team": false,
+      "notes": "Secondary reproduction; check the consolidated FSSAI text."
+    },
+    {
+      "id": "eu_2023_915",
+      "citation": "Commission Regulation (EU) 2023/915 on maximum levels for certain contaminants in food (consolidated)",
+      "url": "https://eur-lex.europa.eu/eli/reg/2023/915",
+      "kind": "regulatory",
+      "accessed": "2026-10-24 (agent desk research)",
+      "verified_by_team": false
+    },
+    {
+      "id": "arcc_dr1277",
+      "citation": "Full-fat vs defatted rice bran composition. Asian J. Dairy Food Res. 37(1):77-80 (2018), DR-1277",
+      "url": "https://arccjournals.com/journal/asian-journal-of-dairy-and-food-research/DR-1277",
+      "doi": "10.18805/ajdfr.DR-1277",
+      "kind": "peer_reviewed",
+      "accessed": "2026-10-24 (agent desk research)",
+      "verified_by_team": false
+    },
+    {
+      "id": "bvsalud_dephytinised",
+      "citation": "Utilization of dephytinised rice bran for production of biscuits (EMR-97553)",
+      "url": "https://search.bvsalud.org/gim/resource/en/emr-97553",
+      "kind": "peer_reviewed",
+      "accessed": "2026-10-24 (agent desk research)",
+      "verified_by_team": false
+    },
+    {
+      "id": "spkx_2010_peanut",
+      "citation": "Optimisation of alkali extraction / acid precipitation of peanut protein isolate. Food Science 31(20):196-201 (2010)",
+      "url": "https://www.spkx.net.cn/EN/Y2010/V31/I20/196",
+      "doi": "10.7506/spkx1002-6630-201020040",
+      "kind": "peer_reviewed",
+      "accessed": "2026-10-24 (agent desk research)",
+      "verified_by_team": false
+    },
+    {
+      "id": "sun_2008_bran_as",
+      "citation": "Sun, Meharg et al. 2008. Inorganic arsenic in rice bran and its products. Environ. Sci. Technol.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18939599",
+      "kind": "peer_reviewed",
+      "accessed": "2026-10-24 (agent desk research)",
+      "verified_by_team": false
+    }
+  ]
+}

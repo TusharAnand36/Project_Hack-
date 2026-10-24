@@ -1,0 +1,166 @@
+{
+  "tiers": [
+    "flour",
+    "treated_flour",
+    "concentrate",
+    "isolate"
+  ],
+  "tier_thresholds": {
+    "concentrate_min_protein_pct": {
+      "unit": "%",
+      "tag": "assumed",
+      "value": 45,
+      "evidence_grade": "D",
+      "notes": "source plan §12.5 (configurable)"
+    },
+    "isolate_min_protein_pct": {
+      "unit": "%",
+      "tag": "assumed",
+      "value": 75,
+      "evidence_grade": "D",
+      "notes": "source plan §12.5 (configurable)"
+    }
+  },
+  "applications": [
+    {
+      "id": "beverage",
+      "name": "Beverage",
+      "preferred_tiers": [
+        "concentrate",
+        "isolate"
+      ],
+      "tolerances": {
+        "min_protein_pct": {
+          "unit": "%",
+          "tag": "assumed",
+          "value": 60,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (min protein); source it"
+        },
+        "max_ofi": {
+          "unit": "index 0-10",
+          "tag": "assumed",
+          "value": 3,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (max off-flavour); source it"
+        },
+        "max_phytate_pct_db": {
+          "unit": "% dry basis",
+          "tag": "assumed",
+          "value": 1.0,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (max phytate); source it"
+        },
+        "max_tia_pct_raw": {
+          "unit": "% of raw activity",
+          "tag": "assumed",
+          "value": 15,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (max TIA); source it"
+        }
+      },
+      "functionality": "Solubility at neutral pH, low grit, colour.",
+      "functionality_tests": [
+        "functionality_panel",
+        "sensory_panel"
+      ]
+    },
+    {
+      "id": "extruded_snack",
+      "name": "Extruded snack / puffed product",
+      "preferred_tiers": [
+        "flour",
+        "treated_flour",
+        "concentrate"
+      ],
+      "tolerances": {
+        "min_protein_pct": {
+          "unit": "%",
+          "tag": "assumed",
+          "value": 35,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (min protein, as inclusion); source it"
+        },
+        "max_ofi": {
+          "unit": "index 0-10",
+          "tag": "assumed",
+          "value": 5,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (max off-flavour); source it"
+        },
+        "max_phytate_pct_db": {
+          "unit": "% dry basis",
+          "tag": "assumed",
+          "value": 2.0,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (max phytate); source it"
+        },
+        "max_tia_pct_raw": {
+          "unit": "% of raw activity",
+          "tag": "assumed",
+          "value": 20,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (max TIA); source it"
+        }
+      },
+      "inclusion_pct": {
+        "unit": "%",
+        "tag": "assumed",
+        "dist": {
+          "type": "uniform",
+          "low": 10,
+          "high": 20
+        },
+        "evidence_grade": "D",
+        "notes": "source plan §11.5; review draft says <=15-20% inclusion typical; verify"
+      },
+      "functionality": "Expansion tolerance at 10-20% inclusion; darker colour acceptable.",
+      "functionality_tests": [
+        "sensory_panel"
+      ]
+    },
+    {
+      "id": "meat_analogue",
+      "name": "Meat analogue (textured protein)",
+      "preferred_tiers": [
+        "concentrate",
+        "isolate"
+      ],
+      "tolerances": {
+        "min_protein_pct": {
+          "unit": "%",
+          "tag": "assumed",
+          "value": 55,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (min protein); source it"
+        },
+        "max_ofi": {
+          "unit": "index 0-10",
+          "tag": "assumed",
+          "value": 4,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (max off-flavour); source it"
+        },
+        "max_phytate_pct_db": {
+          "unit": "% dry basis",
+          "tag": "assumed",
+          "value": 1.5,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (max phytate); source it"
+        },
+        "max_tia_pct_raw": {
+          "unit": "% of raw activity",
+          "tag": "assumed",
+          "value": 15,
+          "evidence_grade": "D",
+          "notes": "source plan §11.5 starting value (max TIA); source it"
+        }
+      },
+      "functionality": "Gelation / texturisation, water holding.",
+      "functionality_tests": [
+        "functionality_panel",
+        "sensory_panel"
+      ]
+    }
+  ]
+}

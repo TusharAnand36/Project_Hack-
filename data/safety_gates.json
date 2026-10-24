@@ -1,0 +1,214 @@
+{
+  "gates": [
+    {
+      "id": "G1",
+      "name": "Aflatoxin B1",
+      "kind": "stop",
+      "applies_to": [
+        "groundnut_cake"
+      ],
+      "inputs": [
+        "afb1_ppb",
+        "market",
+        "sorted_food_grade_supply"
+      ],
+      "rule": "measured <= pass_fraction x L -> PASS; <= L -> TEST-FIRST (confirm by HPLC); > L -> FAIL. Not measured -> TEST-FIRST with prior P(fail).",
+      "required_tests": [
+        "afb1_elisa",
+        "afb1_hplc"
+      ],
+      "flip_condition": "measured <= 0.5 x limit on a representative composite sample",
+      "limits": {
+        "domestic": {
+          "unit": "ppb",
+          "tag": "published",
+          "value": 30,
+          "evidence_grade": "C",
+          "source_id": "shriram_aflatoxin",
+          "notes": "per one Indian institute summary; verify legal basis. Desk research found FSSAI 2015 amendment lists 15 µg/kg for nuts/oilseeds for further processing (see _staging)"
+        },
+        "export_EU": {
+          "unit": "ppb",
+          "tag": "published",
+          "value": 4,
+          "evidence_grade": "C",
+          "source_id": "shriram_aflatoxin",
+          "notes": "total aflatoxin; verify Reg. (EU) 2023/915 (B1 vs total; sorting vs direct consumption)"
+        }
+      },
+      "params": {
+        "pass_fraction_of_limit": {
+          "unit": "fraction",
+          "tag": "assumed",
+          "value": 0.5,
+          "evidence_grade": "D",
+          "notes": "rule threshold, source plan §12.1"
+        },
+        "prior_p_fail": {
+          "unit": "probability",
+          "tag": "published",
+          "value": 0.53,
+          "evidence_grade": "B",
+          "source_id": "murugeswari_2023",
+          "notes": "1 - 0.472 (47.2% of 118 samples <= 20 ppb). Feed-grade cake and a 20 ppb threshold, not the market limit; verify"
+        },
+        "sorted_supply_odds_multiplier": {
+          "unit": "dimensionless",
+          "tag": "assumed",
+          "value": 0.2,
+          "evidence_grade": "D",
+          "notes": "source plan §12.1"
+        },
+        "composite_subsamples_min": {
+          "unit": "count",
+          "tag": "assumed",
+          "value": 10,
+          "evidence_grade": "D",
+          "notes": "lot sampling, source plan §12.1"
+        }
+      },
+      "notes": "Aflatoxin sits in a few hot kernels: sampling error often dominates assay error."
+    },
+    {
+      "id": "G2",
+      "name": "Rancidity / lipase",
+      "kind": "stop",
+      "applies_to": [
+        "deoiled_rice_bran"
+      ],
+      "inputs": [
+        "ffa_pct",
+        "hours_since_milling",
+        "stabilised"
+      ],
+      "rule": "ffa > fail -> FAIL; test_first < ffa <= fail -> TEST-FIRST; ffa <= test_first and (stabilised or hours <= window) -> PASS; unmeasured, unstabilised and hours > window -> FAIL; else TEST-FIRST.",
+      "required_tests": [
+        "ffa_titration",
+        "peroxide_value"
+      ],
+      "flip_condition": "FFA <= 3% on stabilised material",
+      "limits": {
+        "ffa_fail_pct": {
+          "unit": "%",
+          "tag": "published",
+          "value": 5,
+          "evidence_grade": "C",
+          "source_id": "dubey_2019",
+          "notes": "Dubey 2019 citing Tao 1993 (secondary)"
+        }
+      },
+      "params": {
+        "ffa_test_first_pct": {
+          "unit": "%",
+          "tag": "assumed",
+          "value": 3,
+          "evidence_grade": "D",
+          "notes": "source plan §12.1"
+        },
+        "unstabilised_window_h": {
+          "unit": "h",
+          "tag": "published",
+          "value": 6,
+          "evidence_grade": "C",
+          "source_id": "dubey_2019",
+          "notes": "raw bran under normal milling; applicability to DORB to verify"
+        }
+      }
+    },
+    {
+      "id": "G3",
+      "name": "Heavy metals",
+      "kind": "stop",
+      "applies_to": [
+        "deoiled_rice_bran"
+      ],
+      "inputs": [
+        "inorganic_as_ppm",
+        "cd_ppm"
+      ],
+      "rule": "Not measured -> TEST-FIRST. Measured vs limit (null limit -> TEST-FIRST).",
+      "required_tests": [
+        "icp_ms_metals"
+      ],
+      "flip_condition": "measured <= limit",
+      "limits": {
+        "inorganic_arsenic": {
+          "unit": "mg/kg",
+          "tag": "assumed",
+          "notes": "MISSING: inorganic As limit for rice-bran ingredients (FSSAI/Codex)"
+        },
+        "cadmium": {
+          "unit": "mg/kg",
+          "tag": "assumed",
+          "notes": "MISSING: Cd limit for rice-bran ingredients (FSSAI/Codex)"
+        }
+      },
+      "notes": "Rice bran concentrates arsenic (~1 mg/kg inorganic As reported; candidate in _staging). Add a citation before pitching."
+    },
+    {
+      "id": "G4",
+      "name": "Solvent residue",
+      "kind": "stop",
+      "applies_to": [
+        "groundnut_cake",
+        "deoiled_rice_bran"
+      ],
+      "inputs": [
+        "solvent_extracted",
+        "hexane_cert"
+      ],
+      "rule": "Solvent-extracted and no certificate -> TEST-FIRST.",
+      "required_tests": [
+        "hexane_residue_gchs"
+      ],
+      "flip_condition": "certificate or measurement"
+    },
+    {
+      "id": "G5",
+      "name": "Food-grade provenance",
+      "kind": "stop",
+      "applies_to": [
+        "*"
+      ],
+      "inputs": [
+        "food_grade_supply",
+        "storage"
+      ],
+      "rule": "Feed-grade or open storage -> TEST-FIRST (micro panel) and 're-source if possible'.",
+      "required_tests": [
+        "micro_panel"
+      ],
+      "flip_condition": "passing micro panel + hygienic supply"
+    },
+    {
+      "id": "G6",
+      "name": "Allergen",
+      "kind": "flag",
+      "applies_to": [
+        "groundnut_cake",
+        "almond_cake"
+      ],
+      "inputs": [
+        "application",
+        "claims"
+      ],
+      "rule": "Always FLAG: major allergen; must be labelled; cannot support an allergen-free claim. Claim 'allergen_free' -> FAIL for that claim.",
+      "required_tests": [],
+      "allergens": {
+        "groundnut_cake": "peanut",
+        "almond_cake": "tree nut (almond)"
+      }
+    },
+    {
+      "id": "G7",
+      "name": "Regulatory",
+      "kind": "flag",
+      "applies_to": [
+        "*"
+      ],
+      "inputs": [],
+      "rule": "Always FLAG: confirm FSSAI classification / approval route for a novel or non-standardised ingredient.",
+      "required_tests": []
+    }
+  ]
+}

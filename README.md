@@ -37,7 +37,13 @@ make web          # http://localhost:5173  (shows "API: ok")
 make types        # regenerate web/src/api/types.ts (API must be running)
 make test         # pytest + web build
 make lint
+make data         # dataset report: counts by tag/grade, missing inputs per preset
+make todo         # regenerate DATA_TODO.md and data/schema/
 ```
+
+## Data
+
+Every number in `/data` carries `tag` (measured/published/assumed/synthetic), `evidence_grade` (A–D), `source_id` and, for transferred evidence, `applicability` (α). Missing values are `null` and listed in `DATA_TODO.md`, which is generated, not hand-edited. Candidate values that still need human review live in `data/_staging/` and are never read by the engine. Unpublished team documents (review drafts, research plan, PhD report) are cited as sources but are not committed to the repo.
 
 ## Rules for contributors
 

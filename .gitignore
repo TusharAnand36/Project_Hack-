@@ -18,3 +18,5 @@ web/dist/
 .DS_Store
 # local git bundles (push fallback)
 *.bundle
+# unpublished data awaiting permission (never commit)
+*.local.json

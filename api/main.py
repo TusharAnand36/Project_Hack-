@@ -29,10 +29,15 @@ from api.schemas import (
     VerdictLabel,
     Voi,
 )
-from compass import DATASET_VERSION, __version__
+from compass import __version__
+from compass.data import load_dataset
 from compass.models import Range, Tag, Value
 
 CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",") if o.strip()]
+
+# Load and validate /data at startup: a bad dataset stops the server with the file and row id.
+DATASET = load_dataset()
+DATASET_VERSION = DATASET.version
 
 app = FastAPI(title="Upcycle Compass API", version=__version__)
 

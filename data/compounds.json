@@ -1,0 +1,148 @@
+{
+  "flavour_classes": [
+    "beany",
+    "bitter",
+    "rancid",
+    "roasted",
+    "earthy",
+    "fermented"
+  ],
+  "compounds": [
+    {
+      "id": "aflatoxin_b1",
+      "name": "Aflatoxin B1",
+      "roles": [
+        "safety",
+        "toxic"
+      ],
+      "gate": "G1",
+      "unit": "ppb",
+      "assay_test_id": "afb1_hplc",
+      "notes": "Heat-stable (decomposes ~237-306 °C). Never modelled as removed by treatment; only a re-assay clears a batch."
+    },
+    {
+      "id": "free_fatty_acids",
+      "name": "Free fatty acids (rancidity)",
+      "roles": [
+        "safety",
+        "rancid"
+      ],
+      "gate": "G2",
+      "unit": "%",
+      "flavour_class": "rancid",
+      "assay_test_id": "ffa_titration"
+    },
+    {
+      "id": "inorganic_arsenic",
+      "name": "Inorganic arsenic",
+      "roles": [
+        "safety",
+        "toxic"
+      ],
+      "gate": "G3",
+      "unit": "mg/kg",
+      "assay_test_id": "icp_ms_metals"
+    },
+    {
+      "id": "cadmium",
+      "name": "Cadmium",
+      "roles": [
+        "safety",
+        "toxic"
+      ],
+      "gate": "G3",
+      "unit": "mg/kg",
+      "assay_test_id": "icp_ms_metals"
+    },
+    {
+      "id": "hexane_residue",
+      "name": "Hexane residue",
+      "roles": [
+        "safety"
+      ],
+      "gate": "G4",
+      "unit": "mg/kg",
+      "assay_test_id": "hexane_residue_gchs"
+    },
+    {
+      "id": "phytic_acid",
+      "name": "Phytic acid",
+      "roles": [
+        "mineral_binding"
+      ],
+      "unit": "% dry basis",
+      "floor": {
+        "unit": "% dry basis",
+        "tag": "assumed",
+        "notes": "MISSING: phytate floor (assay detection limit or intrinsic residual)"
+      },
+      "assay_test_id": "phytate_assay"
+    },
+    {
+      "id": "trypsin_inhibitor",
+      "name": "Trypsin inhibitor activity",
+      "roles": [
+        "digestibility"
+      ],
+      "unit": "% of raw activity",
+      "relative_to_raw": true,
+      "floor": {
+        "unit": "% of raw activity",
+        "tag": "assumed",
+        "notes": "MISSING: TIA floor (assay detection limit or intrinsic residual)"
+      },
+      "assay_test_id": "tia_assay"
+    },
+    {
+      "id": "tannins",
+      "name": "Tannins",
+      "roles": [
+        "bitter",
+        "mineral_binding"
+      ],
+      "unit": "% dry basis",
+      "flavour_class": "bitter",
+      "floor": {
+        "unit": "% dry basis",
+        "tag": "assumed",
+        "notes": "MISSING: tannin floor (assay detection limit or intrinsic residual)"
+      },
+      "assay_test_id": "tannin_assay"
+    },
+    {
+      "id": "polyphenols",
+      "name": "Polyphenols",
+      "roles": [
+        "bitter",
+        "colour"
+      ],
+      "unit": "% dry basis",
+      "flavour_class": "bitter",
+      "floor": {
+        "unit": "% dry basis",
+        "tag": "assumed",
+        "notes": "MISSING: polyphenol floor (assay detection limit or intrinsic residual)"
+      }
+    },
+    {
+      "id": "glucosinolates",
+      "name": "Glucosinolates",
+      "roles": [
+        "bitter",
+        "toxic"
+      ],
+      "unit": "µmol/g",
+      "flavour_class": "bitter",
+      "notes": "Reference compound (rapeseed); not in core by-products."
+    },
+    {
+      "id": "oxalate",
+      "name": "Oxalate",
+      "roles": [
+        "mineral_binding"
+      ],
+      "unit": "% dry basis",
+      "notes": "Reference compound (sesame); not in core by-products."
+    }
+  ]
+}

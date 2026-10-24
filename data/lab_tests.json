@@ -1,0 +1,339 @@
+{
+  "tests": [
+    {
+      "id": "afb1_elisa",
+      "name": "Aflatoxin B1 ELISA screen",
+      "measures": [
+        "afb1_ppb"
+      ],
+      "method": "ELISA on a composite sample (>= 10 sub-samples)",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Aflatoxin B1 ELISA screen cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Aflatoxin B1 ELISA screen turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Aflatoxin B1 ELISA screen measurement CV (log scale)"
+      },
+      "replicates_min": 3,
+      "sensitivity": {
+        "unit": "probability",
+        "tag": "assumed",
+        "value": 0.95,
+        "evidence_grade": "D",
+        "notes": "source plan §12.12"
+      },
+      "specificity": {
+        "unit": "probability",
+        "tag": "assumed",
+        "value": 0.9,
+        "evidence_grade": "D",
+        "notes": "source plan §12.12"
+      }
+    },
+    {
+      "id": "afb1_hplc",
+      "name": "Aflatoxin B1 HPLC confirmation",
+      "measures": [
+        "afb1_ppb"
+      ],
+      "method": "HPLC-FLD on a composite sample",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Aflatoxin B1 HPLC confirmation cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Aflatoxin B1 HPLC confirmation turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Aflatoxin B1 HPLC confirmation measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "ffa_titration",
+      "name": "Free fatty acid / acid value",
+      "measures": [
+        "ffa_pct"
+      ],
+      "method": "Titration (acid value)",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Free fatty acid / acid value cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Free fatty acid / acid value turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Free fatty acid / acid value measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "peroxide_value",
+      "name": "Peroxide value",
+      "measures": [
+        "peroxide_value"
+      ],
+      "method": "Titration",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Peroxide value cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Peroxide value turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Peroxide value measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "icp_ms_metals",
+      "name": "Heavy metals (As, Cd)",
+      "measures": [
+        "inorganic_as_ppm",
+        "cd_ppm"
+      ],
+      "method": "ICP-MS (with As speciation for inorganic As)",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Heavy metals (As, Cd) cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Heavy metals (As, Cd) turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Heavy metals (As, Cd) measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "hexane_residue_gchs",
+      "name": "Hexane residue",
+      "measures": [
+        "hexane_residue"
+      ],
+      "method": "Headspace GC",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Hexane residue cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Hexane residue turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Hexane residue measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "micro_panel",
+      "name": "Microbiology panel",
+      "measures": [
+        "tpc",
+        "yeast_mould",
+        "salmonella"
+      ],
+      "method": "Total plate count, yeast & mould, Salmonella",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Microbiology panel cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Microbiology panel turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Microbiology panel measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "phytate_assay",
+      "name": "Phytic acid assay",
+      "measures": [
+        "phytate_pct"
+      ],
+      "method": "Phytic acid / phytate-P assay",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Phytic acid assay cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Phytic acid assay turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Phytic acid assay measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "tia_assay",
+      "name": "Trypsin inhibitor activity",
+      "measures": [
+        "tia"
+      ],
+      "method": "Enzymatic TIA assay",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Trypsin inhibitor activity cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Trypsin inhibitor activity turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Trypsin inhibitor activity measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "tannin_assay",
+      "name": "Tannin assay",
+      "measures": [
+        "tannins"
+      ],
+      "method": "Colorimetric tannin assay",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Tannin assay cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Tannin assay turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Tannin assay measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "proximate_kjeldahl",
+      "name": "Proximate + Kjeldahl protein",
+      "measures": [
+        "protein_pct",
+        "moisture_pct",
+        "fat_pct",
+        "ash_pct"
+      ],
+      "method": "Kjeldahl N, moisture, fat, ash, fibre",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Proximate + Kjeldahl protein cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Proximate + Kjeldahl protein turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Proximate + Kjeldahl protein measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    },
+    {
+      "id": "sensory_panel",
+      "name": "Sensory panel",
+      "measures": [
+        "ofi"
+      ],
+      "method": "Triangle test + scaling",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Sensory panel cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Sensory panel turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Sensory panel measurement CV (log scale)"
+      },
+      "replicates_min": 3,
+      "notes": "Calibrates the off-flavour index."
+    },
+    {
+      "id": "functionality_panel",
+      "name": "Functionality panel",
+      "measures": [
+        "solubility",
+        "emulsification",
+        "gelation"
+      ],
+      "method": "Solubility, emulsifying and gelation tests",
+      "cost_inr": {
+        "unit": "INR per batch",
+        "tag": "assumed",
+        "notes": "MISSING: Functionality panel cost; NABL lab quotes / NIFTEM"
+      },
+      "turnaround_days": {
+        "unit": "days",
+        "tag": "assumed",
+        "notes": "MISSING: Functionality panel turnaround"
+      },
+      "cv": {
+        "unit": "fraction",
+        "tag": "assumed",
+        "notes": "MISSING: Functionality panel measurement CV (log scale)"
+      },
+      "replicates_min": 3
+    }
+  ]
+}
