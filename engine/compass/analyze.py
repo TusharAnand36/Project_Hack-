@@ -45,6 +45,7 @@ from compass.data import Dataset
 from compass.models import Grade, Param, Tag
 from compass.montecarlo import ChainEval, Context, evaluate
 from compass.sampling import Provenance, Sampled, Sampler, as_value, combine, summarise
+from compass.workflow import assess, missing_balance
 
 DISCLAIMER = (
     "Proof of concept. Not a substitute for laboratory validation. "
@@ -88,7 +89,7 @@ def build_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sample
     if req.batch.protein_pct is not None:
         s.add_value("bp.protein", req.batch.protein_pct.value, "%", _measured_prov(req.batch.protein_pct.tag))
     else:
-        s.add("bp.protein", bp.composition["crude_protein_pct"])
+        s.add("bp.protein", bp.composition["crude_protein_pct"].model_copy(update={"unit": "%"}))
     if req.batch.moisture_pct is not None:
         s.add_value(
             "bp.moisture", req.batch.moisture_pct.value, "%", _measured_prov(req.batch.moisture_pct.tag)
@@ -115,15 +116,15 @@ def build_sampler(req: AnalyzeRequest, ds: Dataset, n: int, seed: int) -> Sample
     for tid, t in ds.treatments.items():
         for i, e in enumerate(t.effects):
             if bp.id in e.applies_to:
-                s.add(f"t.{tid}.e{i}", e.reduction, missing="full_range")
+                s.add(f"t.{tid}.e{i}", e.reduction)
         for i, se in enumerate(t.side_effects):
             s.add(f"t.{tid}.se{i}", se.addition)
         if t.kind == "process":
-            s.add(f"t.{tid}.m", t.mass_yield, missing="full_range")
-            s.add(f"t.{tid}.rho", t.protein_retention, missing="full_range")
+            s.add(f"t.{tid}.m", t.mass_yield)
+            s.add(f"t.{tid}.rho", t.protein_retention)
         else:
-            s.add(f"t.{tid}.pi", t.purity, missing="full_range")
-            s.add(f"t.{tid}.rec", t.recovery, missing="full_range")
+            s.add(f"t.{tid}.pi", t.purity)
+            s.add(f"t.{tid}.rec", t.recovery)
         for f in RESOURCE_FIELDS:
             s.add(f"t.{tid}.res.{f}", getattr(t.resources, f))
     # plant economics
@@ -207,25 +208,32 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
         "Functionality fit (solubility, emulsification, gelation) is a qualitative flag, not a computed score.",
     ]
 
-    # ---- normalisation: true protein fraction of the raw cake on a dry basis (§12.2)
+    # Use reported crude protein on one as-received mass basis; no universal N factor correction.
     prot = d["bp.protein"]
-    crude = prot.values / 100
-    if "bp.moisture" in d:
-        crude = fx.to_dry_basis(crude, d["bp.moisture"].values / 100)
-    elif req.batch.protein_pct is not None:
-        limitations.append("Batch protein used as given (no moisture entered, so no dry-basis conversion).")
-    n_used = (
-        req.batch.protein_pct.n_factor if req.batch.protein_pct and req.batch.protein_pct.n_factor else 6.25
+    p0 = prot.values / 100
+    p0_prov = prot.prov
+    protein_evidence = next((e for e in req.evidence if e.input == "bp.protein"), None)
+    protein_basis = (
+        req.batch.protein_pct.basis
+        if req.batch.protein_pct
+        else protein_evidence.basis if protein_evidence else "unknown"
     )
-    p0 = fx.true_protein(crude, d["nf"].values, n_used)
-    p0_prov = combine([prot.prov, d["nf"].prov])
-    if bp.id == "pea_protein_isolate":
-        p0 = crude if req.batch.protein_pct is not None else d["pea.protein_frac"].values
-        p0_prov = prot.prov if req.batch.protein_pct is not None else d["pea.protein_frac"].prov
-        limitations.append(bp.notes)
-    if bp.id != "pea_protein_isolate" and req.batch.protein_pct is None and not prot.unit.startswith("% dry"):
-        limitations.append(f"{bp.name}: composition basis not stated in the source; treated as dry basis.")
+    if protein_basis == "dry_matter":
+        if req.batch.moisture_pct is not None:
+            p0 = p0 * (1 - req.batch.moisture_pct.value / 100)
+        else:
+            limitations.append(
+                "Dry-basis protein cannot establish as-received protein cost without moisture."
+            )
+    if bp.id == "pea_protein_isolate" and req.batch.protein_pct is None:
+        p0 = d["pea.protein_frac"].values
+        p0_prov = d["pea.protein_frac"].prov
+    limitations.append(
+        "Protein is reported crude protein with its recorded laboratory factor, not corrected to true/digestible protein using a generic oilseed N factor."
+    )
 
+    if np.any(p0 <= 0):
+        raise AnalyzeError("A positive protein mass is required; check protein and moisture results")
     compounds = {}
     for cid in bp.compounds:
         s = d[f"cmp.{cid}"]
@@ -317,13 +325,14 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
     seqs = chainsm.enumerate_chains(cands.allowed, ds, bp.id, app.id)
     max_chains = int(_cfg(ds, "engine", "max_chains"))
     evals: list[ChainEval] = []
+    evidence_only: list[tuple[str, ...]] = []
     stop_fail = overall is GateState.FAIL
     if not stop_fail:
         for seq in seqs:
+            if missing_balance(req, ds, seq):
+                evidence_only.append(seq)
+                continue
             ev = evaluate(seq, ctx, targets)
-            if targets["cost"] and ev.cost.per_kg_protein is not None and seq:
-                if np.percentile(ev.cost.per_kg_protein, 10) > targets["cost"][0]:  # prune rule 8a
-                    continue
             evals.append(ev)
     total = len(evals)
     not_viable = _cfg(ds, "readiness", "not_viable_p_spec_max")
@@ -395,9 +404,6 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
 
     # ---- value of information (§12.9)
     voi_block, drivers = None, []
-    if evals and len(utilities) == len(evals):
-        voi_block, drivers = _voi(d, ds, bp, evals, utilities, campaign, gate_prov)
-
     # ---- pea block
     best = evals[0] if evals else None
     pea_block = _pea_block(req, ds, d, pea_in, pea_prov, landed, best, duty_p)
@@ -469,6 +475,17 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
             for t in voi_block.tests
             if t.evsi.value > 0
         ] + plan_tests
+    plan_tests += [
+        (
+            "proximate_kjeldahl",
+            "Technical evidence: establish batch protein basis and recovered protein mass",
+        ),
+        (
+            "functionality_panel",
+            "Matched functional assays against pea protein isolate for the chosen application",
+        ),
+        ("sensory_panel", "Application-specific sensory acceptance with a defined scoring rubric"),
+    ]
     plan = planm.build(ds, plan_tests, targets, req.market, _g1_limit(outcomes), app.functionality)
 
     # ---- limitations
@@ -500,7 +517,7 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
         )
     limitations.append("This is a proof of concept; the next step is laboratory validation.")
 
-    return AnalyzeResponse(
+    response = AnalyzeResponse(
         meta=Meta(
             seed=seed,
             n_draws=n,
@@ -524,6 +541,23 @@ def analyze(req: AnalyzeRequest, ds: Dataset) -> AnalyzeResponse:
         limitations=limitations,
         disclaimer=DISCLAIMER,
     )
+    if not stop_fail:
+        for seq in evidence_only[: max(0, max_chains - len(response.chains))]:
+            response.chains.append(
+                Chain(
+                    id="__".join(seq),
+                    steps=list(seq),
+                    tier="treated_flour",
+                    rank=0,
+                    protein_retained=None,
+                    protein_pct_final=None,
+                    p_spec=None,
+                )
+            )
+        response.meta.chains_total = len(seqs)
+        response.meta.chains_shown = len(response.chains)
+        response.meta.chains_capped = len(seqs) > max_chains
+    return assess(req, ds, response, d, evals)
 
 
 # ---------------------------------------------------------------- helpers
@@ -751,7 +785,7 @@ def _input_label(key: str, ds: Dataset) -> tuple[str, str | None]:
     if key == "gate.G1.u":
         return "aflatoxin B1 status of this lot (G1)", "afb1_hplc"
     if key == "bp.protein":
-        return "protein content of the cake", "proximate_kjeldahl"
+        return "reported batch protein content", "proximate_kjeldahl"
     if key == "nf":
         return "nitrogen-to-protein factor", "proximate_kjeldahl"
     if key == "bp.price":

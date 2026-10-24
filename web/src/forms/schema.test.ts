@@ -21,7 +21,7 @@ describe("form schema", () => {
     const req = toRequest(r);
     expect(req.raw_price_inr_per_kg).toBe(28);
     expect(req.targets?.min_protein_pct).toBeNull();
-    expect(req.batch?.afb1_ppb).toEqual({ value: 12, tag: "measured" });
+    expect(req.batch?.afb1_ppb).toMatchObject({ value: 12, tag: "assumed" });
     expect(req.process?.stabilised).toBeNull();
   });
 

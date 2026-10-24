@@ -1,11 +1,18 @@
 """/update-evidence: enter one lab result, re-run the analysis, show before and after (§12.12).
 
+
+
 "Enter one lab number and the recommendation sharpens" is the demo moment, so the before/after
+
 snapshot names the parts that move: verdict, readiness, P(GO), best chain, P(spec), the
+
 recommended test and the EVPPI ranking.
+
 """
 
 from __future__ import annotations
+
+from pydantic import ValidationError
 
 from compass import update as upd
 from compass.analyze import AnalyzeError, _cfg, _input_label, analyze, build_sampler
@@ -49,13 +56,48 @@ def update_evidence(body: UpdateEvidenceRequest, ds: Dataset) -> UpdateEvidenceR
     req = body.request
     before = analyze(req, ds)
     key = body.input
+    gate_fields = {
+        "batch.total_aflatoxins_ppb": "total_aflatoxins_ppb",
+        "batch.hexane_ppm": "hexane_ppm",
+        "batch.pb_ppm": "pb_ppm",
+        "batch.cd_ppm": "cd_ppm",
+        "batch.arsenic_ppm": "arsenic_ppm",
+        "batch.hg_ppm": "hg_ppm",
+    }
+    expected_unit = (
+        "µg/kg"
+        if key in ("gate.G1.u", "gate.G1", "batch.total_aflatoxins_ppb")
+        else "mg/kg" if key in gate_fields else None
+    )
+    aliases = {"ppb": "µg/kg", "ug/kg": "µg/kg", "ppm": "mg/kg"}
+    if expected_unit and body.unit and aliases.get(body.unit, body.unit) != expected_unit:
+        raise AnalyzeError(f"Incompatible unit: this analyte requires {expected_unit}")
+    metadata = dict(
+        method=body.method,
+        laboratory=body.laboratory,
+        report_reference=body.report_reference,
+        report_date=body.report_date,
+        basis=body.basis,
+    )
+    if body.batch_id and req.batch.lot_id and body.batch_id != req.batch.lot_id:
+        raise AnalyzeError("Lab report batch ID does not match the selected lot")
     label, test_id = _input_label(key, ds)
-
-    if key in ("gate.G1.u", "gate.G1"):
+    if key in gate_fields:
+        if body.value is None:
+            raise AnalyzeError("Enter a quantitative laboratory result")
+        after_req = req.model_copy(deep=True)
+        setattr(
+            after_req.batch, gate_fields[key], Measurement(value=body.value, tag=Tag.measured, **metadata)
+        )
+        after_req.batch = type(req.batch).model_validate(after_req.batch.model_dump())
+        prior, post = None, None
+        measurement = as_value(body.value, MEASURED, expected_unit)
+        note = "Traceable batch laboratory result recorded; the affected contaminant gate is re-evaluated."
+    elif key in ("gate.G1.u", "gate.G1"):
         label = "aflatoxin B1 of this lot (G1)"
         if body.value is not None:  # quantitative HPLC result decides the gate
             after_req = req.model_copy(deep=True)
-            after_req.batch.afb1_ppb = Measurement(value=body.value, tag=Tag.measured)
+            after_req.batch.afb1_ppb = Measurement(value=body.value, tag=Tag.measured, **metadata)
             after_req.evidence = [e for e in after_req.evidence if e.input != "gate.G1"]
             measurement = as_value(body.value, MEASURED, "ppb")
             prior, post = None, None
@@ -82,6 +124,8 @@ def update_evidence(body: UpdateEvidenceRequest, ds: Dataset) -> UpdateEvidenceR
             raise AnalyzeError(f"'{key}' is not an input of this analysis")
         s = draws[key]
         unit = s.unit
+        if body.unit and aliases.get(body.unit, body.unit) != unit:
+            raise AnalyzeError(f"Incompatible unit: {label} requires {unit}")
         if unit in ("fraction", "probability") and body.value > 1:
             raise AnalyzeError(f"'{label}' is a fraction: enter 0-1 (e.g. 0.62), not a percentage")
         prior_n = upd.fit_lognormal(s.values) if s.values is not None else None
@@ -107,6 +151,9 @@ def update_evidence(body: UpdateEvidenceRequest, ds: Dataset) -> UpdateEvidenceR
             )
             post = summarise(draws_from(dist, n, seed, unit), MEASURED, unit)
             note = f"Lognormal update with assay CV {cv:g}: the range narrows around the measurement."
+        ev.basis = body.basis
+        ev.method, ev.laboratory = body.method, body.laboratory
+        ev.report_reference, ev.report_date = body.report_reference, body.report_date
         after_req = _with_evidence(req, ev)
         # a batch field for the same input would win over evidence; the lab result replaces it
         if key == "cmp.phytic_acid":
@@ -114,7 +161,10 @@ def update_evidence(body: UpdateEvidenceRequest, ds: Dataset) -> UpdateEvidenceR
         if key == "bp.protein":
             after_req.batch.protein_pct = None
         measurement = as_value(body.value, MEASURED, unit)
-
+    try:
+        after_req = AnalyzeRequest.model_validate(after_req.model_dump())
+    except ValidationError as exc:
+        raise AnalyzeError("Inconsistent batch or assay metadata: " + str(exc)) from exc
     after = analyze(after_req, ds)
     return UpdateEvidenceResponse(
         input=key,

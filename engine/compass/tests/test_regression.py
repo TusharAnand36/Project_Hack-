@@ -26,11 +26,11 @@ def key_values() -> dict:
         "grade": r.verdict.grade.value,
         "g1_prior": next(g for g in r.gates if g.id == "G1").prior_p_fail,
         "top_chain": top.id,
-        "top_p_spec": round(top.p_spec.value, 3),
-        "top_protein_p50": round(top.protein_pct_final.p50, 2),
+        "top_p_spec": None if top.p_spec is None else round(top.p_spec.value, 3),
+        "top_protein_p50": None if top.protein_pct_final is None else round(top.protein_pct_final.p50, 2),
         "pea_landed_p50": round(r.pea.landed_inr_per_kg_protein.p50, 1),
-        "recommended_test": r.voi.recommended_test,
-        "evpi": round(r.voi.evpi.value, -2),
+        "recommended_test": None if r.voi is None else r.voi.recommended_test,
+        "evpi": None if r.voi is None else round(r.voi.evpi.value, -2),
         "chains_total": r.meta.chains_total,
     }
 

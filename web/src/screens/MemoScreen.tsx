@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import type { AnalyzeResponse, Range, Value } from "@/api/client";
 import { useSources } from "@/api/hooks";
+import { WorkflowDimensions } from "@/components/WorkflowDimensions";
 import { Num } from "@/components/Num";
 import { Button } from "@/components/ui/button";
 import { VerdictLabel } from "@/components/Verdict";
@@ -29,19 +30,41 @@ export function MemoScreen({ data }: { data: AnalyzeResponse }) {
   const top = data.chains[0];
   const rec = data.voi?.tests.find((x) => x.test_id === data.voi?.recommended_test);
   const g1 = data.gates.find((g) => g.id === "G1");
-  const ids = collectSources(
-    g1?.prior_p_fail,
-    g1?.limit,
-    top?.protein_pct_final,
-    top?.cost_inr_per_kg_protein,
-    data.pea.landed_inr_per_kg_protein,
-    data.pea.b2b_cross_check_inr_per_kg_protein,
-  );
+  const ids = [
+    ...new Set([
+      ...collectSources(
+        g1?.prior_p_fail,
+        g1?.limit,
+        top?.protein_pct_final,
+        top?.cost_inr_per_kg_protein,
+        data.pea.landed_inr_per_kg_protein,
+        data.pea.b2b_cross_check_inr_per_kg_protein,
+      ),
+      ...data.gates.flatMap((gate) => gate.checks.flatMap((check) => check.limit.source_ids ?? [])),
+      ...data.functional_comparison.properties.flatMap((property) => property.source_ids),
+    ]),
+  ];
   return (
     <article className="memo mx-auto max-w-3xl space-y-3 text-sm" data-testid="memo">
       <div className="no-print flex flex-wrap gap-2">
         <Button onClick={() => window.print()} data-testid="memo-print">
           {t("memo.print")}
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            const blob = new Blob([JSON.stringify({ request, result: data }, null, 2)], {
+              type: "application/json",
+            });
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement("a");
+            anchor.href = url;
+            anchor.download = "upcycle-compass-case.json";
+            anchor.click();
+            URL.revokeObjectURL(url);
+          }}
+        >
+          {t("workflow.downloadCase")}
         </Button>
         <Button variant="outline" onClick={() => setScreen("verdict")}>
           {t("memo.back")}
@@ -52,13 +75,18 @@ export function MemoScreen({ data }: { data: AnalyzeResponse }) {
           {t("app.title")} · {t("memo.title")}
         </h2>
         <span>
-          {t("memo.date")}: {today()} · engine {data.meta.engine_version} · dataset{" "}
-          {data.meta.dataset_version}
+          {t("memo.date")}:{" "}
+          {data.meta.generated_at
+            ? new Date(data.meta.generated_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+            : today()}{" "}
+          · engine {data.meta.engine_version} · dataset {data.meta.dataset_version}
         </span>
       </header>
       <section>
         <h3 className="font-semibold">{t("memo.batch")}</h3>
         <p>
+          {data.case_id && <>Case {data.case_id} · </>}
+          {request?.batch?.lot_id && <>Lot {request.batch.lot_id} · </>}
           {request?.byproduct.replace(/_/g, " ")} → {request?.application.replace(/_/g, " ")} (
           {request?.market ?? "domestic"})
         </p>
@@ -74,6 +102,7 @@ export function MemoScreen({ data }: { data: AnalyzeResponse }) {
           </span>
         )}
       </section>
+      <WorkflowDimensions data={data} />
       <section>
         <h3 className="font-semibold">{t("memo.why")}</h3>
         <ul className="list-disc ps-5">
@@ -90,7 +119,7 @@ export function MemoScreen({ data }: { data: AnalyzeResponse }) {
         <h3 className="font-semibold">{t("memo.chain")}</h3>
         {top ? (
           <p>
-            {top.steps.join(" → ") || "raw flour"} ({top.tier.replace("_", " ")}): protein{" "}
+            {top.steps.join(" → ") || t("chains.rawFlour")} ({top.tier.replace("_", " ")}): protein{" "}
             <Num v={top.protein_pct_final} />, P(spec) <Num v={top.p_spec} />
           </p>
         ) : (
@@ -107,7 +136,22 @@ export function MemoScreen({ data }: { data: AnalyzeResponse }) {
           )}
           <Num v={data.pea.landed_inr_per_kg_protein} /> ({data.pea.duty_mode})
         </p>
+        <p>
+          {data.cost_target.formula}: <Num v={data.cost_target.amount} />
+        </p>
+        <p>
+          {data.cost_target.note} {top?.cost_missing.join("; ")}
+        </p>
       </section>
+      {!data.voi && (
+        <section>
+          <h3 className="font-semibold">{t("memo.test")}</h3>
+          <p>
+            {data.plan?.tests[0]?.name ?? t("workflow.notEstimated")}: {data.plan?.tests[0]?.why}
+          </p>
+          <p>{data.voi_note}</p>
+        </section>
+      )}
       {data.voi && (
         <section>
           <h3 className="font-semibold">{t("memo.test")}</h3>

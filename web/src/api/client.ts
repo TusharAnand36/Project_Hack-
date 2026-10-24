@@ -128,6 +128,7 @@ export interface SnapshotStamp {
 }
 
 export const api = {
+  feedback: (body: S["FeedbackRequest"]) => post<S["FeedbackReceipt"]>("/feedback", body),
   health: () => request<Health>("/health", undefined, 4000),
   presets: () =>
     withFallback(

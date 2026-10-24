@@ -30,7 +30,7 @@ from compass.data import DEFAULT_DATA_DIR, FILES, load_dataset, read_raw, report
 
 PUBLIC = ROOT / "web" / "public"
 LANGS = ("en", "hi")
-OFFLINE_FILES = ("sources", "byproducts", "applications", "treatments")
+OFFLINE_FILES = ("sources", "byproducts", "applications", "treatments", "functional_evidence", "research_evidence")
 
 PACK_README = """# Upcycle Compass open data pack
 
@@ -61,6 +61,7 @@ def main() -> int:
         req = AnalyzeRequest.model_validate(preset.payload)
         result = analyze(req, ds)
         body = result.model_dump(mode="json")
+        body["meta"]["generated_at"] = stamp
         for lang in LANGS:
             body["snapshot"] = {
                 "engine_version": __version__,

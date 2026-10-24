@@ -18,7 +18,7 @@ function isRange(v: Leaf): v is Range {
 
 interface NumProps {
   /** Any numeric leaf from the engine: a Value or a P10/P50/P90 Range. */
-  v: Leaf;
+  v: Leaf | null | undefined;
   kind?: NumKind;
   /** Show the P10–P90 range inline (default true for ranges). */
   showRange?: boolean;
@@ -39,6 +39,7 @@ export function Num({ v, kind, showRange = true, className, label }: NumProps) {
     setPeek(false);
     setPinned(false);
   };
+  if (!v) return <span className="text-muted-foreground">{t("workflow.notEstimated")}</span>;
   const k = kind ?? kindForUnit(v.unit);
   const main = isRange(v) ? v.p50 : v.value;
   const text = formatValue(main, k);

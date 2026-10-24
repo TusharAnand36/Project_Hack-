@@ -11,7 +11,8 @@
       },
       "evidence_grade": "C",
       "source_id": "user_review_final",
-      "notes": "Factors 6.25 / 5.71 / 5.45 (final review §2.1.1); PERT shape per source plan §12.2; confirmed in the final review draft; verify against the cited primary paper"
+      "notes": "Factors 6.25 / 5.71 / 5.45 (final review §2.1.1); PERT shape per source plan §12.2; confirmed in the final review draft; verify against the cited primary paper",
+      "verification_status": "review_reported_primary_not_checked"
     }
   },
   "reference_species": [
@@ -51,7 +52,8 @@
             "table": "final review Table 2",
             "cites": "Akande et al. (2011)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "crude_protein_pct": {
           "unit": "%",
@@ -67,7 +69,8 @@
             "table": "final review Table 2",
             "cites": "Akande et al. (2011)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "fat_pct": {
           "unit": "%",
@@ -83,7 +86,8 @@
             "table": "final review Table 2",
             "cites": "Akande et al. (2011)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "fibre_pct": {
           "unit": "%",
@@ -99,7 +103,8 @@
             "table": "final review Table 2",
             "cites": "Akande et al. (2011)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "ash_pct": {
           "unit": "%",
@@ -115,47 +120,55 @@
             "table": "final review Table 2",
             "cites": "Akande et al. (2011)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         }
       },
       "compounds": {
         "phytic_acid": {
           "unit": "% dry basis",
           "tag": "assumed",
-          "notes": "MISSING: Sunflower cake phytate baseline"
+          "notes": "MISSING: Sunflower cake phytate baseline",
+          "verification_status": "not_available"
         }
       },
       "flavour_baseline": {
         "beany": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "bitter": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "rancid": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "roasted": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "earthy": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         }
       },
       "price_inr_per_kg": {
         "unit": "INR/kg",
         "tag": "assumed",
-        "notes": "MISSING: Sunflower cake purchase quote"
+        "notes": "MISSING: Sunflower cake purchase quote",
+        "verification_status": "not_available"
       },
       "notes": "Composition from the supplied final oilseed review, Table 2. Chlorogenic acid can affect colour and bitterness; quantify the batch before formulation."
     },
@@ -191,7 +204,8 @@
             "cites": "Karnika & Asha (2025)",
             "material": "cold-pressed groundnut cake",
             "table": "final review Table 2"
-          }
+          },
+          "verification_status": "review_reported_primary_not_checked"
         },
         "crude_protein_pct": {
           "unit": "% dry matter",
@@ -208,7 +222,8 @@
             "cites": "Karnika & Asha (2025)",
             "material": "cold-pressed groundnut cake",
             "table": "final review Table 2"
-          }
+          },
+          "verification_status": "review_reported_primary_not_checked"
         },
         "fat_pct": {
           "unit": "% dry matter",
@@ -225,7 +240,8 @@
             "cites": "Karnika & Asha (2025)",
             "material": "cold-pressed groundnut cake",
             "table": "final review Table 2"
-          }
+          },
+          "verification_status": "review_reported_primary_not_checked"
         },
         "fibre_pct": {
           "unit": "% dry matter",
@@ -242,7 +258,8 @@
             "cites": "Karnika & Asha (2025)",
             "material": "cold-pressed groundnut cake",
             "table": "final review Table 2"
-          }
+          },
+          "verification_status": "review_reported_primary_not_checked"
         },
         "ash_pct": {
           "unit": "% dry matter",
@@ -259,52 +276,61 @@
             "cites": "Karnika & Asha (2025)",
             "material": "cold-pressed groundnut cake",
             "table": "final review Table 2"
-          }
+          },
+          "verification_status": "review_reported_primary_not_checked"
         }
       },
       "compounds": {
         "phytic_acid": {
           "unit": "% dry basis",
           "tag": "assumed",
-          "notes": "MISSING: groundnut cake phytate baseline; IFCT 2017 / literature ()"
+          "notes": "MISSING: groundnut cake phytate baseline; IFCT 2017 / literature ()",
+          "verification_status": "not_available"
         },
         "trypsin_inhibitor": {
           "unit": "% of raw activity",
           "tag": "assumed",
           "value": 100,
-          "notes": "definitional: raw cake = 100% of its own activity; absolute TIA (TIU/mg) still missing"
+          "notes": "definitional: raw cake = 100% of its own activity; absolute TIA (TIU/mg) still missing",
+          "verification_status": "assumption"
         },
         "tannins": {
           "unit": "% dry basis",
           "tag": "assumed",
-          "notes": "MISSING: groundnut cake tannin baseline"
+          "notes": "MISSING: groundnut cake tannin baseline",
+          "verification_status": "not_available"
         }
       },
       "flavour_baseline": {
         "beany": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "bitter": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "rancid": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "roasted": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "earthy": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         }
       },
       "price_inr_per_kg": {
@@ -317,7 +343,8 @@
         },
         "evidence_grade": "D",
         "source_id": "indiamart_mahalakshmi",
-        "notes": "trader listing INR 27,000-30,000/t; replace with AGMARKNET/SEA"
+        "notes": "trader listing INR 27,000-30,000/t; replace with AGMARKNET/SEA",
+        "verification_status": "assumption"
       },
       "notes": "Limited by lysine and threonine (final review Table 3, Park et al. 2017): flag as 'blend, not treatment'. Composition values refer to cold-pressed cake."
     },
@@ -351,7 +378,8 @@
             "table": "final review Table 2",
             "cites": "Kadam et al. (2025)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "crude_protein_pct": {
           "unit": "%",
@@ -367,7 +395,8 @@
             "table": "final review Table 2",
             "cites": "Kadam et al. (2025)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "fat_pct": {
           "unit": "%",
@@ -383,7 +412,8 @@
             "table": "final review Table 2",
             "cites": "Kadam et al. (2025)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "fibre_pct": {
           "unit": "%",
@@ -399,7 +429,8 @@
             "table": "final review Table 2",
             "cites": "Kadam et al. (2025)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "ash_pct": {
           "unit": "%",
@@ -415,53 +446,62 @@
             "table": "final review Table 2",
             "cites": "Kadam et al. (2025)"
           },
-          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay."
+          "notes": "Secondary review; composition basis not specified. Verify against primary paper and batch assay.",
+          "verification_status": "review_reported_primary_not_checked"
         }
       },
       "compounds": {
         "phytic_acid": {
           "unit": "% dry basis",
           "tag": "assumed",
-          "notes": "MISSING: Soybean cake phytate baseline"
+          "notes": "MISSING: Soybean cake phytate baseline",
+          "verification_status": "not_available"
         },
         "trypsin_inhibitor": {
           "unit": "% of raw activity",
           "tag": "assumed",
           "value": 100,
-          "notes": "definitional: raw cake = 100% of its own activity; absolute TIA (TIU/mg) still missing"
+          "notes": "definitional: raw cake = 100% of its own activity; absolute TIA (TIU/mg) still missing",
+          "verification_status": "assumption"
         }
       },
       "flavour_baseline": {
         "beany": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "bitter": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "rancid": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "roasted": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "earthy": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         }
       },
       "price_inr_per_kg": {
         "unit": "INR/kg",
         "tag": "assumed",
-        "notes": "MISSING: Soybean cake purchase quote"
+        "notes": "MISSING: Soybean cake purchase quote",
+        "verification_status": "not_available"
       },
       "notes": "Composition from the supplied final oilseed review, Table 2. Soybean extrusion TIA evidence from Tables 7–8."
     },
@@ -481,7 +521,8 @@
         "moisture_pct": {
           "unit": "%",
           "tag": "assumed",
-          "notes": "MISSING: almond cake moisture"
+          "notes": "MISSING: almond cake moisture",
+          "verification_status": "not_available"
         },
         "crude_protein_pct": {
           "unit": "%",
@@ -493,7 +534,8 @@
           },
           "evidence_grade": "C",
           "source_id": "user_research_plan",
-          "notes": "research plan range; PhD report gives 35-49 (conflict; not used without permission); verify"
+          "notes": "research plan range; PhD report gives 35-49 (conflict; not used without permission); verify",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "fat_pct": {
           "unit": "%",
@@ -505,7 +547,8 @@
           },
           "evidence_grade": "C",
           "source_id": "user_research_plan",
-          "notes": "verify"
+          "notes": "verify",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "fibre_pct": {
           "unit": "%",
@@ -513,7 +556,8 @@
           "value": 5.6,
           "evidence_grade": "C",
           "source_id": "user_research_plan",
-          "notes": "approximate (~); verify"
+          "notes": "approximate (~); verify",
+          "verification_status": "review_reported_primary_not_checked"
         },
         "ash_pct": {
           "unit": "%",
@@ -521,7 +565,8 @@
           "value": 5.3,
           "evidence_grade": "C",
           "source_id": "user_research_plan",
-          "notes": "approximate (~); verify"
+          "notes": "approximate (~); verify",
+          "verification_status": "review_reported_primary_not_checked"
         }
       },
       "compounds": {},
@@ -529,33 +574,39 @@
         "beany": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "bitter": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "rancid": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "roasted": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "earthy": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         }
       },
       "price_inr_per_kg": {
         "unit": "INR/kg",
         "tag": "assumed",
-        "notes": "MISSING: almond cake price; trader quotes"
+        "notes": "MISSING: almond cake price; trader quotes",
+        "verification_status": "not_available"
       },
       "notes": "Control case: few anti-nutrients (source plan §7.1). No compound baselines listed; confirm from literature that none exceed tolerances."
     },
@@ -577,7 +628,8 @@
             "section": "2.1 Materials",
             "material": "commercial pea protein isolate"
           },
-          "notes": "Reported protein content of the commercial PPI used in the supplied paper; not an assay of the user batch."
+          "notes": "Reported protein content of the commercial PPI used in the supplied paper; not an assay of the user batch.",
+          "verification_status": "verified_primary_source"
         }
       },
       "compounds": {},
@@ -585,34 +637,40 @@
         "beany": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "bitter": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "rancid": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "roasted": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         },
         "earthy": {
           "unit": "index units (0-10 scale)",
           "tag": "assumed",
-          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)"
+          "notes": "MISSING: off-flavour baseline; sensory literature or own panel (grade D until then)",
+          "verification_status": "not_available"
         }
       },
       "limiting_amino_acid": null,
       "price_inr_per_kg": {
         "unit": "INR/kg",
         "tag": "assumed",
-        "notes": "MISSING: uses the shared landed pea benchmark at analysis time; enter a supplier quote to override"
+        "notes": "MISSING: uses the shared landed pea benchmark at analysis time; enter a supplier quote to override",
+        "verification_status": "not_available"
       },
       "notes": "Commercial isolate reference, not an oilseed cake. Qi et al. (2025), DOI 10.1016/j.fochx.2025.102898, reports 80.2% protein. Gellan gum 0.4% (w/v) and low NaCl (≤0.1 M) improved functional properties; NaCl ≥0.3 M weakened gels. The paper provides no purchase price, extraction yield, anti-nutrient reduction or process cost. These formulation findings are qualitative, not simulated treatments."
     }

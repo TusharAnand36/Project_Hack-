@@ -43,7 +43,7 @@
     "whatItalic": "हम रास्ता खोजने में मदद करते हैं।",
     "whatDescription": "हम सामग्री से जुड़े जटिल सवाल को प्रमाण-आधारित खोज में बदलते हैं: क्या काम कर सकता है, क्या बाधा है और अगला कदम क्या हो।",
     "feature1Title": "भीतर छिपी सामग्री को पहचानें",
-    "feature1Description": "सूरजमुखी, मूंगफली, सोयाबीन और बादाम खली देखें; मटर प्रोटीन आइसोलेट शोध संदर्भ के रूप में उपलब्ध है।",
+    "feature1Description": "Evaluate sunflower cake for a high-protein/fibre snack; compare other oilseed references and pea isolate without hiding research gaps.",
     "feature2Title": "अनुमान से पहले प्रमाण",
     "feature2Description": "सुरक्षा जाँच, प्रोटीन की संभावना और प्रसंस्करण विकल्प समझें। हर संख्या का स्रोत और अनिश्चितता देखें।",
     "feature3Title": "अगले कदम को उपयोगी बनाएँ",
@@ -199,7 +199,7 @@
     "measured": "मापा गया",
     "published": "प्रकाशित",
     "assumed": "अनुमानित",
-    "synthetic": "कृत्रिम (डेमो)"
+    "synthetic": "Demo data"
   },
   "num": {
     "details": "संख्या का विवरण",
@@ -241,7 +241,7 @@
     "equipment": "उपलब्ध मशीनें (पता न हो तो सब खाली छोड़ें)",
     "exclude": "इन प्रक्रियाओं को छोड़ें",
     "batch": "अपने बैच का डेटा (वैकल्पिक)",
-    "batchHint": "आप जो मान भरेंगे वे \"मापा गया\" (M) माने जाएँगे। जैसा माल मिला है, उसी पर भरें।",
+    "batchHint": "Add the laboratory method and report reference for measured inputs. Without them, entered numbers remain scenario assumptions; they cannot clear safety gates.",
     "protein": "प्रोटीन (%)",
     "nFactor": "प्रोटीन के लिए इस्तेमाल हुआ N फ़ैक्टर",
     "moisture": "नमी (%)",
@@ -273,7 +273,8 @@
       "max10": "10 या उससे कम होना चाहिए",
       "nFactor": "आम तौर पर 5 और 6.5 के बीच",
       "proximate": "प्रोटीन + नमी 100% से ज़्यादा है",
-      "aflatoxinTotal": "कुल अफ्लाटॉक्सिन, अफ्लाटॉक्सिन B1 से कम नहीं हो सकता।"
+      "aflatoxinTotal": "कुल अफ्लाटॉक्सिन, अफ्लाटॉक्सिन B1 से कम नहीं हो सकता।",
+      "proteinKg": "Enter protein mass above 0 and at most 1 kg/kg finished product."
     },
     "yes": "हाँ",
     "no": "नहीं",
@@ -310,7 +311,7 @@
   "diagnosis": {
     "summary": "इस उपयोग के लिए कौन से यौगिक इस उप-उत्पाद को रोकते हैं, और वे सीमा से कितना ऊपर हैं।",
     "title": "निदान",
-    "chartTitle": "स्तर ÷ उपयोग की सीमा (1 = ठीक सीमा पर)",
+    "chartTitle": "Level-to-threshold ratio (compatible measured values only)",
     "compound": "यौगिक",
     "level": "स्तर",
     "tolerance": "सीमा",
@@ -318,7 +319,7 @@
     "role": "भूमिका",
     "gate": "सुरक्षा गेट",
     "tunable": "उपचार योग्य",
-    "limiting": "मुख्य बाधा",
+    "limiting": "Potential limiting factor",
     "noData": "डेटा नहीं",
     "noLimit": "कोई सीमा उपलब्ध नहीं (गुणात्मक)",
     "issues": "दूसरी बाधाएँ",
@@ -328,7 +329,7 @@
     "none": "कोई नहीं"
   },
   "chains": {
-    "summary": "संभावित प्रक्रिया-श्रृंखलाएँ, आपकी विशिष्टता पूरी होने की संभावना के क्रम में। विवरण के लिए पंक्ति दबाएँ।",
+    "summary": "Compare evidence-linked research candidates. Missing batch, yield or process evidence remains not estimated; the table is not a validated ranking.",
     "title": "प्रक्रिया-श्रृंखलाएँ",
     "steps": "चरण",
     "tier": "श्रेणी",
@@ -347,17 +348,18 @@
     "criteria": "विशिष्टता की शर्तें",
     "notEvaluated": "जाँचा नहीं गया",
     "transferred": "दूसरी सामग्री से लिया गया साक्ष्य (साबित करना होगा)",
-    "noDataInputs": "बिना डेटा वाले इनपुट (0–1 में सैंपल)",
+    "noDataInputs": "Missing inputs (not estimated)",
     "costMissing": "लागत के छूटे हिस्से (लागत निचली सीमा है)",
     "phytate": "फाइटेट (% शुष्क आधार)",
     "tia": "ट्रिप्सिन इनहिबिटर (कच्चे का %)",
-    "notComputable": "गणना संभव नहीं",
+    "notComputable": "Not estimated",
     "shown": "{{total}} में से {{shown}} श्रृंखलाएँ दिख रही हैं",
     "tiers": {
       "flour": "आटा",
       "treated_flour": "उपचारित आटा",
       "concentrate": "कंसन्ट्रेट",
-      "isolate": "आइसोलेट"
+      "isolate": "आइसोलेट",
+      "fraction": "Protein fraction (classification unverified)"
     },
     "badge": {
       "highest_p_spec": "सबसे ज़्यादा P(spec)",
@@ -367,7 +369,12 @@
       "cost_not_computable": "लागत की गणना संभव नहीं",
       "not_recommended": "सुझाया नहीं गया",
       "best_expected_value": "सबसे अच्छा अपेक्षित मूल्य",
-      "safest": "सबसे सुरक्षित"
+      "safest": "सबसे सुरक्षित",
+      "reference_only": "Reference only",
+      "research_candidate": "Research candidate",
+      "batch_scenario": "Batch scenario",
+      "assumption_scenario": "Assumption scenario",
+      "synthetic_demo": "Synthetic demo"
     },
     "criterion": {
       "protein": "प्रोटीन ≥ लक्ष्य",
@@ -379,19 +386,19 @@
     "eu": "E[U] (₹/फ़ैसला)",
     "paretoTitle": "पेरेटो दृश्य: लागत बनाम बचा हुआ प्रोटीन (व्यवहार्य श्रृंखलाएँ)",
     "paretoSummary": "{{n}} व्यवहार्य श्रृंखलाएँ; {{front}} पेरेटो सीमा पर (घेरे में)। बिंदु का आकार = P(spec); रेखाएँ = P10–P90।",
-    "paretoNone": "किसी व्यवहार्य श्रृंखला की लागत की गणना नहीं हो सकती, इसलिए पेरेटो चार्ट नहीं दिखाया गया।",
+    "paretoNone": "Pareto ranking is unavailable without comparable, calculable costs, retention and supported success estimates.",
     "onFront": "पेरेटो सीमा पर",
     "ties": "सांख्यिकीय रूप से बराबर (कोई भी P ≥ 0.8 से आगे नहीं): {{pairs}}"
   },
   "cost": {
-    "summary": "सबसे ऊपर वाली श्रृंखला की प्रति किलो प्रोटीन लागत, भारत में पहुँचे आयातित मटर आइसोलेट के मुकाबले।",
+    "summary": "Compare calculable ingredient costs with the shared landed pea-isolate scenario, using explicit protein and cost boundaries.",
     "title": "लागत बनाम आयातित मटर आइसोलेट",
     "ours": "हमारी ({{chain}})",
     "pea": "मटर आइसोलेट (भारत में पहुँचा)",
     "lowerBound": "निचली सीमा: लागत के कुछ हिस्सों का डेटा अभी नहीं है",
-    "notComputable": "हमारी लागत की गणना संभव नहीं: उप-उत्पाद का भाव नहीं है। इनपुट स्क्रीन पर भरें।",
+    "notComputable": "Cost per kg recovered protein is not estimated: compatible batch protein/basis, recovery or purchase/process inputs are missing.",
     "breakEven": "मटर का ब्रेक-ईवन मूल भाव",
-    "margin": "मटर के मुकाबले मार्जिन",
+    "margin": "Discount-adjusted benchmark difference (scenario)",
     "pMargin": "P(मार्जिन > 0)",
     "sliders": "अगर ऐसा हो तो…",
     "base": "मटर का मूल भाव (US$/किलो)",
@@ -426,7 +433,7 @@
     "sharedBenchmark": "साझा मटर संदर्भ, प्रति किलो आइसोलेट (प्रति किलो प्रोटीन से अलग):"
   },
   "next": {
-    "summary": "सबसे पहले खरीदने लायक एक टेस्ट, फ़ैसला कितना तैयार है, और जाँच की योजना।",
+    "summary": "Resolve critical evidence, inspect readiness, and plan the next validation step.",
     "title": "अगला कदम",
     "readiness": "फ़ैसले की तैयारी",
     "grades": {
@@ -438,7 +445,7 @@
     "notComputable": "गणना संभव नहीं",
     "mustDemonstrate": "क्या साबित करना होगा",
     "recommended": "सबसे पहले खरीदने लायक टेस्ट",
-    "noTest": "कोई माप खरीदने लायक नहीं: अभी फ़ैसला करें।",
+    "noTest": "No optional economic test ranking is available.",
     "evsi": "टेस्ट का अपेक्षित मूल्य",
     "upperBound": "ऊपरी सीमा (टेस्ट की त्रुटि अज्ञात, सही टेस्ट माना गया)",
     "cost": "लैब लागत",
@@ -458,7 +465,7 @@
     "campaign": "फ़ैसले की मात्रा (खली का एक पायलट अभियान)",
     "eNow": "अभी सबसे अच्छे विकल्प का अपेक्षित मूल्य",
     "evpi": "पूरी जानकारी का मूल्य (EVPI)",
-    "notAvailable": "जानकारी के मूल्य की गणना संभव नहीं: हमारी लागत के लिए उप-उत्पाद का भाव चाहिए। इनपुट स्क्रीन पर भरें।",
+    "notAvailable": "Economic value of information is not estimated: complete cost, calibrated uncertainty and test-cost inputs are unavailable. Critical safety tests remain necessary.",
     "plan": "जाँच की योजना",
     "method": "तरीका",
     "replicates": "दोहराव",
@@ -486,7 +493,7 @@
     "retry": "फिर से कोशिश करें"
   },
   "footer": {
-    "privacy": "कोई खाता नहीं और कोई निजी डेटा नहीं। इस ब्राउज़र में सिर्फ़ आपकी भाषा का चुनाव सहेजा जाता है।",
+    "privacy": "No accounts. Live analyses and case feedback are stored in the configured database. Do not enter personal or confidential information. Language choice is stored in this browser.",
     "limitations": "सीमाएँ",
     "dataPack": "ओपन डेटा पैक (JSON + स्रोत)"
   },
@@ -509,7 +516,7 @@
   },
   "lab": {
     "title": "अपना लैब परिणाम भरें",
-    "hint": "एक मापा हुआ मान विश्लेषण को अपडेट करता है (बेज़ियन अपडेट); आप पहले और बाद दोनों देखेंगे।",
+    "hint": "A traceable lab result updates the affected analysis; compare the before and after evidence. A Bayesian update is used only where a compatible prior model exists.",
     "input": "क्या मापा गया",
     "choose": "चुनें…",
     "mode": "एफ्लाटॉक्सिन परिणाम का प्रकार",
@@ -571,13 +578,13 @@
     "verdict": "फ़ैसला",
     "why": "क्यों",
     "gates": "सुरक्षा गेट",
-    "chain": "सुझाया गया रास्ता",
+    "chain": "Candidate / reference baseline",
     "vsPea": "लागत बनाम आयातित मटर आइसोलेट",
     "test": "सबसे पहले खरीदने लायक टेस्ट",
     "readiness": "फ़ैसले की तैयारी",
     "limits": "मुख्य सीमाएँ",
     "sources": "स्रोत",
-    "notes": "हर संख्या पर लेबल है: M मापा गया, P प्रकाशित, A अनुमानित, S कृत्रिम।",
+    "notes": "Numbers retain measured, published, assumed or synthetic provenance. References are not current-batch assays.",
     "noChain": "कोई श्रृंखला क्रम में नहीं (एक सुरक्षा गेट विफल हुआ)।"
   },
   "safety": {
@@ -585,5 +592,156 @@
     "policy": "उपयोगकर्ता द्वारा निर्धारित परियोजना स्वीकृति सीमाएं, हर सामग्री और दोनों बाजार परिदृश्यों पर लागू। ये स्वतंत्र रूप से सत्यापित नियामक सीमाएं नहीं हैं।",
     "status": "जांच परिणाम",
     "units": "µg/kg = ppb। mg/kg = ppm। आर्सेनिक कुल आर्सेनिक है; दी गई 0.5 सीमा को mg/kg माना गया है।"
+  },
+  "workflow": {
+    "notEstimated": "अनुमान उपलब्ध नहीं",
+    "legend": "Measured = entered batch/lab result · Published = source reference · Assumption = scenario input · Demo data = synthetic example. Click a number for evidence; references are not batch measurements.",
+    "dimensions": {
+      "safety": "Safety readiness",
+      "technical": "Technical feasibility",
+      "economic": "Economic feasibility",
+      "evidence": "Evidence quality"
+    },
+    "status": {
+      "failed": "Known failure",
+      "needs_verification": "Needs verification",
+      "documented_for_pilot_review": "Documented for pilot review",
+      "needs_validation": "Needs validation",
+      "scenario_available": "Scenario available",
+      "not_calculable": "Not calculable",
+      "partial_cost": "Partial cost only",
+      "target_not_supplied": "Target not supplied",
+      "meets_target": "Meets target in this scenario",
+      "exceeds_target": "Exceeds target in this scenario",
+      "sensitive_to_assumptions": "Sensitive to assumptions",
+      "hypothesis_grade": "Hypothesis grade"
+    },
+    "economicState": "Economic target status",
+    "studyEvidence": "Study conditions, applicability and evidence",
+    "ingredientYield": "Ingredient yield (kg/kg starting material)",
+    "initialProtein": "Initial protein (kg/100 kg starting material)",
+    "recoveredProtein": "Recovered protein (kg/100 kg starting material)",
+    "ratioMissing": "No valid level-to-threshold ratio is available. A compatible batch result and a justified positive threshold are required; missing evidence is not a zero bar.",
+    "criticalTests": "Resolve critical safety evidence first",
+    "referenceData": "Automatically loaded material references",
+    "referenceWarning": "Literature ranges below are reference information, not measurements of this lot. Unspecified route, method or basis requires verification.",
+    "reviewReported": "Review-reported; primary source not checked",
+    "lotIdentity": "सामग्री, बैच और स्रोत रिकॉर्ड",
+    "materialForm": "सामग्री का रूप",
+    "lotId": "बैच / लॉट पहचान",
+    "supplier": "आपूर्तिकर्ता या स्रोत",
+    "origin": "उत्पत्ति",
+    "sourceReference": "Supplier / food-grade documentation reference",
+    "routeReference": "Extraction-route documentation reference",
+    "dehulled": "Dehulled material?",
+    "regulatoryReference": "Qualified regulatory category / intended-use review reference",
+    "priceSource": "Price source / quote reference",
+    "priceDate": "Price date (YYYY-MM-DD)",
+    "priceBoundary": "Price delivery boundary / included costs",
+    "targetProteinBasis": "Target protein basis",
+    "costMethod": "Maximum cost target method",
+    "discount": "Required discount from benchmark (%)",
+    "productBudget": "Protein-ingredient budget (₹/kg finished product)",
+    "productProtein": "Protein required (kg/kg finished product)",
+    "phytateType": "Phytate threshold type",
+    "sensoryRubric": "Sensory scoring rubric / protocol reference",
+    "proteinBasis": "Composition / assay basis",
+    "fat": "Crude fat (%)",
+    "ash": "Ash (%)",
+    "crudeFibre": "Crude fibre (%)",
+    "dietaryFibre": "Total dietary fibre (%)",
+    "method": "Laboratory method / protocol",
+    "laboratory": "Laboratory",
+    "reportReference": "Report reference",
+    "reportDate": "Report date (YYYY-MM-DD)",
+    "unit": "परिणाम की इकाई",
+    "reportFields": {
+      "laboratory": "Laboratory",
+      "report_reference": "Report reference",
+      "report_date": "Report date (YYYY-MM-DD)"
+    },
+    "confirmParsed": "I have reviewed the parsed material, extraction route, lot and critical numbers before analysing.",
+    "costTarget": "Your commercial cost target",
+    "costBoundary": "Production cost uses recovered protein mass. Missing logistics, preprocessing, separation/drying, QA, packaging and waste costs remain excluded and explicitly unresolved; a partial cost is not full production cost.",
+    "marginFormula": "Discount-adjusted benchmark difference = landed pea cost/kg protein × (1 − buyer discount) − our cost/kg recovered protein. It is a scenario difference, not validated profit; draw-by-draw medians need not equal the difference of two displayed medians.",
+    "dutyBasis": "Import scenario basis and tax treatment",
+    "dutyExplanation": "Illustrative 43.96% cash-import scenario: BCD 20% + assumed surcharge 2% + IGST 18% on 122% of the stated customs base. The 22% economic-cost scenario assumes full IGST credit. The alternative 49.15% source remains unverified. Classification, freight/tax bases, effective date and credit eligibility require a dated qualified review; these are not universal applicable rates.",
+    "costFormula": {
+      "manual": "Enter your own maximum acceptable ₹/kg recovered protein. Blank means no cost cap.",
+      "benchmark": "Suggested cap = landed benchmark ₹/kg isolate ÷ protein mass fraction × (1 − required discount). The benchmark is illustrative.",
+      "product_budget": "Suggested cap = allocated protein-ingredient budget ₹/kg finished product ÷ kg protein required/kg finished product."
+    },
+    "options": {
+      "unknown": "Unknown / not supplied",
+      "as_received": "As received",
+      "dry_matter": "Dry matter",
+      "not_applicable": "Not applicable",
+      "cake": "Cake",
+      "meal": "Meal",
+      "flour": "Flour",
+      "concentrate": "Concentrate (classification to verify)",
+      "isolate": "Isolate (classification to verify)",
+      "other": "Other route",
+      "manual": "Manual commercial target",
+      "benchmark": "Pea benchmark minus required discount",
+      "product_budget": "Finished-product protein budget",
+      "not_established": "No justified threshold supplied",
+      "internal_target": "Explicit internal project target"
+    },
+    "evidenceExplorer": "Research evidence and unresolved claims",
+    "downloadCase": "Download this case JSON",
+    "functionalReference": "Application-specific functional validation report / reviewer reference",
+    "thresholdCheck": "Threshold check",
+    "comparison": {
+      "exceeds_threshold": "Entered value exceeds threshold",
+      "within_threshold": "Entered value within threshold",
+      "not_measured": "Not measured",
+      "threshold_not_established": "Threshold not established",
+      "not_estimated": "Not estimated",
+      "incompatible_basis": "Incompatible assay basis"
+    }
+  },
+  "functional": {
+    "eyebrow": "FUNCTIONAL EVIDENCE · MATCHED METHODS MATTER",
+    "title": "निकाले गए तिलहन प्रोटीन और मटर आइसोलेट के कार्यात्मक गुणों की तुलना",
+    "property": "Functional property",
+    "flour": "Whole-cake flour reference",
+    "extracted": "Extracted oilseed isolate reference",
+    "pea": "Pea isolate study",
+    "compareHow": "Conditions, evidence and next comparison test",
+    "noWinner": "These studies do not establish a head-to-head winner. Compare matched protein concentration, pH, salt, temperature, sample form and assay duration before calculating a difference.",
+    "applicationTests": "Validation for this application",
+    "paper": "Read Qi et al. (2025) · source paper"
+  },
+  "feedback": {
+    "eyebrow": "CLOSE THE LOOP · THIS ANALYSED CASE",
+    "title": "यह विश्लेषण कितना उपयोगी था?",
+    "scope": "Feedback belongs to this exact analysis. Later matching cases use aggregate observations to suggest follow-up checks; feedback never overrides safety gates or verified laboratory evidence.",
+    "previous": "{{count}} matching case(s) have feedback in the database.",
+    "liveRequired": "Feedback needs a completed live analysis and an available database. Offline snapshots do not create or save case feedback.",
+    "saved": "Feedback saved to this case. Matching future analyses will use the aggregate observations.",
+    "helpful": "क्या यह विश्लेषण उपयोगी था?",
+    "outcome": "What happened in your trial?",
+    "outcomes": {
+      "not_tested": "Not tested yet",
+      "worked": "Worked in my trial (unverified report)",
+      "failed": "Did not work in my trial (unverified report)"
+    },
+    "chain": "Which candidate did you try?",
+    "wholeCase": "Whole case / no candidate selected",
+    "issue": "Main issue to investigate",
+    "issues": {
+      "none": "No specific issue",
+      "solubility": "Solubility / sedimentation",
+      "texture": "Texture / expansion",
+      "sensory": "Sensory / flavour",
+      "cost": "Cost disagreement",
+      "yield": "Yield / recovery",
+      "safety": "Safety concern — requires qualified review"
+    },
+    "notes": "निजी केस नोट्स (वैकल्पिक)",
+    "privacy": "Do not include personal or sensitive information. Notes are stored with this case; other cases receive aggregate counts and issue categories, not your notes. Trial reports remain unverified.",
+    "submit": "इस केस की प्रतिक्रिया सहेजें",
+    "learning": "Learning from similar cases (unverified observations)"
   }
 }

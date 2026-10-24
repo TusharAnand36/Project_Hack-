@@ -1,5 +1,5 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useStore } from "@/store";
@@ -47,13 +47,23 @@ export function useAnalysis() {
   const { i18n } = useTranslation();
   const request = useStore((s) => s.request);
   const presetId = useStore((s) => s.presetId);
-  const debounced = useDebounced(request, 400);
-  return useQuery({
-    queryKey: ["analyze", debounced, presetId, i18n.language],
-    queryFn: () => api.analyze(debounced!, presetId, i18n.language),
+  const runRevision = useStore((s) => s.runRevision);
+  const run = useMemo(() => ({ request, runRevision, presetId }), [request, runRevision, presetId]);
+  const debouncedRun = useDebounced(run, 400);
+  const debounced = debouncedRun.request;
+  const query = useQuery({
+    queryKey: ["analyze", debounced, debouncedRun.runRevision, debouncedRun.presetId, i18n.language],
+    queryFn: () => api.analyze(debounced!, debouncedRun.presetId, i18n.language),
     enabled: debounced !== null,
-    placeholderData: keepPreviousData,
     retry: false,
     staleTime: Infinity,
   });
+  // Never pair a previous case's result/feedback with a newly selected request,
+  // including the debounce interval before the next network call starts.
+  const pendingRequest = debouncedRun !== run;
+  return {
+    ...query,
+    data: pendingRequest ? undefined : query.data,
+    isFetching: pendingRequest || query.isFetching,
+  };
 }

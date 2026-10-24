@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import type { AnalyzeResponse } from "@/api/client";
 import { ExceedanceBars } from "@/charts/ExceedanceBars";
+import { EvidenceExplorer } from "@/components/EvidenceExplorer";
+import { FunctionalComparison } from "@/components/FunctionalComparison";
 import { Num } from "@/components/Num";
 import { ScreenHeader } from "@/components/States";
 import { Button } from "@/components/ui/button";
@@ -53,7 +55,7 @@ export function DiagnosisScreen({ data }: { data: AnalyzeResponse }) {
                 {t("diagnosis.tolerance")}
               </th>
               <th scope="col" className="text-start">
-                {t("diagnosis.pExceed")}
+                {t("workflow.thresholdCheck")}
               </th>
             </tr>
           </thead>
@@ -73,6 +75,12 @@ export function DiagnosisScreen({ data }: { data: AnalyzeResponse }) {
                     </span>
                   )}
                   {d.note && <p className="text-xs text-muted-foreground">{d.note}</p>}
+                  {d.basis !== "unknown" && (
+                    <p className="text-xs text-muted-foreground">
+                      {d.basis.replace(/_/g, " ")}
+                      {d.method && ` · ${d.method}`}
+                    </p>
+                  )}
                 </td>
                 <td>{d.role === "gate" ? t("diagnosis.gate") : t("diagnosis.tunable")}</td>
                 <td>
@@ -89,13 +97,23 @@ export function DiagnosisScreen({ data }: { data: AnalyzeResponse }) {
                     <span className="text-muted-foreground">{t("diagnosis.noLimit")}</span>
                   )}
                 </td>
-                <td>{d.p_exceed ? <Num v={d.p_exceed} label={t("diagnosis.pExceed")} /> : "—"}</td>
+                <td>
+                  {d.p_exceed ? (
+                    <Num v={d.p_exceed} label={t("workflow.thresholdCheck")} />
+                  ) : (
+                    t(`workflow.comparison.${d.comparison_status ?? "not_estimated"}`, {
+                      defaultValue: (d.comparison_status ?? "not_estimated").replace(/_/g, " "),
+                    })
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
+      <FunctionalComparison data={data} />
+      <EvidenceExplorer />
       <h3 className="mb-2 mt-6 font-medium">{t("diagnosis.issues")}</h3>
       <div className="grid gap-3 md:grid-cols-2">
         {data.issues.map((i) => (

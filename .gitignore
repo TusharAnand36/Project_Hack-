@@ -20,3 +20,7 @@ web/dist/
 *.bundle
 # unpublished data awaiting permission (never commit)
 *.local.json
+.runtime/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm

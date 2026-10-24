@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const COLOUR: Record<Tag, string> = {
   measured: "border-tag-measured text-tag-measured",
   published: "border-tag-published text-tag-published",
-  assumed: "border-tag-assumed text-tag-assumed",
+  assumed: "border-border text-muted-foreground",
   synthetic: "border-tag-synthetic text-tag-synthetic",
 };
 
@@ -16,14 +16,13 @@ export function TagChip({ tag, className }: { tag: Tag; className?: string }) {
   return (
     <span
       className={cn(
-        "inline-flex h-5 min-w-5 items-center justify-center rounded border px-1 text-[0.7rem] font-bold leading-none",
+        "inline-flex min-h-5 items-center justify-center rounded border px-1 text-[0.65rem] font-medium leading-normal",
         COLOUR[tag],
         className,
       )}
       title={t(`tag.${tag}`)}
     >
-      <span aria-hidden="true">{t(`tag.letter.${tag}`)}</span>
-      <span className="sr-only">{t(`tag.${tag}`)}</span>
+      {t(`tag.${tag}`)}
     </span>
   );
 }

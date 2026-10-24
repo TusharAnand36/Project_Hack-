@@ -60,8 +60,18 @@ def test_exceedance_reaches_verdict_and_individual_diagnosis(ds):
     assert r.verdict.label.value == "NO-GO" and not r.chains
     lead = next(d for d in r.diagnosis if d.compound == "lead")
     cadmium = next(d for d in r.diagnosis if d.compound == "cadmium")
-    assert lead.level.p50 == 1.1 and lead.tolerance.value == 1 and lead.p_exceed.value == 1
-    assert cadmium.level.p50 == 0.05 and cadmium.tolerance.value == 0.1 and cadmium.p_exceed.value == 0
+    assert (
+        lead.level.p50 == 1.1
+        and lead.tolerance.value == 1
+        and lead.p_exceed is None
+        and lead.comparison_status == "exceeds_threshold"
+    )
+    assert (
+        cadmium.level.p50 == 0.05
+        and cadmium.tolerance.value == 0.1
+        and cadmium.p_exceed is None
+        and cadmium.comparison_status == "within_threshold"
+    )
 
 
 def test_hexane_certificate_or_route_cannot_override_high_measured_result(ds):
@@ -71,7 +81,7 @@ def test_hexane_certificate_or_route_cannot_override_high_measured_result(ds):
     assert next(g.gate.state for g in evaluate(req, ds) if g.gate.id == "G4") is GateState.FAIL
     req = request(process={"solvent_extracted": True, "hexane_cert": True})
     assert next(g.gate.state for g in evaluate(req, ds) if g.gate.id == "G4") is GateState.TEST_FIRST
-    req = request(process={"oil_route": "cold_pressed"})
+    req = request(process={"oil_route": "cold_pressed", "route_reference": "mill process record"})
     assert next(g.gate.state for g in evaluate(req, ds) if g.gate.id == "G4") is GateState.PASS
 
 

@@ -42,6 +42,13 @@ class Targets(_Strict):
     max_cost_inr_per_kg_protein: float | None = Field(default=None, gt=0)
     max_offflavour_index: float | None = Field(default=None, ge=0, le=10)
     max_phytate_pct: float | None = _pct()
+    protein_basis: Literal["as_received", "dry_matter"] = "as_received"
+    cost_method: Literal["manual", "benchmark", "product_budget"] = "manual"
+    required_discount_pct: float = Field(default=10, ge=0, lt=100)
+    product_budget_inr: float | None = Field(default=None, gt=0)
+    product_protein_kg: float | None = Field(default=None, gt=0, le=1)
+    phytate_target_type: Literal["internal_target", "not_established"] = "not_established"
+    sensory_rubric: str | None = Field(default=None, max_length=500)
 
 
 class Constraints(_Strict):
@@ -60,6 +67,11 @@ class Measurement(_Strict):
 
     value: float = Field(ge=0)
     tag: Tag = Tag.measured
+    basis: Literal["as_received", "dry_matter", "not_applicable", "unknown"] = "as_received"
+    method: str | None = Field(default=None, max_length=200)
+    laboratory: str | None = Field(default=None, max_length=200)
+    report_reference: str | None = Field(default=None, max_length=200)
+    report_date: str | None = Field(default=None, max_length=32)
     n_factor: float | None = Field(
         default=None, gt=0, le=7, description="Protein only: N-to-protein factor used"
     )
@@ -67,6 +79,10 @@ class Measurement(_Strict):
 
 class PctMeasurement(Measurement):
     value: float = Field(ge=0, le=100)
+
+
+class DryBasisMeasurement(PctMeasurement):
+    basis: Literal["dry_matter"] = "dry_matter"
 
 
 class Batch(_Strict):
@@ -77,7 +93,7 @@ class Batch(_Strict):
     fat_pct: PctMeasurement | None = None
     ffa_pct: PctMeasurement | None = None
     ash_pct: PctMeasurement | None = None
-    phytate_pct: PctMeasurement | None = Field(default=None, description="% dry basis")
+    phytate_pct: DryBasisMeasurement | None = Field(default=None, description="% dry basis")
     afb1_ppb: Measurement | None = None
     total_aflatoxins_ppb: Measurement | None = None
     hexane_ppm: Measurement | None = None
@@ -87,6 +103,14 @@ class Batch(_Strict):
     tia: Measurement | None = None
     inorganic_as_ppm: Measurement | None = None
     cd_ppm: Measurement | None = None
+    crude_fibre_pct: PctMeasurement | None = None
+    dietary_fibre_pct: PctMeasurement | None = None
+    lot_id: str | None = Field(default=None, max_length=100)
+    supplier: str | None = Field(default=None, max_length=200)
+    origin: str | None = Field(default=None, max_length=200)
+    material_form: Literal["cake", "meal", "flour", "concentrate", "isolate", "unknown"] = "unknown"
+    dehulled: bool | None = None
+    source_reference: str | None = Field(default=None, max_length=300)
 
     @model_validator(mode="after")
     def _aflatoxin_total(self):
@@ -97,7 +121,7 @@ class Batch(_Strict):
 
 
 class Process(_Strict):
-    oil_route: Literal["cold_pressed", "expeller", "solvent"] | None = None
+    oil_route: Literal["cold_pressed", "expeller", "solvent", "other"] | None = None
     hours_since_milling: float | None = Field(default=None, ge=0)
     stabilised: bool | None = None
     storage: Literal["hygienic", "open"] | None = None
@@ -105,6 +129,9 @@ class Process(_Strict):
     sorted_food_grade_supply: bool | None = None
     solvent_extracted: bool | None = None
     hexane_cert: bool | None = None
+    route_reference: str | None = Field(default=None, max_length=300)
+    regulatory_review_reference: str | None = Field(default=None, max_length=300)
+    functional_validation_reference: str | None = Field(default=None, max_length=300)
 
 
 class PeaInputs(_Strict):
@@ -132,6 +159,11 @@ class Evidence(_Strict):
     tag: Tag = Tag.measured
     grade: Grade | None = Grade.A
     note: str | None = None
+    basis: str = "unknown"
+    method: str | None = None
+    laboratory: str | None = None
+    report_reference: str | None = None
+    report_date: str | None = None
 
 
 class AnalyzeRequest(_Strict):
@@ -154,6 +186,11 @@ class AnalyzeRequest(_Strict):
     evidence: list[Evidence] = Field(default_factory=list, max_length=20)
     seed: int | None = None
     n_draws: int | None = Field(default=None, ge=256, le=16384)
+    price_source: str | None = Field(default=None, max_length=300)
+    price_date: str | None = Field(default=None, max_length=32)
+    price_boundary: str = Field(default="Supplier price; logistics not supplied", max_length=300)
+    original_price: float | None = Field(default=None, gt=0)
+    original_price_unit: Literal["per_kg", "per_quintal", "per_tonne"] | None = None
 
 
 # ---------------------------------------------------------------- result (§14.2)
@@ -188,6 +225,7 @@ class Meta(_Strict):
     chains_shown: int = 0
     chains_capped: bool = False
     is_stub: bool = False
+    generated_at: str | None = None
 
 
 class Verdict(_Strict):
@@ -234,6 +272,11 @@ class Diagnosis(_Strict):
     rank: int
     limiting: bool = False
     note: str | None = None
+    ratio: Range | None = None
+    evidence_status: str = "not_available"
+    basis: str = "unknown"
+    method: str | None = None
+    comparison_status: str = "not_estimated"
 
 
 class Issue(_Strict):
@@ -262,10 +305,10 @@ class Criterion(_Strict):
 class Chain(_Strict):
     id: str
     steps: list[str]
-    tier: Literal["flour", "treated_flour", "concentrate", "isolate"]
+    tier: Literal["flour", "treated_flour", "concentrate", "isolate", "fraction"]
     rank: int
-    protein_retained: Range
-    protein_pct_final: Range
+    protein_retained: Range | None
+    protein_pct_final: Range | None
     ofi: Range | None = None
     phytate_pct_final: Range | None = None
     tia_pct_raw_final: Range | None = None
@@ -277,13 +320,21 @@ class Chain(_Strict):
     l_water_per_kg_protein: Range | None = None
     margin_vs_pea: Range | None = None
     p_margin_positive: Value | None = None
-    p_spec: Value
+    p_spec: Value | None
     criteria: list[Criterion] = Field(default_factory=list)
     e_utility: Value | None = None
     transferred: list[str] = Field(default_factory=list)
     no_data_inputs: list[str] = Field(default_factory=list)
     pareto: bool = False
     badges: list[str] = Field(default_factory=list)
+    assessment_status: str = "scenario_only"
+    assessment_note: str = ""
+    economic_status: str = "not_calculable"
+    ingredient_yield: Range | None = None
+    initial_protein_kg: Range | None = None
+    recovered_protein_kg: Range | None = None
+    basis: str = "as_received"
+    evidence: list[dict] = Field(default_factory=list)
 
 
 class Scenario(_Strict):
@@ -390,6 +441,7 @@ class PlanMonth(_Strict):
     months: str
     work: str
     output: str
+    decision_gate: str = "Hold until the required evidence is reviewed. This is a proposed future phase."
 
 
 class Budget(_Strict):
@@ -406,6 +458,49 @@ class Plan(_Strict):
     pilot_partner: str
 
 
+class AssessmentDimension(_Strict):
+    status: str
+    note: str
+
+
+class FunctionalProperty(_Strict):
+    id: str
+    name: str
+    oilseed_flour: str
+    oilseed_isolate: str
+    pea_isolate: str
+    oilseed_conditions: str
+    pea_conditions: str
+    comparable: bool = False
+    next_test: str
+    source_ids: list[str]
+    evidence_status: str
+
+
+class FunctionalComparison(_Strict):
+    material: str = ""
+    note: str = ""
+    properties: list[FunctionalProperty] = Field(default_factory=list)
+    application_tests: list[str] = Field(default_factory=list)
+
+
+class CostTarget(_Strict):
+    amount: Value | None = None
+    method: str = "manual"
+    formula: str = ""
+    note: str = ""
+
+
+class FeedbackContext(_Strict):
+    count: int = 0
+    helpful_count: int = 0
+    worked_count: int = 0
+    failed_count: int = 0
+    observations: list[str] = Field(default_factory=list)
+    next_actions: list[str] = Field(default_factory=list)
+    note: str = "Unverified case feedback; does not override laboratory evidence or safety gates."
+
+
 class AnalyzeResponse(_Strict):
     meta: Meta
     verdict: Verdict
@@ -420,6 +515,13 @@ class AnalyzeResponse(_Strict):
     plan: Plan | None = None
     limitations: list[str]
     disclaimer: str
+    dimensions: dict[str, AssessmentDimension] = Field(default_factory=dict)
+    functional_comparison: FunctionalComparison = Field(default_factory=FunctionalComparison)
+    cost_target: CostTarget = Field(default_factory=CostTarget)
+    voi_status: str = "not_estimated"
+    voi_note: str = ""
+    case_id: str | None = None
+    feedback_context: FeedbackContext = Field(default_factory=FeedbackContext)
 
 
 # ---------------------------------------------------------------- learning loop (§12.12)
@@ -448,6 +550,12 @@ class UpdateEvidenceRequest(_Strict):
         default=None, description="ELISA screen result (G1)"
     )
     method: str | None = Field(default=None, max_length=200)
+    unit: str | None = Field(default=None, max_length=100)
+    basis: Literal["as_received", "dry_matter", "not_applicable", "unknown"] = "as_received"
+    laboratory: str | None = Field(default=None, max_length=200)
+    report_reference: str | None = Field(default=None, max_length=200)
+    report_date: str | None = Field(default=None, max_length=32)
+    batch_id: str | None = Field(default=None, max_length=100)
 
 
 class UpdateEvidenceResponse(_Strict):

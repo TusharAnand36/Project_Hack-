@@ -77,6 +77,12 @@ class Param(_Strict):
     )
     conditions: Conditions | None = None
     notes: str | None = None
+    verification_status: str | None = None
+    basis: str | None = None
+    method: str | None = None
+    material_form: str | None = None
+    extraction_route: str | None = None
+    source_location: str | None = None
 
     @model_validator(mode="after")
     def _value_or_dist(self) -> Param:

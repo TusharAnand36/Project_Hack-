@@ -8,7 +8,7 @@ import { VerdictScreen } from "@/screens/VerdictScreen";
 import { useStore } from "@/store";
 import { renderWithProviders } from "@/test/render";
 
-vi.mock("@/api/hooks", () => ({ useSources: () => new Map() }));
+vi.mock("@/api/hooks", () => ({ useSources: () => new Map(), useDataFile: () => ({ data: undefined }) }));
 
 const limits = [
   ["hexane_residue", "10"],

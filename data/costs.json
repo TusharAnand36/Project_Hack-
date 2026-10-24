@@ -3,17 +3,20 @@
     "electricity_inr_per_kwh": {
       "unit": "INR/kWh",
       "tag": "assumed",
-      "notes": "MISSING: industrial electricity tariff (state-specific)"
+      "notes": "MISSING: industrial electricity tariff (state-specific)",
+      "verification_status": "not_available"
     },
     "water_inr_per_m3": {
       "unit": "INR/m3",
       "tag": "assumed",
-      "notes": "MISSING: industrial water price"
+      "notes": "MISSING: industrial water price",
+      "verification_status": "not_available"
     },
     "labour_inr_per_h": {
       "unit": "INR/h",
       "tag": "assumed",
-      "notes": "MISSING: plant labour wage"
+      "notes": "MISSING: plant labour wage",
+      "verification_status": "not_available"
     }
   },
   "capital": {
@@ -22,47 +25,54 @@
       "tag": "assumed",
       "value": 0.12,
       "evidence_grade": "D",
-      "notes": "CRF discount rate (source plan §12.7)"
+      "notes": "CRF discount rate (source plan §12.7)",
+      "verification_status": "assumption"
     },
     "life_years": {
       "unit": "years",
       "tag": "assumed",
       "value": 10,
       "evidence_grade": "D",
-      "notes": "CRF equipment life (source plan §12.7)"
+      "notes": "CRF equipment life (source plan §12.7)",
+      "verification_status": "assumption"
     },
     "operating_days": {
       "unit": "days/year",
       "tag": "assumed",
       "value": 300,
       "evidence_grade": "D",
-      "notes": "source plan §12.7"
+      "notes": "source plan §12.7",
+      "verification_status": "assumption"
     },
     "utilisation": {
       "unit": "fraction",
       "tag": "assumed",
       "value": 0.8,
       "evidence_grade": "D",
-      "notes": "source plan §12.7"
+      "notes": "source plan §12.7",
+      "verification_status": "assumption"
     },
     "scale_exponent": {
       "unit": "dimensionless",
       "tag": "assumed",
       "value": 0.6,
       "evidence_grade": "D",
-      "notes": "six-tenths rule (source plan §12.7)"
+      "notes": "six-tenths rule (source plan §12.7)",
+      "verification_status": "assumption"
     }
   },
   "overheads": {
     "qa_inr_per_kg_raw": {
       "unit": "INR/kg raw",
       "tag": "assumed",
-      "notes": "MISSING: QA cost per kg raw cake"
+      "notes": "MISSING: QA cost per kg raw cake",
+      "verification_status": "not_available"
     },
     "overhead_frac": {
       "unit": "fraction",
       "tag": "assumed",
-      "notes": "MISSING: overhead share of processing cost"
+      "notes": "MISSING: overhead share of processing cost",
+      "verification_status": "not_available"
     }
   },
   "pea": {
@@ -77,7 +87,8 @@
       },
       "evidence_grade": "C",
       "source_id": "tridge_pea_cn",
-      "notes": "China export price, pea protein 80-85%, 2023-24; mode 3.2 is the source plan default"
+      "notes": "China export price, pea protein 80-85%, 2023-24; mode 3.2 is the source plan default",
+      "verification_status": "review_reported_primary_not_checked"
     },
     "protein_frac": {
       "unit": "fraction",
@@ -89,7 +100,8 @@
         "section": "2.1 Materials",
         "material": "commercial pea protein isolate"
       },
-      "notes": "Reported protein content of the commercial PPI used in the supplied paper; not an assay of the user batch."
+      "notes": "Reported protein content of the commercial PPI used in the supplied paper; not an assay of the user batch.",
+      "verification_status": "verified_primary_source"
     },
     "freight_frac": {
       "unit": "fraction",
@@ -101,7 +113,8 @@
         "high": 0.14
       },
       "evidence_grade": "D",
-      "notes": "source plan §11.3"
+      "notes": "source plan §11.3",
+      "verification_status": "assumption"
     },
     "usd_inr": {
       "unit": "INR/USD",
@@ -114,19 +127,22 @@
       },
       "evidence_grade": "C",
       "source_id": "banklive_usdinr",
-      "notes": "mode from Oct 2026 quotes (95-97); range 90-105 is a planning assumption"
+      "notes": "mode from Oct 2026 quotes (95-97); range 90-105 is a planning assumption",
+      "verification_status": "review_reported_primary_not_checked"
     },
     "buyer_discount": {
       "unit": "fraction",
       "tag": "assumed",
       "value": 0.1,
       "evidence_grade": "D",
-      "notes": "source plan §12.8"
+      "notes": "source plan §12.8",
+      "verification_status": "assumption"
     },
     "clearing_frac": {
       "unit": "fraction",
       "tag": "assumed",
-      "notes": "MISSING: optional clearing/holding cost on landed price"
+      "notes": "MISSING: optional clearing/holding cost on landed price",
+      "verification_status": "not_available"
     },
     "india_b2b_inr_per_kg_product": {
       "unit": "INR/kg product",
@@ -138,7 +154,8 @@
       },
       "evidence_grade": "C",
       "source_id": "indiamart_pea_isolate",
-      "notes": "cross-check only (website plan A4); B2B listings; verify"
+      "notes": "cross-check only (website plan A4); B2B listings; verify",
+      "verification_status": "review_reported_primary_not_checked"
     }
   },
   "duty_modes": {
@@ -148,7 +165,8 @@
       "value": 0.4396,
       "evidence_grade": "C",
       "source_id": "hs3504_tariff",
-      "notes": "BCD 20% + SWS + IGST 18%; the two sources disagree (43.96% vs 49.15%)"
+      "notes": "BCD 20% + SWS + IGST 18%; the two sources disagree (43.96% vs 49.15%)",
+      "verification_status": "review_reported_primary_not_checked"
     },
     "full_stack_49": {
       "unit": "fraction",
@@ -156,14 +174,16 @@
       "value": 0.4915,
       "evidence_grade": "C",
       "source_id": "hs3504_tariff",
-      "notes": "BCD 20% + SWS + IGST 18%; the two sources disagree (43.96% vs 49.15%)"
+      "notes": "BCD 20% + SWS + IGST 18%; the two sources disagree (43.96% vs 49.15%)",
+      "verification_status": "review_reported_primary_not_checked"
     },
     "bcd_only_igst_credited_22": {
       "unit": "fraction",
       "tag": "assumed",
       "value": 0.22,
       "evidence_grade": "D",
-      "notes": "BCD + SWS only, if a GST-registered buyer credits IGST; confirm with a CA/customs source"
+      "notes": "BCD + SWS only, if a GST-registered buyer credits IGST; confirm with a CA/customs source",
+      "verification_status": "assumption"
     }
   },
   "scenarios": [
@@ -183,7 +203,7 @@
     },
     {
       "id": "pea_base_plus_25",
-      "name": "Pea base +25% (anti-dumping diversion)",
+      "name": "Illustrative pea base-price +25%",
       "scale": {
         "base_usd_per_kg": 1.25
       },
@@ -196,26 +216,30 @@
       "tag": "assumed",
       "value": 10000,
       "evidence_grade": "D",
-      "notes": "one pilot campaign (10 t cake), source plan §12.9"
+      "notes": "one pilot campaign (10 t cake), source plan §12.9",
+      "verification_status": "assumption"
     },
     "co_product_credit_inr_per_kg_protein": {
       "unit": "INR/kg protein",
       "tag": "assumed",
       "value": 0,
       "evidence_grade": "D",
-      "notes": "conservative default (source plan §8.3)"
+      "notes": "conservative default (source plan §8.3)",
+      "verification_status": "assumption"
     },
     "default_scale_kg_day": {
       "unit": "kg/day",
       "tag": "assumed",
       "value": 500,
       "evidence_grade": "D",
-      "notes": "from the source plan §8.3 example payload"
+      "notes": "from the source plan §8.3 example payload",
+      "verification_status": "assumption"
     },
     "user_risk_tolerance_p_fail": {
       "unit": "probability",
       "tag": "assumed",
-      "notes": "MISSING: acceptable prior gate risk for rule §12.14-2 (user-set)"
+      "notes": "MISSING: acceptable prior gate risk for rule §12.14-2 (user-set)",
+      "verification_status": "not_available"
     }
   },
   "engine": {
@@ -223,48 +247,56 @@
       "unit": "count",
       "tag": "assumed",
       "value": 42,
-      "notes": "config: random seed"
+      "notes": "config: random seed",
+      "verification_status": "assumption"
     },
     "n_draws": {
       "unit": "count",
       "tag": "assumed",
       "value": 8192,
-      "notes": "config: Sobol draws (2^13)"
+      "notes": "config: Sobol draws (2^13)",
+      "verification_status": "assumption"
     },
     "pert_lambda": {
       "unit": "dimensionless",
       "tag": "assumed",
       "value": 4,
-      "notes": "config: PERT shape"
+      "notes": "config: PERT shape",
+      "verification_status": "assumption"
     },
     "extrapolation_k": {
       "unit": "dimensionless",
       "tag": "assumed",
       "value": 1.0,
-      "notes": "config: range widening 1 + k(1-alpha)"
+      "notes": "config: range widening 1 + k(1-alpha)",
+      "verification_status": "assumption"
     },
     "evppi_bins": {
       "unit": "count",
       "tag": "assumed",
       "value": 25,
-      "notes": "config: EVPPI bins"
+      "notes": "config: EVPPI bins",
+      "verification_status": "assumption"
     },
     "max_chains": {
       "unit": "count",
       "tag": "assumed",
       "value": 60,
-      "notes": "config: chain cap"
+      "notes": "config: chain cap",
+      "verification_status": "assumption"
     },
     "max_protein_frac": {
       "unit": "fraction",
       "tag": "assumed",
       "value": 0.95,
-      "notes": "config: cap on protein fraction"
+      "notes": "config: cap on protein fraction",
+      "verification_status": "assumption"
     },
     "elisa_cv_default": {
       "unit": "fraction",
       "tag": "assumed",
-      "notes": "MISSING: assay CV when a lab test lacks one"
+      "notes": "MISSING: assay CV when a lab test lacks one",
+      "verification_status": "not_available"
     }
   },
   "readiness": {
@@ -272,31 +304,36 @@
       "unit": "probability",
       "tag": "assumed",
       "value": 0.8,
-      "notes": "config: decision-grade P(spec)"
+      "notes": "config: decision-grade P(spec)",
+      "verification_status": "assumption"
     },
     "decision_evpi_ratio_max": {
       "unit": "fraction",
       "tag": "assumed",
       "value": 0.15,
-      "notes": "config: decision-grade EVPI/|E_now|"
+      "notes": "config: decision-grade EVPI/|E_now|",
+      "verification_status": "assumption"
     },
     "decision_ab_driver_share_min": {
       "unit": "fraction",
       "tag": "assumed",
       "value": 0.7,
-      "notes": "config: share of top drivers graded A/B"
+      "notes": "config: share of top drivers graded A/B",
+      "verification_status": "assumption"
     },
     "top_drivers": {
       "unit": "count",
       "tag": "assumed",
       "value": 5,
-      "notes": "config: number of value drivers checked"
+      "notes": "config: number of value drivers checked",
+      "verification_status": "assumption"
     },
     "not_viable_p_spec_max": {
       "unit": "probability",
       "tag": "assumed",
       "value": 0.2,
-      "notes": "config: best P(spec) below this = not viable"
+      "notes": "config: best P(spec) below this = not viable",
+      "verification_status": "assumption"
     }
   }
 }

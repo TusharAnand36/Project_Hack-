@@ -23,6 +23,7 @@ from typing import Any, Literal, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
+from compass.contract import FunctionalProperty
 from compass.models import Param, Tag
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parents[2] / "data"
@@ -36,6 +37,8 @@ FILES = (
     "safety_gates",
     "lab_tests",
     "presets",
+    "functional_evidence",
+    "research_evidence",
 )
 
 
@@ -285,6 +288,18 @@ class PresetsFile(_Strict):
     presets: list[Preset]
 
 
+class FunctionalEvidenceFile(_Strict):
+    note: str
+    by_material: dict[str, list[FunctionalProperty]]
+    application_tests: dict[str, list[str]]
+
+
+class ResearchEvidenceFile(_Strict):
+    source_id: str
+    note: str
+    records: list[dict[str, str | dict[str, str]]]
+
+
 # ---------------------------------------------------------------- dataset
 
 
@@ -307,6 +322,7 @@ class Dataset:
     gates: dict[str, SafetyGate]
     lab_tests: dict[str, LabTest]
     presets: dict[str, Preset]
+    functional_evidence: FunctionalEvidenceFile
 
 
 M = TypeVar("M", bound=BaseModel)
@@ -376,6 +392,8 @@ def load_dataset(data_dir: Path | str | None = None) -> Dataset:
     sg = _validate(SafetyGatesFile, raw["safety_gates"], "safety_gates")
     lt = _validate(LabTestsFile, raw["lab_tests"], "lab_tests")
     pr = _validate(PresetsFile, raw["presets"], "presets")
+    fe = _validate(FunctionalEvidenceFile, raw["functional_evidence"], "functional_evidence")
+    _validate(ResearchEvidenceFile, raw["research_evidence"], "research_evidence")
 
     ds = Dataset(
         version=src.dataset_version,
@@ -395,8 +413,15 @@ def load_dataset(data_dir: Path | str | None = None) -> Dataset:
         gates=_index(sg.gates, "safety_gates"),
         lab_tests=_index(lt.tests, "lab_tests"),
         presets=_index(pr.presets, "presets"),
+        functional_evidence=fe,
     )
     check_dataset(ds)
+    for material, rows in fe.by_material.items():
+        if material not in ds.byproducts:
+            raise DataError(f"functional_evidence.json: unknown material {material}")
+        for row in rows:
+            if set(row.source_ids) - ds.sources.keys():
+                raise DataError(f"functional_evidence.json: unknown source in {row.id}")
     return ds
 
 
@@ -722,6 +747,8 @@ FILE_MODELS: dict[str, type[BaseModel]] = {
     "safety_gates": SafetyGatesFile,
     "lab_tests": LabTestsFile,
     "presets": PresetsFile,
+    "functional_evidence": FunctionalEvidenceFile,
+    "research_evidence": ResearchEvidenceFile,
 }
 
 

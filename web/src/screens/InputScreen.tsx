@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
-import { useForm, type FieldPath, type UseFormRegister } from "react-hook-form";
+import { useForm, useWatch, type FieldPath, type UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { api } from "@/api/client";
@@ -25,6 +25,19 @@ import { useStore } from "@/store";
 interface Named {
   id: string;
   name: string;
+  notes?: string;
+  composition?: Record<
+    string,
+    {
+      value?: number | null;
+      dist?: { low: number; high: number } | null;
+      unit: string;
+      tag: string;
+      source_id?: string;
+      notes?: string;
+      conditions?: Record<string, unknown>;
+    }
+  >;
 }
 
 const field = "mt-1 block min-h-11 w-full rounded-md border border-border bg-background px-3";
@@ -152,11 +165,17 @@ export function InputScreen() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(formSchema),
     defaultValues: request ? fromRequest(request) : EMPTY_FORM,
   });
+  const selectedMaterial = useWatch({ control, name: "byproduct" });
+  const costMethod = useWatch({ control, name: "costMethod" });
+  const materialReference = byproducts.data?.byproducts.find((item) => item.id === selectedMaterial);
+  const [parsedReview, setParsedReview] = useState(false);
+  const [parsedConfirmed, setParsedConfirmed] = useState(false);
   useEffect(() => {
     if (request) reset(fromRequest(request));
   }, [request, reset]);
@@ -170,6 +189,8 @@ export function InputScreen() {
     onSuccess: (r) => {
       if (!r.payload) return;
       reset(fromRequest(r.payload));
+      setParsedReview(true);
+      setParsedConfirmed(false);
       const hl = new Set(r.changed.map((k) => PARSED_TO_FORM[k]).filter(Boolean));
       setHighlight(hl);
       if ([...hl].some((f) => BATCH_FIELDS.has(f))) setBatchOpen(true);
@@ -180,6 +201,23 @@ export function InputScreen() {
   const errs = errors as Record<string, { message?: string } | undefined>;
   const num = (name: FieldPath<FormInput>, label: string) => (
     <NumField name={name} label={label} register={register} errors={errs} highlighted={hl(name)} />
+  );
+
+  const textField = (name: FieldPath<FormInput>, label: string) => (
+    <Labelled id={name} label={label} error={errs[name]?.message}>
+      <input id={name} className={field} {...register(name)} />
+    </Labelled>
+  );
+  const selectField = (name: FieldPath<FormInput>, label: string, options: string[]) => (
+    <Labelled id={name} label={label}>
+      <select id={name} className={field} {...register(name)}>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {t(`workflow.options.${option}`, { defaultValue: option.replace(/_/g, " ") })}
+          </option>
+        ))}
+      </select>
+    </Labelled>
   );
 
   return (
@@ -339,12 +377,87 @@ export function InputScreen() {
           </div>
         </div>
 
+        {materialReference && (
+          <details className="workspace-input-panel">
+            <summary className="min-h-11 cursor-pointer py-2 font-medium">
+              {t("workflow.referenceData")}: {materialReference.name}
+            </summary>
+            <p className="my-3 text-sm text-muted-foreground">{t("workflow.referenceWarning")}</p>
+            <div className="overflow-x-auto" tabIndex={0}>
+              <table className="w-full text-sm">
+                <tbody>
+                  {Object.entries(materialReference.composition ?? {}).map(([key, param]) => (
+                    <tr key={key} className="border-b border-border align-top">
+                      <th className="py-3 pe-4 text-start font-medium" scope="row">
+                        {key.replace(/_/g, " ")}
+                      </th>
+                      <td className="py-3 pe-4">
+                        {param.value ??
+                          (param.dist
+                            ? `${param.dist.low}–${param.dist.high}`
+                            : t("workflow.notEstimated"))}{" "}
+                        {param.unit}
+                      </td>
+                      <td className="py-3">
+                        <span>{param.tag === "published" ? t("workflow.reviewReported") : param.tag}</span>
+                        <p className="text-xs">{param.source_id}</p>
+                        <p className="text-xs text-muted-foreground">{param.notes}</p>
+                        {param.conditions && (
+                          <p className="text-xs text-muted-foreground">{JSON.stringify(param.conditions)}</p>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-sm">{materialReference.notes}</p>
+          </details>
+        )}
+
+        <fieldset className="workspace-input-panel grid gap-6 sm:grid-cols-2">
+          <legend className="mb-2 font-medium">{t("workflow.lotIdentity")}</legend>
+          {selectField("materialForm", t("workflow.materialForm"), [
+            "unknown",
+            "cake",
+            "meal",
+            "flour",
+            "concentrate",
+            "isolate",
+          ])}
+          {textField("lotId", t("workflow.lotId"))}
+          {textField("supplier", t("workflow.supplier"))}
+          {textField("origin", t("workflow.origin"))}
+          {textField("sourceReference", t("workflow.sourceReference"))}
+          {textField("routeReference", t("workflow.routeReference"))}
+          <TriField name="dehulled" label={t("workflow.dehulled")} register={register} />
+          {textField("regulatoryReference", t("workflow.regulatoryReference"))}
+          {textField("functionalReference", t("workflow.functionalReference"))}
+          {textField("priceSource", t("workflow.priceSource"))}
+          {textField("priceDate", t("workflow.priceDate"))}
+          {textField("priceBoundary", t("workflow.priceBoundary"))}
+        </fieldset>
+
         <fieldset className="workspace-input-panel grid gap-6 sm:grid-cols-2">
           <legend className="mb-2 font-medium">{t("input.targets")}</legend>
           {num("minProtein", t("input.minProtein"))}
-          {num("maxCost", t("input.maxCost"))}
+          {selectField("targetProteinBasis", t("workflow.targetProteinBasis"), ["as_received", "dry_matter"])}
+          {selectField("costMethod", t("workflow.costMethod"), ["manual", "benchmark", "product_budget"])}
+          {costMethod === "manual" && num("maxCost", t("input.maxCost"))}
+          {costMethod === "benchmark" && num("discount", t("workflow.discount"))}
+          {costMethod === "product_budget" && (
+            <>
+              {num("productBudget", t("workflow.productBudget"))}
+              {num("productProtein", t("workflow.productProtein"))}
+            </>
+          )}
+          <p className="text-xs text-muted-foreground sm:col-span-2">
+            {t(`workflow.costFormula.${costMethod}`)}
+          </p>
           {num("maxOfi", t("input.maxOfi"))}
+          {selectField("phytateType", t("workflow.phytateType"), ["not_established", "internal_target"])}
           {num("maxPhytate", t("input.maxPhytate"))}
+          {textField("sensoryRubric", t("workflow.sensoryRubric"))}
         </fieldset>
 
         <fieldset className="workspace-input-panel">
@@ -385,7 +498,20 @@ export function InputScreen() {
           <p className="mb-3 text-sm text-muted-foreground">{t("input.batchHint")}</p>
           <div className="grid gap-4 sm:grid-cols-2">
             {num("protein", t("input.protein"))}
+            {selectField("proteinBasis", t("workflow.proteinBasis"), [
+              "unknown",
+              "as_received",
+              "dry_matter",
+            ])}
             {num("nFactor", t("input.nFactor"))}
+            {num("fat", t("workflow.fat"))}
+            {num("ash", t("workflow.ash"))}
+            {num("crudeFibre", t("workflow.crudeFibre"))}
+            {num("dietaryFibre", t("workflow.dietaryFibre"))}
+            {textField("method", t("workflow.method"))}
+            {textField("laboratory", t("workflow.laboratory"))}
+            {textField("reportReference", t("workflow.reportReference"))}
+            {textField("reportDate", t("workflow.reportDate"))}
             {num("moisture", t("input.moisture"))}
             {num("ffa", t("input.ffa"))}
             {num("phytate", t("input.phytate"))}
@@ -409,6 +535,7 @@ export function InputScreen() {
                 <option value="cold_pressed">{t("input.cold_pressed")}</option>
                 <option value="expeller">{t("input.expeller")}</option>
                 <option value="solvent">{t("input.solvent")}</option>
+                <option value="other">{t("workflow.options.other")}</option>
               </select>
             </Labelled>
             {num("hours", t("input.hours"))}
@@ -445,7 +572,22 @@ export function InputScreen() {
           </div>
         </details>
 
-        <Button type="submit" className="workspace-analyse" data-testid="submit">
+        {parsedReview && (
+          <label className="flex min-h-11 items-center gap-3 text-sm">
+            <input
+              type="checkbox"
+              checked={parsedConfirmed}
+              onChange={(event) => setParsedConfirmed(event.target.checked)}
+            />
+            {t("workflow.confirmParsed")}
+          </label>
+        )}
+        <Button
+          type="submit"
+          disabled={parsedReview && !parsedConfirmed}
+          className="workspace-analyse"
+          data-testid="submit"
+        >
           {t("input.submit")}
           <span aria-hidden="true">↗</span>
         </Button>

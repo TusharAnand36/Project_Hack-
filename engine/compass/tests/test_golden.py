@@ -37,7 +37,7 @@ def test_gt2_groundnut_aflatoxin_60_ppb(ds):
     assert gate(r, "G1").state is GateState.FAIL
     assert r.verdict.label is VerdictLabel.NO_GO
     assert r.chains == []  # chains are not ranked for a failed gate
-    assert any("divert to feed or re-source" in a.lower() for a in r.verdict.actions)
+    assert any("qualified safety review" in a.lower() for a in r.verdict.actions)
 
 
 def test_legacy_stability_gate_still_handles_measured_and_unstabilised_batches(ds):
@@ -63,7 +63,7 @@ def test_legacy_stability_gate_still_handles_measured_and_unstabilised_batches(d
 def test_gt5_almond_meat_analogue(ds):
     r = run(ds, byproduct="almond_cake", application="meat_analogue")
     kinds = {i.kind for i in r.issues}
-    assert "no_treatment_needed" in kinds and "allergen" in kinds
+    assert "diagnosis_blocked" in kinds and "allergen" in kinds
     assert gate(r, "G6").state is GateState.FLAG
     assert any("raw material price missing" in x for x in r.verdict.reasons)  # price flag
     assert r.chains  # not an empty page
@@ -119,13 +119,32 @@ def test_allergen_free_claim_fails(ds):
 
 
 def test_measured_phytate_is_used_and_tagged(ds):
-    r = run(ds, byproduct="groundnut_cake", application="beverage", batch={"phytate_pct": {"value": 2.0}})
+    r = run(
+        ds,
+        byproduct="groundnut_cake",
+        application="beverage",
+        batch={"phytate_pct": {"value": 2.0}},
+        targets={"max_phytate_pct": 1, "phytate_target_type": "internal_target"},
+    )
     d = next(x for x in r.diagnosis if x.compound == "phytic_acid")
-    assert d.level.p50 == pytest.approx(2.0) and d.level.tag.value == "measured" and d.p_exceed.value == 1.0
+    assert (
+        d.level.p50 == pytest.approx(2.0)
+        and d.level.tag.value == "measured"
+        and d.p_exceed is None
+        and d.comparison_status == "exceeds_threshold"
+    )
 
 
 def test_user_price_makes_almond_cost_computable(ds):
-    r = run(ds, byproduct="almond_cake", application="meat_analogue", raw_price_inr_per_kg=60)
+    r = run(
+        ds,
+        byproduct="almond_cake",
+        application="meat_analogue",
+        raw_price_inr_per_kg=60,
+        batch={"protein_pct": {"value": 40, "basis": "as_received"}},
+    )
     top = r.chains[0]
     assert top.cost_inr_per_kg_protein is not None and "cost_not_computable" not in top.badges
-    assert r.pea.break_even_base_usd_per_kg is not None
+    assert (
+        r.pea.break_even_base_usd_per_kg is None
+    )  # incomplete production boundary is not a break-even estimate

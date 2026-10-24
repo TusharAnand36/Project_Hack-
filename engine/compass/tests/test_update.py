@@ -40,10 +40,9 @@ def test_gt8_measured_phytate_is_tagged_and_changes_value_of_information(ds):
     after = analyze(r.after_request, ds)
     d = next(x for x in after.diagnosis if x.compound == "phytic_acid")
     assert d.level.tag.value == "measured" and d.level.grade.value == "A"
-    assert [e.input for e in r.before.evppi] != [
-        e.input for e in r.after.evppi
-    ] or r.before.best_p_spec != r.after.best_p_spec
-    assert r.after.best_p_spec.value <= r.before.best_p_spec.value  # phytate now constrains the spec
+    assert r.before.best_p_spec is None and r.after.best_p_spec is None
+    assert after.voi is None  # an assay does not create missing process costs or calibrated priors
+    assert d.level.p50 == pytest.approx(1.8, rel=0.05)
 
 
 def test_measured_aflatoxin_over_limit_flips_to_no_go(ds):

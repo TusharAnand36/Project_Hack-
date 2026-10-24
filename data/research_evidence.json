@@ -1,0 +1,829 @@
+{
+  "source_id": "user_evidence_matrix",
+  "note": "Read alongside the five original supplied documents; an extraction checklist, not independently verified prediction data. Drafts overlap and are not independent studies. Preliminary progress-report yields stay outside production calculations.",
+  "records": [
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Purpose",
+        "Guidance": "Structured evidence matrix from the five uploaded oilseed-cake documents to inform Upcycle Compass."
+      }
+    },
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Evidence rule",
+        "Guidance": "Values below are transcribed/summarised from the supplied documents; they are not automatically independently verified."
+      }
+    },
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Status labels",
+        "Guidance": "Source-reported = explicitly reported in supplied document; Proposed = candidate/hypothesis; Needs verification = unclear source, inconsistent basis, questionable generalisation, or missing batch context."
+      }
+    },
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Core product recommendation",
+        "Guidance": "Start with one feedstock + one application. Sunflower cake → extruded high-protein/fibre snack is a candidate route in the research plan, not yet a validated commercial winner."
+      }
+    },
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Critical safety rule",
+        "Guidance": "Unknown provenance/process/contaminant status must remain unknown or test-first; do not silently convert missing data into PASS."
+      }
+    },
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Composition rule",
+        "Guidance": "Do not compare composition values unless material type, extraction route, moisture basis, analytical method and source are known."
+      }
+    },
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Protein rule",
+        "Guidance": "Kjeldahl crude protein in the progress report uses nitrogen × 6.25. Store the conversion factor and analytical basis explicitly; 6.25 may not be appropriate for every ingredient without justification."
+      }
+    },
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Treatment rule",
+        "Guidance": "Reported treatment reductions are study-specific. They are not guaranteed predictions for another batch or processing setup."
+      }
+    },
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Economic rule",
+        "Guidance": "No complete, validated process-cost dataset was found in the visible extracted material. Cost per kg protein requires yield, protein retention, utilities, labour, processing, QA, packaging, waste handling and capital boundaries."
+      }
+    },
+    {
+      "section": "Read me",
+      "fields": {
+        "Item": "Files reviewed",
+        "Guidance": "LoR and Proximate for DoC May 20 2026; final oilseed cake review paper; Review paper oilseed cake- draft 1_28-08-26; review paper oilseed cake- draft 1; oilseed cake - research plan Aug 5 2026."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Sunflower",
+        "Material definition": "Cold-pressed cake / cake flour; route-specific values mixed in research-plan summary",
+        "Parameter": "Protein",
+        "Reported value": "29.0–43.4%",
+        "Basis/method": "Basis not consistently specified in this table",
+        "Document/location": "oilseed cake - research plan Aug 5 2026, pp. 1, 3–4",
+        "Evidence status": "Needs verification",
+        "Implementation note": "Broad range only; identify pressing/dehulling method, moisture basis and primary study before using in calculations."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Sunflower",
+        "Material definition": "Cold-pressed cake",
+        "Parameter": "Crude fibre",
+        "Reported value": "13.1–37.0%",
+        "Basis/method": "Basis not consistently specified",
+        "Document/location": "oilseed cake - research plan Aug 5 2026, p. 1",
+        "Evidence status": "Needs verification",
+        "Implementation note": "Do not equate crude fibre with total dietary fibre."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Sunflower",
+        "Material definition": "Cold-pressed cake",
+        "Parameter": "Crude fat",
+        "Reported value": "1.0–23.6%",
+        "Basis/method": "Basis unclear in comparison table",
+        "Document/location": "oilseed cake - research plan Aug 5 2026, p. 1",
+        "Evidence status": "Needs verification",
+        "Implementation note": "Very wide range suggests different processing routes/materials; raw-material price and processing assumptions depend on residual oil."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Sunflower",
+        "Material definition": "Cold-pressed cakes across literature",
+        "Parameter": "Protein",
+        "Reported value": "21.6–37.7%",
+        "Basis/method": "Dry-matter basis stated for table",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, p. 5; same table in draft 1",
+        "Evidence status": "Source-reported",
+        "Implementation note": "Different range from research plan; preserve as a separate dataset record, not overwrite."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Sunflower",
+        "Material definition": "Cold-pressed cakes across literature",
+        "Parameter": "Crude fibre",
+        "Reported value": "12.6–37.0%",
+        "Basis/method": "Dry-matter basis stated for table",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, p. 5",
+        "Evidence status": "Source-reported",
+        "Implementation note": "Source table includes crude fibre and TDF separately; keep separate."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Rapeseed",
+        "Material definition": "Cold-pressed cakes across literature",
+        "Parameter": "Protein",
+        "Reported value": "19.4–45.0%",
+        "Basis/method": "Dry-matter basis stated for table",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, p. 5",
+        "Evidence status": "Source-reported",
+        "Implementation note": "High variation; must be linked to seed/cake route and batch."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Hempseed",
+        "Material definition": "Cold-pressed cakes across literature",
+        "Parameter": "Protein",
+        "Reported value": "24.8–36.1%",
+        "Basis/method": "Dry-matter basis stated for table",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, p. 5",
+        "Evidence status": "Source-reported",
+        "Implementation note": "Review notes thinner composition/digestibility data for some under-studied cakes."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Linseed/flaxseed",
+        "Material definition": "Cold-pressed cakes across literature",
+        "Parameter": "Protein",
+        "Reported value": "32.2–35.9%",
+        "Basis/method": "Dry-matter basis stated for table",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, p. 5",
+        "Evidence status": "Source-reported",
+        "Implementation note": "Cyanogenic glycosides and mucilage are relevant considerations."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Pumpkin seed",
+        "Material definition": "Cold-pressed cakes across literature",
+        "Parameter": "Protein",
+        "Reported value": "38.3–62.3%",
+        "Basis/method": "Dry-matter basis stated for table",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, p. 5",
+        "Evidence status": "Source-reported",
+        "Implementation note": "Range is very broad; not suitable as default batch protein value."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Soybean",
+        "Material definition": "Cold-pressed cakes across literature",
+        "Parameter": "Protein",
+        "Reported value": "43.3–51.4%",
+        "Basis/method": "Dry-matter basis stated for table",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, p. 5",
+        "Evidence status": "Source-reported",
+        "Implementation note": "Soy allergenicity and trypsin inhibitor reduction are important."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Almond",
+        "Material definition": "Oilseed cake/de-oiled cake; source table mixes routes",
+        "Parameter": "Protein",
+        "Reported value": "37.0–51.3%",
+        "Basis/method": "Basis unclear in table",
+        "Document/location": "oilseed cake - research plan Aug 5 2026, p. 1",
+        "Evidence status": "Needs verification",
+        "Implementation note": "Tree-nut allergen; do not infer safety from composition."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Sesame",
+        "Material definition": "Oilseed cake; source table mixes routes",
+        "Parameter": "Protein",
+        "Reported value": "31.7–58.7%",
+        "Basis/method": "Basis unclear in table",
+        "Document/location": "oilseed cake - research plan Aug 5 2026, p. 1",
+        "Evidence status": "Needs verification",
+        "Implementation note": "Sesame is an allergen; verify exact range and extraction route."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Flaxseed",
+        "Material definition": "Oilseed cake; source table mixes routes",
+        "Parameter": "Crude fibre",
+        "Reported value": "20.0–66.0%",
+        "Basis/method": "Basis unclear in table",
+        "Document/location": "oilseed cake - research plan Aug 5 2026, p. 1",
+        "Evidence status": "Needs verification",
+        "Implementation note": "Do not assume high fibre alone means suitability for a particular texture."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Various",
+        "Material definition": "Cold-pressed cake vs solvent-extracted meal",
+        "Parameter": "Residual fat",
+        "Reported value": "Cold-pressed cake ~5–23%; solvent-extracted meal ~1–2% or less",
+        "Basis/method": "General review ranges",
+        "Document/location": "final oilseed cake review paper, pp. 3–4",
+        "Evidence status": "Source-reported",
+        "Implementation note": "Classification must precede model calculations; route also affects protein and bioactive profile."
+      }
+    },
+    {
+      "section": "Composition",
+      "fields": {
+        "By-product": "Multiple",
+        "Material definition": "De-oiled cake progress report",
+        "Parameter": "Crude protein",
+        "Reported value": "Preliminary report-specific numbers withheld from production use pending sample, basis, replicate and source-permission clarification.",
+        "Basis/method": "Kjeldahl; protein = nitrogen × 6.25 in report",
+        "Document/location": "LoR and Proximate for DoC May 20 2026, extracted result near p. 18",
+        "Evidence status": "Source-reported; sample identity needs checking",
+        "Implementation note": "The extracted snippet does not identify all materials/bases behind the range; do not assign this to one crop without checking report pages."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Soybean cake",
+        "Treatment": "Extrusion / thermal",
+        "Target/outcome": "Trypsin inhibitor activity",
+        "Reported effect": "88.0–98.5% reduction",
+        "Conditions": "140–160 °C; moisture 20–25%",
+        "Document/location": "final oilseed cake review paper, p. 22",
+        "Evidence status": "Source-reported; verify primary source",
+        "Implementation note": "Study-specific. Must still verify final safety, protein quality and sensory performance."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Rapeseed/canola cake",
+        "Treatment": "Extrusion",
+        "Target/outcome": "Glucosinolates",
+        "Reported effect": "65.0–82.0% reduction",
+        "Conditions": "Single-screw extrusion at 150 °C",
+        "Document/location": "final oilseed cake review paper, p. 22",
+        "Evidence status": "Source-reported; verify primary source",
+        "Implementation note": "Do not transfer effect size to other species or extrusion conditions."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Rapeseed cake",
+        "Treatment": "Solid-state fermentation",
+        "Target/outcome": "Glucosinolates and tannins",
+        "Reported effect": "82.5–95.0% reduction",
+        "Conditions": "A. niger or L. plantarum; 30–37 °C; 48–72 h",
+        "Document/location": "final oilseed cake review paper, p. 22",
+        "Evidence status": "Source-reported; verify primary source",
+        "Implementation note": "Fermentation needs strain/process control and microbiological validation."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Flaxseed cake",
+        "Treatment": "Solid-state fermentation",
+        "Target/outcome": "Cyanogenic glycosides",
+        "Reported effect": "85.0–94.0% reduction",
+        "Conditions": "S. cerevisiae co-culture; 32 °C; 48 h",
+        "Document/location": "final oilseed cake review paper, p. 22",
+        "Evidence status": "Source-reported; verify primary source",
+        "Implementation note": "Measure residual target compound; reduction is not equivalent to demonstrated safe final product."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Sunflower cake",
+        "Treatment": "Phytase treatment",
+        "Target/outcome": "Phytic acid",
+        "Reported effect": "75.0–92.0% reduction",
+        "Conditions": "500 FTU/kg; pH 5.5; 50 °C; 120 min",
+        "Document/location": "final oilseed cake review paper, p. 22",
+        "Evidence status": "Source-reported; verify primary source",
+        "Implementation note": "Need enzyme cost, water, pH control, yield and residual-phytate assay."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Sesame cake",
+        "Treatment": "Microbial phytase",
+        "Target/outcome": "Phytic acid",
+        "Reported effect": "70.0–88.0% reduction",
+        "Conditions": "45 °C; pH 5.0; 180 min",
+        "Document/location": "final oilseed cake review paper, p. 22",
+        "Evidence status": "Source-reported; verify primary source",
+        "Implementation note": "Sesame allergen remains a separate issue."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Flaxseed cake",
+        "Treatment": "Aqueous washing",
+        "Target/outcome": "Linustatin/neolinustatin",
+        "Reported effect": "60.0–80.0% removal",
+        "Conditions": "60 °C; solid:liquid ratio 1:10",
+        "Document/location": "final oilseed cake review paper, p. 22",
+        "Evidence status": "Source-reported; verify primary source",
+        "Implementation note": "Large water use and wastewater handling may affect economics."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Groundnut cake",
+        "Treatment": "Dilute sodium bicarbonate soak + germination",
+        "Target/outcome": "Phytic acid and tannins",
+        "Reported effect": "55.0–78.0% reduction",
+        "Conditions": "48 h germination after soak",
+        "Document/location": "final oilseed cake review paper, p. 22",
+        "Evidence status": "Source-reported; verify primary source",
+        "Implementation note": "Aflatoxin contamination is an independent safety gate; treatment does not substitute for testing."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Sunflower cake",
+        "Treatment": "Extrusion",
+        "Target/outcome": "Trypsin inhibitors / chlorogenic acid / digestibility",
+        "Reported effect": "Direction of effect described; exact effect depends on conditions",
+        "Conditions": "Review mentions pilot extrusion up to 120 °C in draft",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, antinutritional-factor section",
+        "Evidence status": "Proposed candidate; quantitative applicability unclear",
+        "Implementation note": "Need source-linked values and exact process settings before the model uses numeric predictions."
+      }
+    },
+    {
+      "section": "Treatments",
+      "fields": {
+        "By-product": "Multiple cakes",
+        "Treatment": "Alkaline solubilisation + isoelectric precipitation",
+        "Target/outcome": "Protein isolate purity",
+        "Reported effect": ">90% purity described as achievable; yield varies",
+        "Conditions": "Traditional extraction route; pH ~10 then pH 4–5 described in draft",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, extraction section",
+        "Evidence status": "Source-reported; verify conditions/material",
+        "Implementation note": "Purity is not the same as recovery yield; account for protein losses, neutralisation, water and drying."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Groundnut/peanut cake",
+        "Hazard": "Aflatoxin B1 / aflatoxins",
+        "Type": "Contaminant hazard",
+        "Evidence/action from documents": "Test representative lot; source review says sorting/heat treatment must be validated",
+        "Document/location": "final oilseed cake review paper, p. 35",
+        "Suggested model status": "Critical hard gate",
+        "Implementation note": "Do not infer pass from supplier statement, heat treatment, or a generic prior. Use applicable sampling/analytical requirements and current legal limit for the actual material/category."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Groundnut/peanut cake",
+        "Hazard": "Peanut allergen",
+        "Type": "Allergen",
+        "Evidence/action from documents": "Explicit allergen assessment and labelling where applicable",
+        "Document/location": "final oilseed cake review paper, p. 35",
+        "Suggested model status": "Critical product gate",
+        "Implementation note": "Allergen status is separate from aflatoxin status."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Soybean cake",
+        "Hazard": "Trypsin inhibitors; soy allergen",
+        "Type": "Antinutritional factor + allergen",
+        "Evidence/action from documents": "Treatment efficacy must be measured; allergen controls/label required",
+        "Document/location": "final oilseed cake review paper, pp. 22, 35",
+        "Suggested model status": "Critical gate",
+        "Implementation note": "A process treatment should not automatically mark either gate PASS."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Sesame cake",
+        "Hazard": "Sesame allergen; phytate/oxalates",
+        "Type": "Allergen + antinutritional factors",
+        "Evidence/action from documents": "Declare allergen; measure target compounds if relevant",
+        "Document/location": "final oilseed cake review paper, pp. 21, 35",
+        "Suggested model status": "Critical gate",
+        "Implementation note": "Do not equate low antinutrient level with allergen-free."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Flaxseed cake",
+        "Hazard": "Cyanogenic glycosides",
+        "Type": "Potential toxic compound",
+        "Evidence/action from documents": "Validate reduction with appropriate analytical method",
+        "Document/location": "final oilseed cake review paper, pp. 21–22",
+        "Suggested model status": "Critical gate",
+        "Implementation note": "Fermentation/washing results are study-specific."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Rapeseed/canola cake",
+        "Hazard": "Glucosinolates; sinapine/other compounds",
+        "Type": "Antinutritional/sensory constraint",
+        "Evidence/action from documents": "Material- and process-specific analysis",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, ANF table; final review p. 22",
+        "Suggested model status": "Application-dependent gate",
+        "Implementation note": "Do not use a single generic rapeseed rule for all cultivars or processing routes."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Cottonseed cake (outside main review scope)",
+        "Hazard": "Gossypol",
+        "Type": "Toxic compound",
+        "Evidence/action from documents": "Do not treat as a routine edible cake without validated controls and relevant regulatory assessment",
+        "Document/location": "final oilseed cake review paper, p. 21",
+        "Suggested model status": "Critical hard gate",
+        "Implementation note": "The review flags gossypol as toxic; keep outside MVP until a specific safe route is established."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Castor, jatropha, mahua (non-edible cakes per review)",
+        "Hazard": "Species-specific toxins",
+        "Type": "Intrinsic toxicity concern",
+        "Evidence/action from documents": "Exclude from human-food candidate list in MVP",
+        "Document/location": "final oilseed cake review paper, pp. 4, 35",
+        "Suggested model status": "Exclude",
+        "Implementation note": "Do not let a high protein score override species-level hazard."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Any cake",
+        "Hazard": "Food-grade provenance/storage/microbiology",
+        "Type": "Supply chain + microbiological hazard",
+        "Evidence/action from documents": "Document supplier, extraction route, storage, hygiene, lot traceability and appropriate microbiological/contaminant tests",
+        "Document/location": "final oilseed cake review paper, p. 35; progress report includes proximate methods",
+        "Suggested model status": "Critical hard gate",
+        "Implementation note": "A microbial panel alone cannot prove food-grade provenance or full regulatory compliance."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Any solvent-extracted material",
+        "Hazard": "Residual solvent",
+        "Type": "Chemical residue",
+        "Evidence/action from documents": "Establish extraction route and test when applicable",
+        "Document/location": "final oilseed cake review paper, p. 35",
+        "Suggested model status": "Conditional gate",
+        "Implementation note": "Unknown extraction route is NOT VERIFIED, not PASS."
+      }
+    },
+    {
+      "section": "Safety gates",
+      "fields": {
+        "Material": "Any intended food ingredient",
+        "Hazard": "Regulatory classification",
+        "Type": "Regulatory status",
+        "Evidence/action from documents": "Confirm category, standards/approval route, claims and labelling for intended use",
+        "Document/location": "final oilseed cake review paper, p. 35",
+        "Suggested model status": "Critical review gate",
+        "Implementation note": "The website must not imply regulatory approval."
+      }
+    },
+    {
+      "section": "Applications",
+      "fields": {
+        "By-product": "Sunflower cake",
+        "Application": "Extruded/puffed snacks",
+        "Potential benefit": "Protein and fibre enrichment",
+        "Reported evidence": "Research plan identifies puffed snacks and cereals; review discusses extrusion",
+        "Document/location": "oilseed cake - research plan Aug 5 2026, pp. 5–6; draft review extrusion section",
+        "Evidence status": "Candidate route",
+        "Validation needed": "Measure finished product protein/fibre, expansion, hardness, colour, sensory acceptance, target ANFs and shelf stability."
+      }
+    },
+    {
+      "section": "Applications",
+      "fields": {
+        "By-product": "Sunflower cake",
+        "Application": "Bakery / gluten-free bread",
+        "Potential benefit": "Fortification",
+        "Reported evidence": "Research plan reports 5–15% flour inclusion in cited trials; >15% may reduce volume/springiness",
+        "Document/location": "oilseed cake - research plan Aug 5 2026, p. 5",
+        "Evidence status": "Source-reported; verify primary study",
+        "Validation needed": "Not directly transferable to extruded snack; use only as evidence of possible application."
+      }
+    },
+    {
+      "section": "Applications",
+      "fields": {
+        "By-product": "Sunflower cake",
+        "Application": "Biscuits/cookies",
+        "Potential benefit": "Fortification",
+        "Reported evidence": "Research plan reports 10–20% inclusion in trials; dark colour noted",
+        "Document/location": "oilseed cake - research plan Aug 5 2026, p. 5",
+        "Evidence status": "Source-reported; verify primary study",
+        "Validation needed": "Sensory and colour trade-offs are relevant."
+      }
+    },
+    {
+      "section": "Applications",
+      "fields": {
+        "By-product": "Sunflower + soy",
+        "Application": "Meat analogue / extrusion",
+        "Potential benefit": "Texturisation and amino-acid complementarity",
+        "Reported evidence": "Draft review notes sunflower is lysine-limited and can be blended with lysine-rich soy",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, amino-acid/application sections",
+        "Evidence status": "Candidate hypothesis",
+        "Validation needed": "Soy introduces allergen declaration and requires blend optimisation."
+      }
+    },
+    {
+      "section": "Applications",
+      "fields": {
+        "By-product": "Flaxseed cake",
+        "Application": "Bakery",
+        "Potential benefit": "Water absorption/moisture retention",
+        "Reported evidence": "Draft functional-property table reports high water absorption, associated with mucilage",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, functional-property table",
+        "Evidence status": "Source-reported; units require verification",
+        "Validation needed": "Do not compare values where the table mixes g/g and percentages."
+      }
+    },
+    {
+      "section": "Applications",
+      "fields": {
+        "By-product": "Soybean cake",
+        "Application": "Foamed/emulsified foods",
+        "Potential benefit": "Functional properties",
+        "Reported evidence": "Draft table reports good foaming and emulsification; solubility pH-dependent",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, functional-property table",
+        "Evidence status": "Source-reported; verify primary studies",
+        "Validation needed": "Food use depends on target functionality, flavour and allergen requirements."
+      }
+    },
+    {
+      "section": "Applications",
+      "fields": {
+        "By-product": "Rapeseed cake",
+        "Application": "Protein ingredients / food applications",
+        "Potential benefit": "Oil holding; extraction potential",
+        "Reported evidence": "Draft table reports oil-holding capacity range; review discusses cruciferin/napin proteins",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, functional-property table",
+        "Evidence status": "Source-reported; verify units/method",
+        "Validation needed": "Glucosinolates and other cultivar-specific constraints need separate gates."
+      }
+    },
+    {
+      "section": "Applications",
+      "fields": {
+        "By-product": "Groundnut cake",
+        "Application": "Human-food ingredient candidate",
+        "Potential benefit": "Protein enrichment",
+        "Reported evidence": "Review identifies aflatoxin risk and trypsin inhibitors",
+        "Document/location": "final oilseed cake review paper, pp. 21, 35",
+        "Evidence status": "Only after safety evidence",
+        "Validation needed": "Not a safe default MVP material without lot-level contaminant and allergen controls."
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Batch composition variability",
+        "What source indicates": "Literature ranges are broad and route-dependent",
+        "Recommended response in Upcycle Compass": "Capture material species/variety, origin, dehulling, pressing/de-oiling route, moisture basis, analytical method and lot ID; encourage batch testing.",
+        "Priority": "P0",
+        "Document/location": "final oilseed cake review paper, pp. 36–37"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Non-comparable data basis",
+        "What source indicates": "Some tables mix dry matter and unspecified/as-received values; crude fibre and TDF may be conflated in casual use",
+        "Recommended response in Upcycle Compass": "Store unit, basis, method and analyte explicitly; block comparisons when incompatible.",
+        "Priority": "P0",
+        "Document/location": "draft review composition tables; research plan p. 1"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Primary source traceability",
+        "What source indicates": "Some values are cited through review papers; draft contains placeholders/editorial notes",
+        "Recommended response in Upcycle Compass": "Every numeric parameter needs a primary reference, conditions, sample identity and confidence/status.",
+        "Priority": "P0",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26; final review"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Treatment generalisation",
+        "What source indicates": "ANF reduction depends on species, process conditions and batch",
+        "Recommended response in Upcycle Compass": "Model effects as ranges with scope and provenance; label extrapolations; require validation before predictive claims.",
+        "Priority": "P0",
+        "Document/location": "final oilseed cake review paper, p. 22"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Sensory evidence",
+        "What source indicates": "Off-flavour and dark colour are described as commercialization barriers; draft contains a note to expand sensory analysis",
+        "Recommended response in Upcycle Compass": "Collect sensory data for the actual target product; do not fabricate an off-flavour index.",
+        "Priority": "P0",
+        "Document/location": "draft review, application/challenges section"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Food-grade provenance",
+        "What source indicates": "Feed-grade or unknown origin cannot be assumed suitable for human food",
+        "Recommended response in Upcycle Compass": "Separate supplier/process documentation, traceability, storage, microbial and contaminant evidence.",
+        "Priority": "P0",
+        "Document/location": "final oilseed cake review paper, p. 35"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Safety test plan",
+        "What source indicates": "The documents describe hazards but do not provide a complete universal sampling/testing protocol for every material",
+        "Recommended response in Upcycle Compass": "Map hazards to applicable standards, validated methods, sampling plans and current jurisdictional requirements.",
+        "Priority": "P0",
+        "Document/location": "final oilseed cake review paper, p. 35"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Techno-economic evidence",
+        "What source indicates": "Review notes that scale-up and process economics remain uncertain; LCA comparisons are missing",
+        "Recommended response in Upcycle Compass": "Build cost model only when process yield, utilities, water, enzyme, labour, QA, packaging, waste and capital inputs are available.",
+        "Priority": "P1",
+        "Document/location": "final oilseed cake review paper, pp. 34–37"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Functional property comparability",
+        "What source indicates": "Some values in draft tables mix g/g, percentages and qualitative notes",
+        "Recommended response in Upcycle Compass": "Store method, unit, sample form (cake/flour/isolate), pH and test conditions.",
+        "Priority": "P1",
+        "Document/location": "Review paper oilseed cake- draft 1_28-08-26, functional-property table"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Human health claims",
+        "What source indicates": "Review notes in vitro/animal evidence is not equivalent to clinical evidence",
+        "Recommended response in Upcycle Compass": "Do not make health-benefit claims from antioxidant assays or mechanistic findings alone.",
+        "Priority": "P1",
+        "Document/location": "final oilseed cake review paper, abstract and research-gap section"
+      }
+    },
+    {
+      "section": "Research gaps",
+      "fields": {
+        "Gap": "Life-cycle assessment",
+        "What source indicates": "Review explicitly identifies lack of full LCA comparisons by energy, solvent, water and emissions per kg protein",
+        "Recommended response in Upcycle Compass": "Treat sustainability as an unverified claim until boundaries and measurements are available.",
+        "Priority": "P2",
+        "Document/location": "final oilseed cake review paper, p. 34"
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Input",
+        "Capability": "Material identity",
+        "Required behaviour": "Species, product form, extraction/de-oiling route, dehulling, supplier/lot, origin, intended use",
+        "Failure to prevent": "Do not infer cold-pressed or solvent-free when route is unknown."
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Input",
+        "Capability": "Composition",
+        "Required behaviour": "Protein, moisture, fat, fibre (crude/TDF separate), ash; method, basis, date, lab",
+        "Failure to prevent": "Assumed defaults must be visibly labelled and excluded from measured batch status."
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Verdict",
+        "Capability": "Decision layers",
+        "Required behaviour": "Separate safety readiness, technical feasibility, economic feasibility and data confidence",
+        "Failure to prevent": "Do not compress unknown safety evidence into a single probability or GO score."
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Diagnosis",
+        "Capability": "Limiting factors",
+        "Required behaviour": "Only show material-relevant hazards/ANFs supported by source or measurement",
+        "Failure to prevent": "A review-level hazard association is a screening prompt, not proof that a particular lot contains a hazardous level."
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Chains",
+        "Capability": "Treatment effect",
+        "Required behaviour": "Represent each chain with target compound, reported effect range, conditions, expected trade-offs, evidence scope",
+        "Failure to prevent": "No universal treatment effect; unknown parameters stay unknown."
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Chains",
+        "Capability": "Protein retention",
+        "Required behaviour": "Measured mass balance or explicitly sourced model range",
+        "Failure to prevent": "Protein concentration and protein retention are different metrics."
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Cost",
+        "Capability": "Comparable economics",
+        "Required behaviour": "Cost/kg recovered protein on explicit system boundary; include all relevant process costs and losses",
+        "Failure to prevent": "Do not compare raw-cake cost with imported isolate without matching basis and processing costs."
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Next",
+        "Capability": "Test selection",
+        "Required behaviour": "Recommend tests based on unresolved safety gate or decision-changing uncertainty",
+        "Failure to prevent": "Do not show EVPI/EVPPI as ₹0 merely because missing costs/probabilities make it uncomputable."
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Next",
+        "Capability": "Validation",
+        "Required behaviour": "Pilot plan: lot sourcing → gate tests → bench trials → sensory/functionality → pilot run → regulatory and economics review",
+        "Failure to prevent": "The supplied report supports proximate analysis and protein isolation as research areas; actual pilot data must be collected."
+      }
+    },
+    {
+      "section": "Prototype mapping",
+      "fields": {
+        "Tab/feature": "Evidence UI",
+        "Capability": "Provenance badges",
+        "Required behaviour": "Measured / Published / Assumed / Synthetic / Not supplied / Not applicable / Not verified",
+        "Failure to prevent": "Keep an A badge if it communicates assumption, but add a legend and never style assumed values as validated evidence."
+      }
+    }
+  ]
+}

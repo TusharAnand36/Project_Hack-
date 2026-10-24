@@ -47,8 +47,10 @@ def _facts(r: AnalyzeResponse) -> dict[str, Any]:
             else {
                 "steps": top.steps,
                 "tier": top.tier,
-                "p_spec": round(top.p_spec.value, 2),
-                "protein_pct_p50": round(top.protein_pct_final.p50, 1),
+                "p_spec": None if top.p_spec is None else round(top.p_spec.value, 2),
+                "protein_pct_p50": (
+                    None if top.protein_pct_final is None else round(top.protein_pct_final.p50, 1)
+                ),
                 "cost_inr_per_kg_protein_p50": (
                     None if top.cost_inr_per_kg_protein is None else round(top.cost_inr_per_kg_protein.p50)
                 ),

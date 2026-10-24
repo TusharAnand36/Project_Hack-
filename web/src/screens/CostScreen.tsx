@@ -100,6 +100,20 @@ export function CostScreen({ data }: { data: AnalyzeResponse }) {
   return (
     <section>
       <ScreenHeader title={t("cost.title")} summary={t("cost.summary")} />
+      <section className="mb-5 border-l-2 border-primary pl-4 text-sm">
+        <h3>{t("workflow.costTarget")}</h3>
+        <p className="mt-2">
+          <Num v={data.cost_target.amount} />
+        </p>
+        <p>{data.cost_target.formula}</p>
+        <p className="mt-2 text-muted-foreground">{data.cost_target.note}</p>
+        <p className="mt-3">{t("workflow.costBoundary")}</p>
+        <p className="mt-3">{t("workflow.marginFormula")}</p>
+        <details className="mt-3">
+          <summary className="min-h-9 cursor-pointer underline">{t("workflow.dutyBasis")}</summary>
+          <p>{t("workflow.dutyExplanation")}</p>
+        </details>
+      </section>
       {top?.cost_inr_per_kg_protein ? (
         <Card className="space-y-3">
           <p className="text-sm">

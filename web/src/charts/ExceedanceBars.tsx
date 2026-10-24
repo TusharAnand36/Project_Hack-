@@ -7,15 +7,16 @@ import { formatNumber } from "@/lib/format";
 export function ExceedanceBars({ rows }: { rows: Diagnosis[] }) {
   const { t } = useTranslation();
   const data = rows
-    .filter((d) => d.level && d.tolerance)
+    .filter((d) => d.ratio)
     .map((d) => ({
       name: d.name,
       limiting: d.limiting,
-      p10: d.level!.p10 / d.tolerance!.value,
-      p50: d.level!.p50 / d.tolerance!.value,
-      p90: d.level!.p90 / d.tolerance!.value,
+      p10: d.ratio!.p10,
+      p50: d.ratio!.p50,
+      p90: d.ratio!.p90,
     }));
-  if (data.length === 0) return null;
+  if (data.length === 0)
+    return <p className="my-4 text-sm text-muted-foreground">{t("workflow.ratioMissing")}</p>;
   const max = Math.max(2, ...data.map((d) => d.p90)) * 1.05;
   const W = 640;
   const label = 170;
@@ -86,7 +87,7 @@ export function ExceedanceBars({ rows }: { rows: Diagnosis[] }) {
           strokeDasharray="5 4"
         />
         <text x={x(1) + 4} y={H - 8} className="fill-warn text-[12px]">
-          1 = {t("diagnosis.tolerance")}
+          1.0× = {t("diagnosis.tolerance")}
         </text>
       </svg>
     </figure>

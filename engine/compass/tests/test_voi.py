@@ -87,25 +87,24 @@ def run(ds, **kw):
     return analyze(AnalyzeRequest.model_validate(kw), ds)
 
 
-def test_preset1_recommends_a_test_with_value_and_readiness(ds):
+def test_missing_utility_and_quotes_leave_economic_voi_unestimated(ds):
     r = analyze(AnalyzeRequest.model_validate(ds.presets["groundnut_beverage"].payload), ds)
-    assert r.voi and r.voi.recommended_test
-    t = next(x for x in r.voi.tests if x.test_id == r.voi.recommended_test)
-    assert t.evsi.value > 0 and t.worth_it == "unknown"  # lab cost not in the dataset yet
-    assert 0 <= r.voi.evppi[0].value.value <= r.voi.evpi.value + 1e-6
-    assert r.readiness.grade is DecisionGrade.hypothesis_grade and r.readiness.must_demonstrate
-    assert r.plan.tests and r.plan.budget_inr.low is None  # honest: costs missing
-    assert r.picks and r.picks.best_expected_value
+    assert r.voi is None and r.voi_status == "not_estimated"
+    assert r.verdict.p_go is None
+    assert r.readiness.grade is DecisionGrade.hypothesis_grade
+    assert r.plan.tests and any("Critical safety" in t.why for t in r.plan.tests)
+    assert r.plan.budget_inr.low is None
+    assert r.picks is None
 
 
-def test_higher_pea_price_never_lowers_p_margin_positive(ds):
+def test_higher_pea_price_changes_reference_without_inventing_margin_probability(ds):
     lo = run(ds, byproduct="groundnut_cake", application="beverage", pea={"base_usd_per_kg": 2.5})
     hi = run(ds, byproduct="groundnut_cake", application="beverage", pea={"base_usd_per_kg": 4.5})
-    a = {c.id: c.p_margin_positive.value for c in lo.chains if c.p_margin_positive}
-    b = {c.id: c.p_margin_positive.value for c in hi.chains if c.p_margin_positive}
-    assert a and all(b[k] >= a[k] for k in a)
+    assert hi.pea.landed_inr_per_kg_protein.p50 > lo.pea.landed_inr_per_kg_protein.p50
+    assert all(c.p_margin_positive is None for c in hi.chains)
 
 
-def test_measuring_aflatoxin_removes_its_value_of_information(ds):
+def test_measured_b1_does_not_clear_missing_total_aflatoxins(ds):
     r = run(ds, byproduct="groundnut_cake", application="beverage", batch={"afb1_ppb": {"value": 5}})
-    assert all(e.test_id != "afb1_hplc" for e in r.voi.evppi)
+    assert r.voi is None
+    assert any(g.id == "G1" and g.state.value == "TEST-FIRST" for g in r.gates)

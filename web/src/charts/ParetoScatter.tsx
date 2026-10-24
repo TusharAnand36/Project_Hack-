@@ -3,7 +3,7 @@ import { formatValue } from "@/lib/format";
 
 /** Cost (x) vs protein retained (y); dot size = P(spec); P10-P90 bars on both axes; Pareto front outlined. */
 export function ParetoScatter({ chains, title }: { chains: Chain[]; title: string }) {
-  const pts = chains.filter((c) => c.cost_inr_per_kg_protein);
+  const pts = chains.filter((c) => c.cost_inr_per_kg_protein && c.protein_retained && c.p_spec);
   const W = 640;
   const H = 320;
   const m = { l: 56, r: 48, t: 12, b: 40 };
@@ -49,8 +49,8 @@ export function ParetoScatter({ chains, title }: { chains: Chain[]; title: strin
         </text>
         {pts.map((c) => {
           const cx = x(c.cost_inr_per_kg_protein!.p50);
-          const cy = y(c.protein_retained.p50);
-          const r = 4 + 10 * c.p_spec.value;
+          const cy = y(c.protein_retained!.p50);
+          const r = 4 + 10 * c.p_spec!.value;
           return (
             <g key={c.id}>
               <line
@@ -64,8 +64,8 @@ export function ParetoScatter({ chains, title }: { chains: Chain[]; title: strin
               <line
                 x1={cx}
                 x2={cx}
-                y1={y(c.protein_retained.p10)}
-                y2={y(c.protein_retained.p90)}
+                y1={y(c.protein_retained!.p10)}
+                y2={y(c.protein_retained!.p90)}
                 className="stroke-muted-foreground"
                 strokeWidth={1}
               />

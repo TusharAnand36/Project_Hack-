@@ -7,6 +7,7 @@ import { BottomBar, Footer, SafetyNote, Stepper, TopBar } from "@/components/Lay
 import { ErrorCard, LoadingScreen } from "@/components/States";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { FeedbackForm } from "@/components/FeedbackForm";
 import { InputScreen } from "@/screens/InputScreen";
 import { VerdictScreen } from "@/screens/VerdictScreen";
 import { useStore } from "@/store";
@@ -98,7 +99,19 @@ export default function App() {
         {analysis.isFetching && result && screen !== "input" && (
           <p className="mb-2 text-xs text-muted-foreground">{t("state.loading")}</p>
         )}
+        {result && screen !== "input" && (
+          <p className="mb-5 border-l-2 border-primary pl-4 text-xs text-muted-foreground">
+            {t("workflow.legend")}
+          </p>
+        )}
         <Suspense fallback={<LoadingScreen />}>{body}</Suspense>
+        {result && screen !== "input" && screen !== "memo" && (
+          <FeedbackForm
+            key={result.data.case_id ?? "offline"}
+            data={result.data}
+            disabled={result.offline || analysis.isFetching || analysis.isError}
+          />
+        )}
       </main>
       <div aria-live="polite" className="sr-only">
         {announce}

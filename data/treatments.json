@@ -34,7 +34,8 @@
               "measured_on": "rice bran",
               "method": "edible-acid activation of endogenous phytase, then drying"
             },
-            "notes": "'up to 43.6%'; low end 0 is our reading of 'up to'; measured on rice bran, not specifically DORB"
+            "notes": "'up to 43.6%'; low end 0 is our reading of 'up to'; measured on rice bran, not specifically DORB",
+            "verification_status": "review_reported_primary_not_checked"
           }
         },
         {
@@ -57,55 +58,65 @@
               "measured_on": "rice bran",
               "measure": "acid value"
             },
-            "notes": "'up to 85.2%' acid value. Gate compound: never used to clear G2; only a re-test does"
+            "notes": "'up to 85.2%' acid value. Gate compound: never used to clear G2; only a re-test does",
+            "verification_status": "review_reported_primary_not_checked"
           }
         }
       ],
       "mass_yield": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: stabilise dry-matter mass yield"
+        "notes": "MISSING: stabilise dry-matter mass yield",
+        "verification_status": "not_available"
       },
       "protein_retention": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: stabilise protein retention"
+        "notes": "MISSING: stabilise protein retention",
+        "verification_status": "not_available"
       },
       "resources": {
         "kwh_per_kg": {
           "unit": "kWh/kg input",
           "tag": "assumed",
-          "notes": "MISSING: stabilise: energy; process-engineering papers or supplier quotes"
+          "notes": "MISSING: stabilise: energy; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "water_l_per_kg": {
           "unit": "L/kg input",
           "tag": "assumed",
-          "notes": "MISSING: stabilise: water; process-engineering papers or supplier quotes"
+          "notes": "MISSING: stabilise: water; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "chem_inr_per_kg": {
           "unit": "INR/kg input",
           "tag": "assumed",
-          "notes": "MISSING: stabilise: chemicals; process-engineering papers or supplier quotes"
+          "notes": "MISSING: stabilise: chemicals; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "labour_h_per_t": {
           "unit": "h/t input",
           "tag": "assumed",
-          "notes": "MISSING: stabilise: labour; process-engineering papers or supplier quotes"
+          "notes": "MISSING: stabilise: labour; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "time_h": {
           "unit": "h",
           "tag": "assumed",
-          "notes": "MISSING: stabilise: processing time; process-engineering papers or supplier quotes"
+          "notes": "MISSING: stabilise: processing time; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_inr": {
           "unit": "INR",
           "tag": "assumed",
-          "notes": "MISSING: stabilise: reference capex; process-engineering papers or supplier quotes"
+          "notes": "MISSING: stabilise: reference capex; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_scale_kg_day": {
           "unit": "kg/day",
           "tag": "assumed",
-          "notes": "MISSING: stabilise: reference capex scale; process-engineering papers or supplier quotes"
+          "notes": "MISSING: stabilise: reference capex scale; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         }
       },
       "notes": "Must be first for rice bran and before any wet step. Antilipase route per US5753283 (claim)."
@@ -136,55 +147,65 @@
               "time_min": 15,
               "cites": "Panhwar (2005)"
             },
-            "notes": "~85%; confirmed in the final review draft; verify against the cited primary paper (Panhwar 2005)"
+            "notes": "~85%; confirmed in the final review draft; verify against the cited primary paper (Panhwar 2005)",
+            "verification_status": "review_reported_primary_not_checked"
           }
         }
       ],
       "mass_yield": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: moist_heat dry-matter mass yield"
+        "notes": "MISSING: moist_heat dry-matter mass yield",
+        "verification_status": "not_available"
       },
       "protein_retention": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: moist_heat protein retention"
+        "notes": "MISSING: moist_heat protein retention",
+        "verification_status": "not_available"
       },
       "resources": {
         "kwh_per_kg": {
           "unit": "kWh/kg input",
           "tag": "assumed",
-          "notes": "MISSING: moist_heat: energy; process-engineering papers or supplier quotes"
+          "notes": "MISSING: moist_heat: energy; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "water_l_per_kg": {
           "unit": "L/kg input",
           "tag": "assumed",
-          "notes": "MISSING: moist_heat: water; process-engineering papers or supplier quotes"
+          "notes": "MISSING: moist_heat: water; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "chem_inr_per_kg": {
           "unit": "INR/kg input",
           "tag": "assumed",
-          "notes": "MISSING: moist_heat: chemicals; process-engineering papers or supplier quotes"
+          "notes": "MISSING: moist_heat: chemicals; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "labour_h_per_t": {
           "unit": "h/t input",
           "tag": "assumed",
-          "notes": "MISSING: moist_heat: labour; process-engineering papers or supplier quotes"
+          "notes": "MISSING: moist_heat: labour; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "time_h": {
           "unit": "h",
           "tag": "assumed",
-          "notes": "MISSING: moist_heat: processing time; process-engineering papers or supplier quotes"
+          "notes": "MISSING: moist_heat: processing time; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_inr": {
           "unit": "INR",
           "tag": "assumed",
-          "notes": "MISSING: moist_heat: reference capex; process-engineering papers or supplier quotes"
+          "notes": "MISSING: moist_heat: reference capex; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_scale_kg_day": {
           "unit": "kg/day",
           "tag": "assumed",
-          "notes": "MISSING: moist_heat: reference capex scale; process-engineering papers or supplier quotes"
+          "notes": "MISSING: moist_heat: reference capex scale; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         }
       },
       "side_effects": [
@@ -193,7 +214,8 @@
           "addition": {
             "unit": "index units (0-10 scale)",
             "tag": "assumed",
-            "notes": "MISSING: roasted note added by heat"
+            "notes": "MISSING: roasted note added by heat",
+            "verification_status": "not_available"
           }
         }
       ],
@@ -233,7 +255,8 @@
               "time_min": 120,
               "cites": "Akande (2011); Salgado et al. (2011)"
             },
-            "notes": "Transferred from sunflower; mode 0.84 from source plan §11.2 example (Akande 2011, cited in review); confirmed in the final review draft; verify against the cited primary paper"
+            "notes": "Transferred from sunflower; mode 0.84 from source plan §11.2 example (Akande 2011, cited in review); confirmed in the final review draft; verify against the cited primary paper",
+            "verification_status": "review_reported_primary_not_checked"
           }
         },
         {
@@ -259,7 +282,8 @@
               "time_min": 180,
               "cites": "Melo et al. (2021); Sunil et al. (2015)"
             },
-            "notes": "combined phytic acid + oxalate figure; confirmed in the final review draft; verify against the cited primary paper"
+            "notes": "combined phytic acid + oxalate figure; confirmed in the final review draft; verify against the cited primary paper",
+            "verification_status": "review_reported_primary_not_checked"
           }
         },
         {
@@ -285,7 +309,8 @@
               "time_min": 180,
               "cites": "Melo et al. (2021); Sunil et al. (2015)"
             },
-            "notes": "combined phytic acid + oxalate figure; confirmed in the final review draft; verify against the cited primary paper"
+            "notes": "combined phytic acid + oxalate figure; confirmed in the final review draft; verify against the cited primary paper",
+            "verification_status": "review_reported_primary_not_checked"
           }
         },
         {
@@ -312,55 +337,65 @@
               "time_min": 120,
               "cites": "Akande (2011); Salgado et al. (2011)"
             },
-            "notes": "Same-material range reported in final review Table 7; verify primary paper and batch treatment conditions."
+            "notes": "Same-material range reported in final review Table 7; verify primary paper and batch treatment conditions.",
+            "verification_status": "review_reported_primary_not_checked"
           }
         }
       ],
       "mass_yield": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: phytase dry-matter mass yield"
+        "notes": "MISSING: phytase dry-matter mass yield",
+        "verification_status": "not_available"
       },
       "protein_retention": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: phytase protein retention"
+        "notes": "MISSING: phytase protein retention",
+        "verification_status": "not_available"
       },
       "resources": {
         "kwh_per_kg": {
           "unit": "kWh/kg input",
           "tag": "assumed",
-          "notes": "MISSING: phytase: energy; process-engineering papers or supplier quotes"
+          "notes": "MISSING: phytase: energy; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "water_l_per_kg": {
           "unit": "L/kg input",
           "tag": "assumed",
-          "notes": "MISSING: phytase: water; process-engineering papers or supplier quotes"
+          "notes": "MISSING: phytase: water; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "chem_inr_per_kg": {
           "unit": "INR/kg input",
           "tag": "assumed",
-          "notes": "MISSING: phytase: chemicals; process-engineering papers or supplier quotes"
+          "notes": "MISSING: phytase: chemicals; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "labour_h_per_t": {
           "unit": "h/t input",
           "tag": "assumed",
-          "notes": "MISSING: phytase: labour; process-engineering papers or supplier quotes"
+          "notes": "MISSING: phytase: labour; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "time_h": {
           "unit": "h",
           "tag": "assumed",
-          "notes": "MISSING: phytase: processing time; process-engineering papers or supplier quotes"
+          "notes": "MISSING: phytase: processing time; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_inr": {
           "unit": "INR",
           "tag": "assumed",
-          "notes": "MISSING: phytase: reference capex; process-engineering papers or supplier quotes"
+          "notes": "MISSING: phytase: reference capex; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_scale_kg_day": {
           "unit": "kg/day",
           "tag": "assumed",
-          "notes": "MISSING: phytase: reference capex scale; process-engineering papers or supplier quotes"
+          "notes": "MISSING: phytase: reference capex scale; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         }
       },
       "notes": "Needs an aqueous, mildly acidic step (pH ~5-5.5); placed before ae_iep."
@@ -394,7 +429,8 @@
               "method": "0.1% NaHCO3 soak + 48 h germination",
               "cites": "Karnika & Asha (2025); Fekria et al. (2012)"
             },
-            "notes": "plan: alpha 0.7-1.0 depending on source check; 0.7 used; confirmed in the final review draft; verify against the cited primary paper"
+            "notes": "plan: alpha 0.7-1.0 depending on source check; 0.7 used; confirmed in the final review draft; verify against the cited primary paper",
+            "verification_status": "review_reported_primary_not_checked"
           }
         },
         {
@@ -418,55 +454,65 @@
               "method": "0.1% NaHCO3 soak + 48 h germination",
               "cites": "Karnika & Asha (2025); Fekria et al. (2012)"
             },
-            "notes": "plan: alpha 0.7-1.0 depending on source check; 0.7 used; confirmed in the final review draft; verify against the cited primary paper"
+            "notes": "plan: alpha 0.7-1.0 depending on source check; 0.7 used; confirmed in the final review draft; verify against the cited primary paper",
+            "verification_status": "review_reported_primary_not_checked"
           }
         }
       ],
       "mass_yield": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: soak_germinate (germination loss) dry-matter mass yield"
+        "notes": "MISSING: soak_germinate (germination loss) dry-matter mass yield",
+        "verification_status": "not_available"
       },
       "protein_retention": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: soak_germinate protein retention"
+        "notes": "MISSING: soak_germinate protein retention",
+        "verification_status": "not_available"
       },
       "resources": {
         "kwh_per_kg": {
           "unit": "kWh/kg input",
           "tag": "assumed",
-          "notes": "MISSING: soak_germinate: energy; process-engineering papers or supplier quotes"
+          "notes": "MISSING: soak_germinate: energy; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "water_l_per_kg": {
           "unit": "L/kg input",
           "tag": "assumed",
-          "notes": "MISSING: soak_germinate: water; process-engineering papers or supplier quotes"
+          "notes": "MISSING: soak_germinate: water; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "chem_inr_per_kg": {
           "unit": "INR/kg input",
           "tag": "assumed",
-          "notes": "MISSING: soak_germinate: chemicals; process-engineering papers or supplier quotes"
+          "notes": "MISSING: soak_germinate: chemicals; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "labour_h_per_t": {
           "unit": "h/t input",
           "tag": "assumed",
-          "notes": "MISSING: soak_germinate: labour; process-engineering papers or supplier quotes"
+          "notes": "MISSING: soak_germinate: labour; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "time_h": {
           "unit": "h",
           "tag": "assumed",
-          "notes": "MISSING: soak_germinate: processing time; process-engineering papers or supplier quotes"
+          "notes": "MISSING: soak_germinate: processing time; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_inr": {
           "unit": "INR",
           "tag": "assumed",
-          "notes": "MISSING: soak_germinate: reference capex; process-engineering papers or supplier quotes"
+          "notes": "MISSING: soak_germinate: reference capex; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_scale_kg_day": {
           "unit": "kg/day",
           "tag": "assumed",
-          "notes": "MISSING: soak_germinate: reference capex scale; process-engineering papers or supplier quotes"
+          "notes": "MISSING: soak_germinate: reference capex scale; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         }
       }
     },
@@ -503,7 +549,8 @@
               "time_h": "48-72",
               "cites": "Ramachandran et al. (2007); Shi et al. (2015)"
             },
-            "notes": "Transferred from rapeseed (glucosinolates + tannins); confirmed in the final review draft; verify against the cited primary paper"
+            "notes": "Transferred from rapeseed (glucosinolates + tannins); confirmed in the final review draft; verify against the cited primary paper",
+            "verification_status": "review_reported_primary_not_checked"
           }
         },
         {
@@ -529,55 +576,65 @@
               "time_h": "48-72",
               "cites": "Ramachandran et al. (2007); Shi et al. (2015)"
             },
-            "notes": "confirmed in the final review draft; verify against the cited primary paper"
+            "notes": "confirmed in the final review draft; verify against the cited primary paper",
+            "verification_status": "review_reported_primary_not_checked"
           }
         }
       ],
       "mass_yield": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: ssf_ferment dry-matter mass yield"
+        "notes": "MISSING: ssf_ferment dry-matter mass yield",
+        "verification_status": "not_available"
       },
       "protein_retention": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: ssf_ferment protein retention"
+        "notes": "MISSING: ssf_ferment protein retention",
+        "verification_status": "not_available"
       },
       "resources": {
         "kwh_per_kg": {
           "unit": "kWh/kg input",
           "tag": "assumed",
-          "notes": "MISSING: ssf_ferment: energy; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ssf_ferment: energy; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "water_l_per_kg": {
           "unit": "L/kg input",
           "tag": "assumed",
-          "notes": "MISSING: ssf_ferment: water; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ssf_ferment: water; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "chem_inr_per_kg": {
           "unit": "INR/kg input",
           "tag": "assumed",
-          "notes": "MISSING: ssf_ferment: chemicals; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ssf_ferment: chemicals; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "labour_h_per_t": {
           "unit": "h/t input",
           "tag": "assumed",
-          "notes": "MISSING: ssf_ferment: labour; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ssf_ferment: labour; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "time_h": {
           "unit": "h",
           "tag": "assumed",
-          "notes": "MISSING: ssf_ferment: processing time; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ssf_ferment: processing time; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_inr": {
           "unit": "INR",
           "tag": "assumed",
-          "notes": "MISSING: ssf_ferment: reference capex; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ssf_ferment: reference capex; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_scale_kg_day": {
           "unit": "kg/day",
           "tag": "assumed",
-          "notes": "MISSING: ssf_ferment: reference capex scale; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ssf_ferment: reference capex scale; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         }
       },
       "side_effects": [
@@ -586,7 +643,8 @@
           "addition": {
             "unit": "index units (0-10 scale)",
             "tag": "assumed",
-            "notes": "MISSING: fermented note added by SSF"
+            "notes": "MISSING: fermented note added by SSF",
+            "verification_status": "not_available"
           }
         }
       ]
@@ -610,7 +668,8 @@
           "reduction": {
             "unit": "fraction",
             "tag": "assumed",
-            "notes": "MISSING: phytic_acid partition into the waste stream during AE-IEP"
+            "notes": "MISSING: phytic_acid partition into the waste stream during AE-IEP",
+            "verification_status": "not_available"
           }
         },
         {
@@ -622,7 +681,8 @@
           "reduction": {
             "unit": "fraction",
             "tag": "assumed",
-            "notes": "MISSING: tannins partition into the waste stream during AE-IEP"
+            "notes": "MISSING: tannins partition into the waste stream during AE-IEP",
+            "verification_status": "not_available"
           }
         },
         {
@@ -634,7 +694,8 @@
           "reduction": {
             "unit": "fraction",
             "tag": "assumed",
-            "notes": "MISSING: trypsin_inhibitor partition into the waste stream during AE-IEP"
+            "notes": "MISSING: trypsin_inhibitor partition into the waste stream during AE-IEP",
+            "verification_status": "not_available"
           }
         }
       ],
@@ -655,7 +716,8 @@
           "pH": "8.5-10.5 extraction, 4.2-4.5 precipitation",
           "table": "final review Table 11"
         },
-        "notes": "Generic oilseed-cake range, not groundnut- or rice-bran-specific (alpha 0.4). Replaces the source plan's assumed 0.75-0.90. confirmed in the final review draft; verify against the cited primary paper"
+        "notes": "Generic oilseed-cake range, not groundnut- or rice-bran-specific (alpha 0.4). Replaces the source plan's assumed 0.75-0.90. confirmed in the final review draft; verify against the cited primary paper",
+        "verification_status": "review_reported_primary_not_checked"
       },
       "recovery": {
         "unit": "fraction",
@@ -673,43 +735,51 @@
           "measured_on": "oilseed cakes (general)",
           "table": "final review Table 11"
         },
-        "notes": "'Yield' in the review; generic range (alpha 0.4). Replaces the source plan's assumed 0.40-0.70. confirmed in the final review draft; verify against the cited primary paper"
+        "notes": "'Yield' in the review; generic range (alpha 0.4). Replaces the source plan's assumed 0.40-0.70. confirmed in the final review draft; verify against the cited primary paper",
+        "verification_status": "review_reported_primary_not_checked"
       },
       "resources": {
         "kwh_per_kg": {
           "unit": "kWh/kg input",
           "tag": "assumed",
-          "notes": "MISSING: ae_iep: energy; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ae_iep: energy; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "water_l_per_kg": {
           "unit": "L/kg input",
           "tag": "assumed",
-          "notes": "MISSING: ae_iep: water; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ae_iep: water; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "chem_inr_per_kg": {
           "unit": "INR/kg input",
           "tag": "assumed",
-          "notes": "MISSING: ae_iep: chemicals; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ae_iep: chemicals; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "labour_h_per_t": {
           "unit": "h/t input",
           "tag": "assumed",
-          "notes": "MISSING: ae_iep: labour; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ae_iep: labour; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "time_h": {
           "unit": "h",
           "tag": "assumed",
-          "notes": "MISSING: ae_iep: processing time; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ae_iep: processing time; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_inr": {
           "unit": "INR",
           "tag": "assumed",
-          "notes": "MISSING: ae_iep: reference capex; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ae_iep: reference capex; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_scale_kg_day": {
           "unit": "kg/day",
           "tag": "assumed",
-          "notes": "MISSING: ae_iep: reference capex scale; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ae_iep: reference capex scale; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         }
       },
       "notes": "Spray dryer requirement is an assumption (isolate drying). Rice-bran isolate ~91% protein is a patent claim (grade C/D)."
@@ -746,7 +816,8 @@
               "moisture_pct": "20-25",
               "cites": "Kadam et al. (2025); Song et al. (2008)"
             },
-            "notes": "Transferred from soybean; confirmed in the final review draft; verify against the cited primary paper"
+            "notes": "Transferred from soybean; confirmed in the final review draft; verify against the cited primary paper",
+            "verification_status": "review_reported_primary_not_checked"
           }
         },
         {
@@ -771,55 +842,65 @@
               "moisture_pct": "20-25",
               "cites": "Kadam et al. (2025); Song et al. (2008)"
             },
-            "notes": "Same-material range reported in final review Table 7; verify primary paper and batch treatment conditions."
+            "notes": "Same-material range reported in final review Table 7; verify primary paper and batch treatment conditions.",
+            "verification_status": "review_reported_primary_not_checked"
           }
         }
       ],
       "mass_yield": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: extrude dry-matter mass yield"
+        "notes": "MISSING: extrude dry-matter mass yield",
+        "verification_status": "not_available"
       },
       "protein_retention": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: extrude protein retention"
+        "notes": "MISSING: extrude protein retention",
+        "verification_status": "not_available"
       },
       "resources": {
         "kwh_per_kg": {
           "unit": "kWh/kg input",
           "tag": "assumed",
-          "notes": "MISSING: extrude: energy; process-engineering papers or supplier quotes"
+          "notes": "MISSING: extrude: energy; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "water_l_per_kg": {
           "unit": "L/kg input",
           "tag": "assumed",
-          "notes": "MISSING: extrude: water; process-engineering papers or supplier quotes"
+          "notes": "MISSING: extrude: water; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "chem_inr_per_kg": {
           "unit": "INR/kg input",
           "tag": "assumed",
-          "notes": "MISSING: extrude: chemicals; process-engineering papers or supplier quotes"
+          "notes": "MISSING: extrude: chemicals; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "labour_h_per_t": {
           "unit": "h/t input",
           "tag": "assumed",
-          "notes": "MISSING: extrude: labour; process-engineering papers or supplier quotes"
+          "notes": "MISSING: extrude: labour; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "time_h": {
           "unit": "h",
           "tag": "assumed",
-          "notes": "MISSING: extrude: processing time; process-engineering papers or supplier quotes"
+          "notes": "MISSING: extrude: processing time; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_inr": {
           "unit": "INR",
           "tag": "assumed",
-          "notes": "MISSING: extrude: reference capex; process-engineering papers or supplier quotes"
+          "notes": "MISSING: extrude: reference capex; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_scale_kg_day": {
           "unit": "kg/day",
           "tag": "assumed",
-          "notes": "MISSING: extrude: reference capex scale; process-engineering papers or supplier quotes"
+          "notes": "MISSING: extrude: reference capex scale; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         }
       },
       "side_effects": [
@@ -828,7 +909,8 @@
           "addition": {
             "unit": "index units (0-10 scale)",
             "tag": "assumed",
-            "notes": "MISSING: roasted note added by extrusion"
+            "notes": "MISSING: roasted note added by extrusion",
+            "verification_status": "not_available"
           }
         }
       ]
@@ -859,55 +941,65 @@
               "purity_change": "55% -> 84%",
               "cites": "Helstad et al. (2021)"
             },
-            "notes": "confirmed in the final review draft; verify against the cited primary paper"
+            "notes": "confirmed in the final review draft; verify against the cited primary paper",
+            "verification_status": "review_reported_primary_not_checked"
           }
         }
       ],
       "mass_yield": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: ethanol_wash dry-matter mass yield"
+        "notes": "MISSING: ethanol_wash dry-matter mass yield",
+        "verification_status": "not_available"
       },
       "protein_retention": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: ethanol_wash protein retention"
+        "notes": "MISSING: ethanol_wash protein retention",
+        "verification_status": "not_available"
       },
       "resources": {
         "kwh_per_kg": {
           "unit": "kWh/kg input",
           "tag": "assumed",
-          "notes": "MISSING: ethanol_wash: energy; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ethanol_wash: energy; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "water_l_per_kg": {
           "unit": "L/kg input",
           "tag": "assumed",
-          "notes": "MISSING: ethanol_wash: water; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ethanol_wash: water; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "chem_inr_per_kg": {
           "unit": "INR/kg input",
           "tag": "assumed",
-          "notes": "MISSING: ethanol_wash: chemicals; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ethanol_wash: chemicals; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "labour_h_per_t": {
           "unit": "h/t input",
           "tag": "assumed",
-          "notes": "MISSING: ethanol_wash: labour; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ethanol_wash: labour; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "time_h": {
           "unit": "h",
           "tag": "assumed",
-          "notes": "MISSING: ethanol_wash: processing time; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ethanol_wash: processing time; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_inr": {
           "unit": "INR",
           "tag": "assumed",
-          "notes": "MISSING: ethanol_wash: reference capex; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ethanol_wash: reference capex; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         },
         "capex_ref_scale_kg_day": {
           "unit": "kg/day",
           "tag": "assumed",
-          "notes": "MISSING: ethanol_wash: reference capex scale; process-engineering papers or supplier quotes"
+          "notes": "MISSING: ethanol_wash: reference capex scale; process-engineering papers or supplier quotes",
+          "verification_status": "not_available"
         }
       },
       "notes": "Optional; excluded automatically when the user selects 'no solvents'."

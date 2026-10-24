@@ -269,7 +269,7 @@ function PlanBlock({ data }: { data: AnalyzeResponse }) {
           <li key={m.months} className="grid gap-1 sm:grid-cols-[5rem_1fr_1fr]">
             <span className="font-semibold">{m.months}</span>
             <span>{m.work}</span>
-            <span className="text-muted-foreground">{m.output}</span>
+            <span className="text-muted-foreground">{m.output}<span className="mt-2 block text-xs">{m.decision_gate}</span></span>
           </li>
         ))}
       </ol>
@@ -294,6 +294,29 @@ export function NextScreen({ data }: { data: AnalyzeResponse }) {
   return (
     <section className="space-y-4">
       <ScreenHeader title={t("next.title")} summary={t("next.summary")} />
+      <section className="mb-6 border-l-2 border-primary pl-4" data-testid="critical-tests">
+        <h3>{t("workflow.criticalTests")}</h3>
+        <p className="mt-2 text-sm">{data.voi_note}</p>
+        <ul className="mt-3 list-disc ps-5 text-sm">
+          {data.plan?.tests
+            .filter((test) => test.why.startsWith("Critical safety"))
+            .map((test) => (
+              <li key={test.test_id}>
+                <strong>{test.name}</strong>: {test.acceptance}
+              </li>
+            ))}
+        </ul>
+        {data.feedback_context.next_actions.length > 0 && (
+          <>
+            <h4 className="mt-4">{t("feedback.learning")}</h4>
+            <ul className="list-disc ps-5 text-sm">
+              {data.feedback_context.next_actions.map((action) => (
+                <li key={action}>{action}</li>
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
       <Voi data={data} />
       <LabResult data={data} />
       <Readiness data={data} />

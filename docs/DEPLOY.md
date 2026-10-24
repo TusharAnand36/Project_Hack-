@@ -62,7 +62,27 @@ Rehearse with Wi-Fi off:
 cd web && npm run e2e:offline
 ```
 
-This builds the app, serves `dist` with no API, and checks the 3 presets, the Hindi summary, the one-page memo and the data pack.
+This builds the app, serves `dist` with no API, and checks the five presets, the Hindi summary, the decision memo and the data pack.
+
+## Case feedback and lab history
+
+Live analyses receive a fresh case ID. Case feedback and laboratory-update history use
+SQLite through Python's standard library. Locally the file is
+`.runtime/feedback.sqlite3`; the runtime directory is excluded from Git.
+
+For a hosted API, set `FEEDBACK_DB_PATH` to a file on a persistent mounted disk,
+for example `/var/data/upcycle-feedback.sqlite3`. An ephemeral filesystem does not
+provide durable feedback. With `APP_ENV=public` and no configured path, analysis
+still works and the UI reports that feedback storage is unavailable. A failed save
+never displays a success message. No storage service or paid disk has been provisioned.
+
+Feedback is scoped to material, intended use, extraction route and dataset version.
+Future matching queries receive aggregated issue counts and follow-up test suggestions;
+free-text notes remain private to storage. Feedback cannot clear safety gates or
+rewrite scientific values. This prototype has no authenticated accounts or verified
+lab submitters, so feedback is observational, not validated scientific evidence.
+Do not enter personal or confidential information. Protect and back up the database
+before using a shared deployment, and provide an appropriate retention process.
 
 ## 4. After changing the engine or data
 

@@ -74,7 +74,8 @@
       "floor": {
         "unit": "% dry basis",
         "tag": "assumed",
-        "notes": "MISSING: phytate floor (assay detection limit or intrinsic residual)"
+        "notes": "MISSING: phytate floor (assay detection limit or intrinsic residual)",
+        "verification_status": "not_available"
       },
       "assay_test_id": "phytate_assay"
     },
@@ -89,7 +90,8 @@
       "floor": {
         "unit": "% of raw activity",
         "tag": "assumed",
-        "notes": "MISSING: TIA floor (assay detection limit or intrinsic residual)"
+        "notes": "MISSING: TIA floor (assay detection limit or intrinsic residual)",
+        "verification_status": "not_available"
       },
       "assay_test_id": "tia_assay"
     },
@@ -105,7 +107,8 @@
       "floor": {
         "unit": "% dry basis",
         "tag": "assumed",
-        "notes": "MISSING: tannin floor (assay detection limit or intrinsic residual)"
+        "notes": "MISSING: tannin floor (assay detection limit or intrinsic residual)",
+        "verification_status": "not_available"
       },
       "assay_test_id": "tannin_assay"
     },
@@ -121,7 +124,8 @@
       "floor": {
         "unit": "% dry basis",
         "tag": "assumed",
-        "notes": "MISSING: polyphenol floor (assay detection limit or intrinsic residual)"
+        "notes": "MISSING: polyphenol floor (assay detection limit or intrinsic residual)",
+        "verification_status": "not_available"
       }
     },
     {

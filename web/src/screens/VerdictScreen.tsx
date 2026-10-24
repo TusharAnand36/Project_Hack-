@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import type { AnalyzeResponse } from "@/api/client";
 import { AiSummary } from "@/components/AiSummary";
+import { WorkflowDimensions } from "@/components/WorkflowDimensions";
 import { Num } from "@/components/Num";
 import { SafetyLimits } from "@/components/SafetyLimits";
 import { ScreenHeader } from "@/components/States";
@@ -60,6 +61,7 @@ export function VerdictScreen({ data }: { data: AnalyzeResponse }) {
         </div>
       )}
 
+      <WorkflowDimensions data={data} />
       <SafetyLimits gates={data.gates} />
       <h3 className="mb-2 mt-6 font-medium">{t("verdict.gates")}</h3>
       <div className="grid gap-3 md:grid-cols-2">

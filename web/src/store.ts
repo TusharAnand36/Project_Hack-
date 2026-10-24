@@ -7,6 +7,7 @@ export const SCREENS: Screen[] = ["input", "verdict", "diagnosis", "chains", "co
 
 interface UiState {
   screen: Screen;
+  runRevision: number;
   request: AnalyzeRequest | null;
   presetId: string | null; // set while the request is an unmodified preset (snapshot fallback)
   showSources: boolean;
@@ -20,6 +21,7 @@ interface UiState {
 
 export const useStore = create<UiState>((set) => ({
   screen: "input",
+  runRevision: 0,
   request: null,
   presetId: null,
   showSources: false,
@@ -31,6 +33,7 @@ export const useStore = create<UiState>((set) => ({
       const changed = JSON.stringify(pea) !== JSON.stringify(request.pea);
       return {
         request: { ...request, pea },
+        runRevision: s.runRevision + 1,
         presetId: changed ? null : presetId,
         screen,
         selectedChain: null,

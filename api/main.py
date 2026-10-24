@@ -15,14 +15,17 @@ from __future__ import annotations
 import json
 import logging
 import os
+import sqlite3
 import time
 from collections import OrderedDict, defaultdict, deque
+from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from api.feedback import FeedbackReceipt, FeedbackRequest, FeedbackStore
 from api.llm import service
 from api.llm.client import LLMClient
 from api.schemas import (
@@ -53,6 +56,7 @@ DATASET = load_dataset()
 DATASET_VERSION = DATASET.version
 SOURCES = set(DATASET.sources)
 LLM = LLMClient()
+FEEDBACK = FeedbackStore()
 
 app = FastAPI(title="Upcycle Compass API", version=__version__)
 app.add_middleware(
@@ -125,13 +129,42 @@ def data_file(name: str) -> Any:
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
-    return _analyze(req)
+    result = _analyze(req).model_copy(deep=True)
+    result.meta.generated_at = datetime.now(UTC).isoformat()
+    try:
+        result.case_id = FEEDBACK.register(req, result)
+        result.feedback_context = FEEDBACK.context(req, DATASET_VERSION)
+    except (OSError, RuntimeError, sqlite3.Error) as exc:
+        result.limitations.append(str(exc))
+    return result
+
+
+@app.post("/feedback", response_model=FeedbackReceipt)
+def feedback(body: FeedbackRequest, request: Request) -> FeedbackReceipt:
+    _rate_limit(request)
+    try:
+        return FEEDBACK.save(body)
+    except KeyError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
+    except (OSError, RuntimeError, sqlite3.Error) as exc:
+        raise HTTPException(503, "Feedback database unavailable; your feedback has not been saved") from exc
 
 
 @app.post("/update-evidence", response_model=UpdateEvidenceResponse)
 def update(body: UpdateEvidenceRequest) -> UpdateEvidenceResponse:
     try:
-        return update_evidence(body, DATASET)
+        result = update_evidence(body, DATASET)
+        try:
+            FEEDBACK.record_lab(
+                json.dumps(
+                    {"request": body.model_dump(mode="json"), "result": result.model_dump(mode="json")}
+                )
+            )
+        except (OSError, RuntimeError, sqlite3.Error):
+            result.note += " Lab history was not persisted: configure the feedback database."
+        return result
     except AnalyzeError as e:
         raise HTTPException(422, str(e)) from e
 

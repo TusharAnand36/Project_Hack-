@@ -2,15 +2,18 @@
 
 For one food by-product batch and one target use, Upcycle Compass answers **Go / No-go / Test-first**. It also says:
 
-- which treatment chain to use;
-- what a kg of protein costs compared with imported pea isolate;
-- which single lab test to buy first.
+- which supported treatment candidates need testing;
+- what can be costed per kg of recovered protein against a defined pea-isolate scenario;
+- which critical evidence to collect before a pilot decision.
 
 Every number carries a provenance tag: `measured`, `published`, `assumed` or `synthetic`.
 
 > **Proof of concept, Hack the Fork 2026 (Problem Statement 2).** Decision support only. Not a regulatory approval. Confirm FSSAI classification and limits.
 
-**Status:** Phases 0–8 done. Progress and test results for each phase are in `docs/PHASES.md`.
+**Status:** Evidence-aware prototype, engine 0.8.0. The final workflow audit,
+current validation results and outstanding scientific/deployment work are in
+[`docs/FINAL_WORKFLOW_AUDIT.md`](docs/FINAL_WORKFLOW_AUDIT.md).
+`docs/PHASES.md` records the earlier implementation history.
 
 The website opens on a public home page with About us, Our mission, and How it works pages.
 Choose **Open Compass** to enter the decision tool, or open `/#/compass` directly.
@@ -45,10 +48,10 @@ The Verdict and Diagnosis screens use these **user-specified project contaminant
 These are project acceptance settings, applied to all materials and both market scenarios;
 they are not independently verified regulatory limits. Arsenic is interpreted as total
 arsenic in mg/kg. Enter the batch report under **Contaminant lab results**. An entered
-value at or below its threshold passes that check; an exceedance fails the safety gate;
+measured value on the compatible as-received basis at or below its threshold passes that check; an exceedance fails the safety gate;
 missing results require testing. Both B1 and total aflatoxins must pass. A hexane
 certificate checkbox alone cannot override a high or missing quantitative result;
-confirmed non-solvent processing clears that route's hexane check without an assay.
+documented non-solvent processing clears that route's hexane check without an assay.
 The older 20-ppb groundnut survey prior is not used to infer compliance at 10 ppb.
 Form labels no longer show provenance/default badges; result provenance remains available.
 
@@ -57,12 +60,23 @@ Form labels no longer show provenance/default badges; result provenance remains 
 | Screen | Answers |
 |---|---|
 | Input | By-product, target use, batch values (form, sample text or voice; English or Hindi) |
-| Verdict | Go / No-go / Test-first, decision grade, P(go), the reasons and the flip conditions |
-| Diagnosis | Which compound or property blocks the target use, and by how much (exceedance) |
-| Chains | Ranked treatment chains, P(spec), protein %, Pareto front of cost vs probability |
-| Cost | ₹ per kg protein compared with imported pea isolate (landed), cost stack |
-| Next | The test to buy first (value of information), readiness, validation plan, lab-result update |
-| Memo | One A4 decision memo with sources and limitations, for printing or saving as PDF |
+| Verdict | Go / No-go / Test-first, with separate safety, technical, economic and evidence status |
+| Diagnosis | Compatible measured exceedances, missing assays, and functional comparisons with pea isolate |
+| Chains | Supported research candidates, mass-balance evidence, missing process data and partial costs |
+| Cost | ₹/kg recovered protein against the landed pea scenario, target formula and cost boundary |
+| Next | Critical tests, unestimated economic VOI, proposed six-month validation plan, lab-result update |
+| Memo | Printable decision memo, traceable sources and matching case JSON export |
+
+P(GO), P(spec), margin probabilities and economic VOI are **not estimated** without
+a calibrated model. Missing yields/recoveries do not produce simulated performance
+predictions. References are not batch assays, and raw flour is not an extracted isolate.
+The default demo therefore returns **TEST-FIRST**, rather than a commercial promise.
+
+Each live analysis gets a fresh case ID and a feedback form. Feedback is saved to
+SQLite locally and future matching queries receive aggregate issue counts and
+follow-up suggestions. It never changes safety thresholds or verified assays.
+For hosted persistence, configure `FEEDBACK_DB_PATH` on a persistent disk; see
+[`docs/DEPLOY.md`](docs/DEPLOY.md). Offline snapshots cannot save feedback.
 
 ## Architecture
 
@@ -70,11 +84,12 @@ Form labels no longer show provenance/default badges; result provenance remains 
 browser (React 18 + TS + Vite + Tailwind)
   │  /api/*  (Vite proxy locally, Vercel rewrite when deployed)
   ▼
-FastAPI  api/main.py   /health /presets /data/* /analyze /update-evidence /explain /plan /parse-text
+FastAPI  api/main.py   /health /presets /data/* /analyze /feedback /update-evidence /explain /plan /parse-text
   │                    LRU cache · 64 KB body limit · 10/min/IP on AI endpoints
   ├── engine/compass/  pure Python decision engine (no web or LLM imports)
   │     data → sampling (Sobol QMC, 8,192 draws, seed 42) → effects → gates G1–G7 → diagnosis
-  │     → chains → Monte Carlo → cost vs pea → value of information → Pareto → readiness → plan
+  │     → candidate chains → supported mass balance / cost → evidence-aware assessment → readiness → plan
+  ├── api/feedback.py  SQLite case feedback + lab-update history; scoped aggregate follow-up suggestions
   └── api/llm/         Bedrock → Groq → template; every AI sentence passes the number verifier
 data/*.json            dataset with tag, grade, source and applicability on every value
 web/public/snapshots/  precomputed preset results for the offline fallback

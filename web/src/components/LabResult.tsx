@@ -23,9 +23,19 @@ function options(data: AnalyzeResponse, t: (k: string) => string): { key: string
       out.set(e.input, e.label);
     }
   }
-  if (data.gates.some((g) => g.id === "G1" && g.prior_p_fail)) out.set("gate.G1.u", t("lab.g1Label"));
+  if (data.gates.some((g) => g.id === "G1")) out.set("gate.G1.u", t("lab.g1Label"));
   for (const d of data.diagnosis)
     if (d.role === "tunable") out.set(`cmp.${d.compound}`, `${d.name.toLowerCase()} ${t("lab.baseline")}`);
+  const gateFields: Record<string, string> = {
+    total_aflatoxins: "total_aflatoxins_ppb",
+    hexane_residue: "hexane_ppm",
+    lead: "pb_ppm",
+    cadmium: "cd_ppm",
+    arsenic: "arsenic_ppm",
+    mercury: "hg_ppm",
+  };
+  for (const row of data.diagnosis)
+    if (gateFields[row.compound]) out.set(`batch.${gateFields[row.compound]}`, row.name);
   out.set("bp.protein", t("lab.proteinLabel"));
   return [...out].map(([key, label]) => ({ key, label }));
 }
@@ -123,11 +133,32 @@ export function LabResult({ data }: { data: AnalyzeResponse }) {
   const [value, setValue] = useState("");
   const [cv, setCv] = useState("");
   const [method, setMethod] = useState("");
+  const [report, setReport] = useState({
+    unit: "",
+    basis: "as_received" as "as_received" | "dry_matter" | "unknown" | "not_applicable",
+    laboratory: "",
+    report_reference: "",
+    report_date: "",
+  });
+  const unitFor = (key: string) =>
+    key === "gate.G1.u" || key === "batch.total_aflatoxins_ppb"
+      ? "µg/kg"
+      : key.startsWith("batch.")
+        ? "mg/kg"
+        : key === "bp.protein"
+          ? "%"
+          : key === "cmp.phytic_acid" || key === "cmp.tannins"
+            ? "% dry basis"
+            : key === "cmp.trypsin_inhibitor"
+              ? "% of raw activity"
+              : "fraction";
   const isGate = input === "gate.G1.u";
   const m = useMutation({
     mutationFn: () =>
       api.updateEvidence({
         request: request!,
+        ...report,
+        batch_id: request?.batch?.lot_id ?? null,
         input,
         value: isGate && mode !== "hplc" ? null : Number(value),
         result: isGate && mode !== "hplc" ? mode : null,
@@ -153,7 +184,14 @@ export function LabResult({ data }: { data: AnalyzeResponse }) {
           <select
             className={field}
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              setReport({
+                ...report,
+                unit: unitFor(e.target.value),
+                basis: e.target.value.startsWith("t.") ? "not_applicable" : e.target.value === "cmp.phytic_acid" ? "dry_matter" : "as_received",
+              });
+            }}
             data-testid="lab-input"
           >
             <option value="">{t("lab.choose")}</option>
@@ -164,6 +202,45 @@ export function LabResult({ data }: { data: AnalyzeResponse }) {
             ))}
           </select>
         </label>
+        <label className="text-sm">
+          {t("workflow.unit")}
+          <select
+            className={field}
+            value={report.unit}
+            onChange={(e) => setReport({ ...report, unit: e.target.value })}
+          >
+            {["", "%", "% dry basis", "% of raw activity", "fraction", "µg/kg", "mg/kg"].map((unit) => (
+              <option key={unit} value={unit}>
+                {unit || t("input.choose")}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="text-sm">
+          {t("workflow.proteinBasis")}
+          <select
+            className={field}
+            value={report.basis}
+            onChange={(e) => setReport({ ...report, basis: e.target.value as typeof report.basis })}
+          >
+            {["as_received", "dry_matter", "unknown", "not_applicable"].map((basis) => (
+              <option key={basis} value={basis}>
+                {basis.replace(/_/g, " ")}
+              </option>
+            ))}
+          </select>
+        </label>
+        {(["laboratory", "report_reference", "report_date"] as const).map((key) => (
+          <label className="text-sm" key={key}>
+            {t(`workflow.reportFields.${key}`)}
+            <input
+              className={field}
+              value={report[key]}
+              maxLength={key === "report_date" ? 32 : 200}
+              onChange={(e) => setReport({ ...report, [key]: e.target.value })}
+            />
+          </label>
+        ))}
         {isGate && (
           <label className="text-sm">
             {t("lab.mode")}

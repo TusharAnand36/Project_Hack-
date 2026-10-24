@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "FunctionalProperty": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "oilseed_flour": {
+          "title": "Oilseed Flour",
+          "type": "string"
+        },
+        "oilseed_isolate": {
+          "title": "Oilseed Isolate",
+          "type": "string"
+        },
+        "pea_isolate": {
+          "title": "Pea Isolate",
+          "type": "string"
+        },
+        "oilseed_conditions": {
+          "title": "Oilseed Conditions",
+          "type": "string"
+        },
+        "pea_conditions": {
+          "title": "Pea Conditions",
+          "type": "string"
+        },
+        "comparable": {
+          "default": false,
+          "title": "Comparable",
+          "type": "boolean"
+        },
+        "next_test": {
+          "title": "Next Test",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "evidence_status": {
+          "title": "Evidence Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "oilseed_flour",
+        "oilseed_isolate",
+        "pea_isolate",
+        "oilseed_conditions",
+        "pea_conditions",
+        "next_test",
+        "source_ids",
+        "evidence_status"
+      ],
+      "title": "FunctionalProperty",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "note": {
+      "title": "Note",
+      "type": "string"
+    },
+    "by_material": {
+      "additionalProperties": {
+        "items": {
+          "$ref": "#/$defs/FunctionalProperty"
+        },
+        "type": "array"
+      },
+      "title": "By Material",
+      "type": "object"
+    },
+    "application_tests": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Application Tests",
+      "type": "object"
+    }
+  },
+  "required": [
+    "note",
+    "by_material",
+    "application_tests"
+  ],
+  "title": "FunctionalEvidenceFile",
+  "type": "object"
+}

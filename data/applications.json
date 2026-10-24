@@ -11,14 +11,16 @@
       "tag": "assumed",
       "value": 45,
       "evidence_grade": "D",
-      "notes": "source plan §12.5 (configurable)"
+      "notes": "source plan §12.5 (configurable)",
+      "verification_status": "assumption"
     },
     "isolate_min_protein_pct": {
       "unit": "%",
       "tag": "assumed",
       "value": 75,
       "evidence_grade": "D",
-      "notes": "source plan §12.5 (configurable)"
+      "notes": "source plan §12.5 (configurable)",
+      "verification_status": "assumption"
     }
   },
   "applications": [
@@ -35,28 +37,32 @@
           "tag": "assumed",
           "value": 60,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (min protein); source it"
+          "notes": "source plan §11.5 starting value (min protein); source it",
+          "verification_status": "assumption"
         },
         "max_ofi": {
           "unit": "index 0-10",
           "tag": "assumed",
           "value": 3,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (max off-flavour); source it"
+          "notes": "source plan §11.5 starting value (max off-flavour); source it",
+          "verification_status": "assumption"
         },
         "max_phytate_pct_db": {
           "unit": "% dry basis",
           "tag": "assumed",
           "value": 1.0,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (max phytate); source it"
+          "notes": "source plan §11.5 starting value (max phytate); source it",
+          "verification_status": "assumption"
         },
         "max_tia_pct_raw": {
           "unit": "% of raw activity",
           "tag": "assumed",
           "value": 15,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (max TIA); source it"
+          "notes": "source plan §11.5 starting value (max TIA); source it",
+          "verification_status": "assumption"
         }
       },
       "functionality": "Solubility at neutral pH, low grit, colour.",
@@ -79,28 +85,32 @@
           "tag": "assumed",
           "value": 35,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (min protein, as inclusion); source it"
+          "notes": "source plan §11.5 starting value (min protein, as inclusion); source it",
+          "verification_status": "assumption"
         },
         "max_ofi": {
           "unit": "index 0-10",
           "tag": "assumed",
           "value": 5,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (max off-flavour); source it"
+          "notes": "source plan §11.5 starting value (max off-flavour); source it",
+          "verification_status": "assumption"
         },
         "max_phytate_pct_db": {
           "unit": "% dry basis",
           "tag": "assumed",
           "value": 2.0,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (max phytate); source it"
+          "notes": "source plan §11.5 starting value (max phytate); source it",
+          "verification_status": "assumption"
         },
         "max_tia_pct_raw": {
           "unit": "% of raw activity",
           "tag": "assumed",
           "value": 20,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (max TIA); source it"
+          "notes": "source plan §11.5 starting value (max TIA); source it",
+          "verification_status": "assumption"
         }
       },
       "inclusion_pct": {
@@ -112,7 +122,8 @@
           "high": 20
         },
         "evidence_grade": "D",
-        "notes": "source plan §11.5; review draft says <=15-20% inclusion typical; verify"
+        "notes": "source plan §11.5; review draft says <=15-20% inclusion typical; verify",
+        "verification_status": "assumption"
       },
       "functionality": "Expansion tolerance at 10-20% inclusion; darker colour acceptable.",
       "functionality_tests": [
@@ -132,28 +143,32 @@
           "tag": "assumed",
           "value": 55,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (min protein); source it"
+          "notes": "source plan §11.5 starting value (min protein); source it",
+          "verification_status": "assumption"
         },
         "max_ofi": {
           "unit": "index 0-10",
           "tag": "assumed",
           "value": 4,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (max off-flavour); source it"
+          "notes": "source plan §11.5 starting value (max off-flavour); source it",
+          "verification_status": "assumption"
         },
         "max_phytate_pct_db": {
           "unit": "% dry basis",
           "tag": "assumed",
           "value": 1.5,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (max phytate); source it"
+          "notes": "source plan §11.5 starting value (max phytate); source it",
+          "verification_status": "assumption"
         },
         "max_tia_pct_raw": {
           "unit": "% of raw activity",
           "tag": "assumed",
           "value": 15,
           "evidence_grade": "D",
-          "notes": "source plan §11.5 starting value (max TIA); source it"
+          "notes": "source plan §11.5 starting value (max TIA); source it",
+          "verification_status": "assumption"
         }
       },
       "functionality": "Gelation / texturisation, water holding.",

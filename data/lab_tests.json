@@ -10,17 +10,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Aflatoxin B1 ELISA screen cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Aflatoxin B1 ELISA screen cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Aflatoxin B1 ELISA screen turnaround"
+        "notes": "MISSING: Aflatoxin B1 ELISA screen turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Aflatoxin B1 ELISA screen measurement CV (log scale)"
+        "notes": "MISSING: Aflatoxin B1 ELISA screen measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3,
       "sensitivity": {
@@ -28,14 +31,16 @@
         "tag": "assumed",
         "value": 0.95,
         "evidence_grade": "D",
-        "notes": "source plan §12.12"
+        "notes": "source plan §12.12",
+        "verification_status": "assumption"
       },
       "specificity": {
         "unit": "probability",
         "tag": "assumed",
         "value": 0.9,
         "evidence_grade": "D",
-        "notes": "source plan §12.12"
+        "notes": "source plan §12.12",
+        "verification_status": "assumption"
       }
     },
     {
@@ -49,17 +54,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Aflatoxin B1 HPLC confirmation cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Aflatoxin B1 HPLC confirmation cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Aflatoxin B1 HPLC confirmation turnaround"
+        "notes": "MISSING: Aflatoxin B1 HPLC confirmation turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Aflatoxin B1 HPLC confirmation measurement CV (log scale)"
+        "notes": "MISSING: Aflatoxin B1 HPLC confirmation measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3,
       "notes": "Report B1 and total B1+B2+G1+G2 separately in µg/kg on a representative composite."
@@ -74,17 +82,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Free fatty acid / acid value cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Free fatty acid / acid value cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Free fatty acid / acid value turnaround"
+        "notes": "MISSING: Free fatty acid / acid value turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Free fatty acid / acid value measurement CV (log scale)"
+        "notes": "MISSING: Free fatty acid / acid value measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3
     },
@@ -98,17 +109,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Peroxide value cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Peroxide value cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Peroxide value turnaround"
+        "notes": "MISSING: Peroxide value turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Peroxide value measurement CV (log scale)"
+        "notes": "MISSING: Peroxide value measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3
     },
@@ -125,17 +139,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Heavy metals (As, Cd) cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Heavy metals (As, Cd) cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Heavy metals (As, Cd) turnaround"
+        "notes": "MISSING: Heavy metals (As, Cd) turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Heavy metals (As, Cd) measurement CV (log scale)"
+        "notes": "MISSING: Heavy metals (As, Cd) measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3,
       "notes": "Report each metal separately in mg/kg; total arsenic is required for the project threshold."
@@ -150,17 +167,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Hexane residue cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Hexane residue cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Hexane residue turnaround"
+        "notes": "MISSING: Hexane residue turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Hexane residue measurement CV (log scale)"
+        "notes": "MISSING: Hexane residue measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3
     },
@@ -176,17 +196,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Microbiology panel cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Microbiology panel cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Microbiology panel turnaround"
+        "notes": "MISSING: Microbiology panel turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Microbiology panel measurement CV (log scale)"
+        "notes": "MISSING: Microbiology panel measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3
     },
@@ -200,17 +223,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Phytic acid assay cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Phytic acid assay cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Phytic acid assay turnaround"
+        "notes": "MISSING: Phytic acid assay turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Phytic acid assay measurement CV (log scale)"
+        "notes": "MISSING: Phytic acid assay measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3
     },
@@ -224,17 +250,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Trypsin inhibitor activity cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Trypsin inhibitor activity cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Trypsin inhibitor activity turnaround"
+        "notes": "MISSING: Trypsin inhibitor activity turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Trypsin inhibitor activity measurement CV (log scale)"
+        "notes": "MISSING: Trypsin inhibitor activity measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3
     },
@@ -248,17 +277,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Tannin assay cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Tannin assay cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Tannin assay turnaround"
+        "notes": "MISSING: Tannin assay turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Tannin assay measurement CV (log scale)"
+        "notes": "MISSING: Tannin assay measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3
     },
@@ -275,17 +307,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Proximate + Kjeldahl protein cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Proximate + Kjeldahl protein cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Proximate + Kjeldahl protein turnaround"
+        "notes": "MISSING: Proximate + Kjeldahl protein turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Proximate + Kjeldahl protein measurement CV (log scale)"
+        "notes": "MISSING: Proximate + Kjeldahl protein measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3
     },
@@ -299,17 +334,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Sensory panel cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Sensory panel cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Sensory panel turnaround"
+        "notes": "MISSING: Sensory panel turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Sensory panel measurement CV (log scale)"
+        "notes": "MISSING: Sensory panel measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3,
       "notes": "Calibrates the off-flavour index."
@@ -326,17 +364,20 @@
       "cost_inr": {
         "unit": "INR per batch",
         "tag": "assumed",
-        "notes": "MISSING: Functionality panel cost; NABL lab quotes / NIFTEM"
+        "notes": "MISSING: Functionality panel cost; NABL lab quotes / NIFTEM",
+        "verification_status": "not_available"
       },
       "turnaround_days": {
         "unit": "days",
         "tag": "assumed",
-        "notes": "MISSING: Functionality panel turnaround"
+        "notes": "MISSING: Functionality panel turnaround",
+        "verification_status": "not_available"
       },
       "cv": {
         "unit": "fraction",
         "tag": "assumed",
-        "notes": "MISSING: Functionality panel measurement CV (log scale)"
+        "notes": "MISSING: Functionality panel measurement CV (log scale)",
+        "verification_status": "not_available"
       },
       "replicates_min": 3
     }

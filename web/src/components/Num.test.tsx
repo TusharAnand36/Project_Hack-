@@ -28,7 +28,7 @@ describe("<Num/>", () => {
       />,
     );
     expect(screen.getByText("₹1,00,000")).toBeInTheDocument();
-    expect(screen.getByText("P")).toBeInTheDocument();
+    expect(screen.getByTitle("published")).toBeInTheDocument();
     expect(screen.getAllByText("published").length).toBeGreaterThan(0);
   });
 

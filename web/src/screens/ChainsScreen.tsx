@@ -13,10 +13,10 @@ type Col = "rank" | "retained" | "protein" | "cost" | "pspec" | "eu";
 
 const sortValue: Record<Col, (c: Chain) => number> = {
   rank: (c) => c.rank,
-  retained: (c) => c.protein_retained.p50,
-  protein: (c) => c.protein_pct_final.p50,
+  retained: (c) => c.protein_retained?.p50 ?? Number.NEGATIVE_INFINITY,
+  protein: (c) => c.protein_pct_final?.p50 ?? Number.NEGATIVE_INFINITY,
   cost: (c) => c.cost_inr_per_kg_protein?.p50 ?? Number.POSITIVE_INFINITY,
-  pspec: (c) => c.p_spec.value,
+  pspec: (c) => c.p_spec?.value ?? Number.NEGATIVE_INFINITY,
   eu: (c) => c.e_utility?.value ?? Number.NEGATIVE_INFINITY,
 };
 
@@ -60,6 +60,16 @@ function ChainDetail({ chain, data }: { chain: Chain; data: AnalyzeResponse }) {
       <h3 className="font-medium">
         {t("chains.detail")}: <Steps chain={chain} />
       </h3>
+      <p className="text-sm text-muted-foreground">{chain.assessment_note}</p>
+      <p className="text-sm">
+        {t("workflow.economicState")}: {chain.economic_status.replace(/_/g, " ")}
+      </p>
+      <details>
+        <summary className="min-h-11 cursor-pointer underline">{t("workflow.studyEvidence")}</summary>
+        <pre className="max-h-80 overflow-auto whitespace-pre-wrap text-xs">
+          {JSON.stringify(chain.evidence, null, 2)}
+        </pre>
+      </details>
       <div className="relative overflow-x-auto" tabIndex={0}>
         <table className="w-full text-sm">
           <thead>
@@ -76,6 +86,9 @@ function ChainDetail({ chain, data }: { chain: Chain; data: AnalyzeResponse }) {
           <tbody>
             {row(t("chains.proteinPct"), raw?.protein_pct_final, chain.protein_pct_final)}
             {row(t("chains.retained"), raw?.protein_retained, chain.protein_retained)}
+            {row(t("workflow.ingredientYield"), raw?.ingredient_yield, chain.ingredient_yield)}
+            {row(t("workflow.initialProtein"), raw?.initial_protein_kg, chain.initial_protein_kg)}
+            {row(t("workflow.recoveredProtein"), raw?.recovered_protein_kg, chain.recovered_protein_kg)}
             {(raw?.phytate_pct_final || chain.phytate_pct_final) &&
               row(t("chains.phytate"), raw?.phytate_pct_final, chain.phytate_pct_final)}
             {(raw?.tia_pct_raw_final || chain.tia_pct_raw_final) &&
@@ -131,7 +144,9 @@ function ChainDetail({ chain, data }: { chain: Chain; data: AnalyzeResponse }) {
 
 function Pareto({ data }: { data: AnalyzeResponse }) {
   const { t } = useTranslation();
-  const viable = data.chains.filter((c) => c.p_spec.value >= 0.2 && c.cost_inr_per_kg_protein);
+  const viable = data.chains.filter(
+    (c) => c.p_spec && c.p_spec.value >= 0.2 && c.protein_retained && c.cost_inr_per_kg_protein,
+  );
   const ties = data.picks?.ties ?? [];
   if (viable.length === 0)
     return <p className="mb-4 text-sm text-muted-foreground">{t("chains.paretoNone")}</p>;
@@ -227,7 +242,7 @@ export function ChainsScreen({ data }: { data: AnalyzeResponse }) {
                     key={c.id}
                     className={cn("border-b border-border align-top", c.id === selected && "bg-muted")}
                   >
-                    <td className="py-2">{c.rank}</td>
+                    <td className="py-2">{c.rank || "—"}</td>
                     <td>
                       <button
                         type="button"

@@ -127,7 +127,7 @@ def diagnose(
             scored.append((-1.0, d))
             continue
         d.level = summarise(lv.values, lv.prov, lv.unit)
-        if tol is None or tol.value is None:
+        if tol is None or tol.value is None or tol.value <= 0:
             d.note = "no limit available (qualitative)"
             scored.append((-0.5, d))
             continue

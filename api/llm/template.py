@@ -35,7 +35,7 @@ def explain(r: AnalyzeResponse) -> str:
     parts = [f"Verdict: {v.label.value} ({v.grade.value})."]
     parts += [x.rstrip(".") + "." for x in v.reasons[:2]]
     top = r.chains[0] if r.chains else None
-    if top:
+    if top and top.protein_pct_final is not None and top.p_spec is not None:
         steps = " then ".join(s.replace("_", " ") for s in top.steps) or "no treatment (raw flour)"
         parts.append(
             f"The leading chain is {steps}, giving {_article(top.tier)} {top.tier.replace('_', ' ')} with about "
@@ -53,6 +53,10 @@ def explain(r: AnalyzeResponse) -> str:
             )
         else:
             parts.append("Our cost per kg protein is not available because the by-product price is missing.")
+    elif top:
+        parts.append(
+            "Candidate routes are research hypotheses; batch performance, cost and success probabilities are not estimated without validated inputs."
+        )
     elif v.actions:
         parts.append(v.actions[0])
     if r.voi and r.voi.recommended_test:
@@ -87,7 +91,7 @@ def explain_hi(r: AnalyzeResponse) -> str:
     if v.reasons:
         parts.append("कारण (अंग्रेज़ी में): " + " ".join(x.rstrip(".") + "." for x in v.reasons[:2]))
     top = r.chains[0] if r.chains else None
-    if top:
+    if top and top.protein_pct_final is not None and top.p_spec is not None:
         steps = " फिर ".join(s.replace("_", " ") for s in top.steps) or "कोई उपचार नहीं (कच्चा आटा)"
         parts.append(
             f"सबसे आगे की प्रक्रिया-श्रृंखला {steps} है, जिससे लगभग {top.protein_pct_final.p50:.1f}% प्रोटीन वाला "

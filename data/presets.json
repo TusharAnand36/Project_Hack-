@@ -1,12 +1,12 @@
 {
   "presets": [
     {
-      "id": "sunflower_beverage",
-      "title": "Sunflower cake → beverage protein",
-      "story": "Start with sunflower: review protein enrichment, colour and bitterness. Composition comes from the team oilseed review; add a supplier quote for cost analysis.",
+      "id": "sunflower_snack",
+      "title": "Sunflower cake → high-protein / fibre snack",
+      "story": "Preferred pilot hypothesis from the supplied research plan. Review ranges are reference evidence; supply lot, route, assays and process costs before a pilot decision.",
       "payload": {
         "byproduct": "sunflower_cake",
-        "application": "beverage",
+        "application": "extruded_snack",
         "market": "domestic",
         "scale_kg_day": 500,
         "constraints": {}
@@ -15,7 +15,7 @@
     {
       "id": "groundnut_beverage",
       "title": "Groundnut cake → beverage protein",
-      "story": "Checks the B1 and total-aflatoxin project thresholds and the chain Pareto. Batch protein and moisture are synthetic demo values (source plan §8.3 example), not measurements.",
+      "story": "Checks the B1 and total-aflatoxin project thresholds and evidence needed for candidate routes. Batch protein and moisture are synthetic demo values (source plan §8.3 example), not measurements.",
       "payload": {
         "byproduct": "groundnut_cake",
         "application": "beverage",
@@ -64,7 +64,7 @@
     {
       "id": "almond_meat",
       "title": "Almond cake → meat analogue",
-      "story": "Shows 'no treatment needed' with allergen and price flags.",
+      "story": "Explore the evidence gaps for almond cake, including allergen labelling, functional assays and a supplier quote. Missing compound data do not establish that no treatment is needed.",
       "payload": {
         "byproduct": "almond_cake",
         "application": "meat_analogue",

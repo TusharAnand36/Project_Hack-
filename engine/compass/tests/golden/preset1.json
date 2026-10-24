@@ -1,13 +1,13 @@
 {
-  "dataset_version": "2026-10-24.5",
+  "dataset_version": "2026-10-25.1",
   "verdict": "TEST-FIRST",
   "grade": "hypothesis-grade",
   "g1_prior": null,
-  "top_chain": "moist_heat+ae_iep",
-  "top_p_spec": 0.68,
-  "top_protein_p50": 88.5,
+  "top_chain": "raw_flour",
+  "top_p_spec": null,
+  "top_protein_p50": 48.0,
   "pea_landed_p50": 518.3,
-  "recommended_test": "proximate_kjeldahl",
-  "evpi": 376900.0,
-  "chains_total": 50
+  "recommended_test": null,
+  "evpi": null,
+  "chains_total": 56
 }

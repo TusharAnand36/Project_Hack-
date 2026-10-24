@@ -51,6 +51,12 @@ def _numeric_check(compound, name, measurement, limit: Param) -> SafetyCheck:
         else f"{name} {measured.value:g} {limit.unit} {'>' if state is GateState.FAIL else '≤'} "
         f"project threshold {limit.value:g} {limit.unit}"
     )
+    if measurement is not None and measurement.basis != "as_received":
+        state = GateState.TEST_FIRST
+        note = f"{name}: assay basis {measurement.basis}; a compatible as-received result is required before threshold comparison"
+    if measurement is not None and measurement.tag is not Tag.measured:
+        state = GateState.TEST_FIRST
+        note = f"{name}: scenario/demo value only; enter a batch assay before clearing this safety gate"
     return SafetyCheck(
         compound=compound, name=name, limit=_val(limit), measured=measured, state=state, note=note
     )
@@ -161,11 +167,13 @@ def g4_solvent(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
         non_solvent = req.process.solvent_extracted is False or (
             req.process.solvent_extracted is None and req.process.oil_route in ("cold_pressed", "expeller")
         )
-        if non_solvent:
+        if non_solvent and req.process.route_reference:
             check.state = GateState.PASS
             check.note = (
                 "Confirmed non-solvent processing: hexane residue testing is not required for this route."
             )
+        elif non_solvent:
+            check.note = "Non-solvent route declared but supporting process documentation is not supplied; verify the route."
         elif req.process.hexane_cert:
             check.note = "Supplier certificate available: enter its quantitative hexane result to check the 10 mg/kg threshold."
     return _checked_gate(g, [check])
@@ -180,7 +188,13 @@ def g5_provenance(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
         required_test=" + ".join(g.required_tests),
         flip_condition=g.flip_condition,
     )
-    if req.process.food_grade_supply and req.process.storage == "hygienic":
+    if (
+        req.process.food_grade_supply
+        and req.process.storage == "hygienic"
+        and req.batch.lot_id
+        and req.batch.supplier
+        and req.batch.source_reference
+    ):
         out.state = GateState.PASS
         out.reasons.append("food-grade supply with hygienic storage")
         return GateOutcome(out, 1.0)
@@ -189,7 +203,9 @@ def g5_provenance(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
         what.append("feed-grade or unknown supply")
     if req.process.storage != "hygienic":
         what.append("open or unknown storage")
-    out.reasons.append(f"{' and '.join(what)}: run a micro panel; re-source if possible")
+    out.reasons.append(
+        f"{' and '.join(what) or 'Supplier / lot documentation not supplied'}: document lot traceability, supplier records and handling; a micro panel alone does not prove food-grade provenance."
+    )
     return GateOutcome(out, None)
 
 
@@ -204,12 +220,16 @@ def g6_allergen(g: SafetyGate, req: AnalyzeRequest, bp: Byproduct) -> GateOutcom
     return GateOutcome(out, 1.0)
 
 
-def g7_regulatory(g: SafetyGate) -> GateOutcome:
-    out = Gate(id=g.id, name=g.name, kind=g.kind, state=GateState.FLAG)
-    out.flags.append(
-        "confirm FSSAI classification / approval route for a novel or non-standardised ingredient"
+def g7_regulatory(g: SafetyGate, req: AnalyzeRequest) -> GateOutcome:
+    passed = bool(req.process.regulatory_review_reference)
+    out = Gate(id=g.id, name=g.name, kind="stop", state=GateState.PASS if passed else GateState.TEST_FIRST)
+    out.reasons.append(
+        "Regulatory review reference recorded for pilot review: " + req.process.regulatory_review_reference
+        if passed
+        else "Regulatory category / intended-use review not documented; obtain a qualified review before pilot food work."
     )
-    return GateOutcome(out, 1.0)
+    out.flip_condition = "documented category and intended-use review, including applicable limits and claims"
+    return GateOutcome(out, 1.0 if passed else None)
 
 
 def evaluate(req: AnalyzeRequest, ds: Dataset) -> list[GateOutcome]:
@@ -231,5 +251,5 @@ def evaluate(req: AnalyzeRequest, ds: Dataset) -> list[GateOutcome]:
         elif g.id == "G6":
             out.append(g6_allergen(g, req, bp))
         elif g.id == "G7":
-            out.append(g7_regulatory(g))
+            out.append(g7_regulatory(g, req))
     return out

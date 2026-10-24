@@ -104,6 +104,10 @@ def evaluate(
             s = _get(ctx, f"t.{tid}.e{i}")
             _note_no_data(no_data, s, f"{tid}: {e.compound} reduction")
             r = s.values
+            if r is None:
+                # An unknown reduction makes the residual unknown, not a random 0–100% removal.
+                del comp_mass[e.compound]
+                continue
             floor_s = ctx.draws.get(f"floor.{e.compound}")
             floor = 0.0 if floor_s is None or floor_s.values is None else floor_s.values
             rel = ctx.compounds[e.compound][2]
@@ -197,7 +201,8 @@ def evaluate(
             crit.append(Criterion(cid, val, unit, tprov, False, None, note))
             return
         crit.append(Criterion(cid, val, unit, tprov, True, ok, note))
-        spec &= ok
+        if cid != "cost":
+            spec &= ok
 
     add("protein", protein_pct >= targets["protein"][0] if targets.get("protein") else None)
     if targets.get("phytate"):

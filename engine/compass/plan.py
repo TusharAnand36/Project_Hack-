@@ -22,7 +22,7 @@ TIMELINE = [
     ),
     (
         "1–3",
-        "Bench trials of the top 2 chains; assay anti-nutrients before and after",
+        "Bench trials of up to two eligible, evidence-supported candidates; assay before and after",
         "Transferred evidence replaced by measured (grade A)",
     ),
     (
@@ -149,7 +149,20 @@ def build(
     )
     return Plan(
         tests=tests,
-        timeline=[PlanMonth(months=m, work=w, output=o) for m, w, o in TIMELINE],
+        timeline=[
+            PlanMonth(months=m, work=w, output=o, decision_gate=gate)
+            for (m, w, o), gate in zip(
+                TIMELINE,
+                [
+                    "Proceed only after lot identity, process records and required safety evidence are accepted.",
+                    "Continue only if an eligible candidate improves the measured constraint and reconciles protein/mass balance.",
+                    "Hold until application-specific functionality and sensory acceptance are demonstrated.",
+                    "Continue scale-up only if the pilot meets the product specification and records yields, losses, utilities and costs.",
+                    "Approve further development only after customer, regulatory and comparable economic review; otherwise hold or stop.",
+                ],
+                strict=True,
+            )
+        ],
         budget_inr=budget,
         pilot_partner=PARTNER,
     )
