@@ -204,7 +204,8 @@
       "url": "https://www.fao.org/faostat/en/#home",
       "kind": "web",
       "verified_by_team": false,
-      "notes": "Hack the Fork 2026 organiser resource list"
+      "notes": "Hack the Fork 2026 organiser resource list",
+      "accessed": "2026-10-24 (organiser resource list)"
     },
     {
       "id": "ifct2017",
@@ -212,7 +213,8 @@
       "url": "https://jsr.io/@nodef/ifct2017",
       "kind": "peer_reviewed",
       "verified_by_team": false,
-      "notes": "Hack the Fork 2026 organiser resource list"
+      "notes": "Hack the Fork 2026 organiser resource list",
+      "accessed": "2026-10-24 (organiser resource list)"
     },
     {
       "id": "usda_fdc",
@@ -220,7 +222,8 @@
       "url": "https://fdc.nal.usda.gov",
       "kind": "web",
       "verified_by_team": false,
-      "notes": "Hack the Fork 2026 organiser resource list; datasets: https://fdc.nal.usda.gov/download-datasets"
+      "notes": "Hack the Fork 2026 organiser resource list; datasets: https://fdc.nal.usda.gov/download-datasets",
+      "accessed": "2026-10-24 (organiser resource list)"
     },
     {
       "id": "foodb",
@@ -228,7 +231,8 @@
       "url": "https://foodb.ca",
       "kind": "web",
       "verified_by_team": false,
-      "notes": "Hack the Fork 2026 organiser resource list"
+      "notes": "Hack the Fork 2026 organiser resource list",
+      "accessed": "2026-10-24 (organiser resource list)"
     },
     {
       "id": "openfoodfacts",
@@ -236,7 +240,8 @@
       "url": "https://world.openfoodfacts.org",
       "kind": "web",
       "verified_by_team": false,
-      "notes": "Hack the Fork 2026 organiser resource list"
+      "notes": "Hack the Fork 2026 organiser resource list",
+      "accessed": "2026-10-24 (organiser resource list)"
     },
     {
       "id": "agmarknet",
@@ -244,7 +249,8 @@
       "url": "https://agmarknet.gov.in/home",
       "kind": "web",
       "verified_by_team": false,
-      "notes": "Hack the Fork 2026 organiser resource list"
+      "notes": "Hack the Fork 2026 organiser resource list",
+      "accessed": "2026-10-24 (organiser resource list)"
     },
     {
       "id": "datagov_mandi_daily",
@@ -252,7 +258,8 @@
       "url": "https://www.data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi",
       "kind": "web",
       "verified_by_team": false,
-      "notes": "Hack the Fork 2026 organiser resource list"
+      "notes": "Hack the Fork 2026 organiser resource list",
+      "accessed": "2026-10-24 (organiser resource list)"
     },
     {
       "id": "datagov_mandi_variety",
@@ -260,7 +267,8 @@
       "url": "https://www.data.gov.in/resource/variety-wise-daily-market-prices-data-commodity",
       "kind": "web",
       "verified_by_team": false,
-      "notes": "Hack the Fork 2026 organiser resource list"
+      "notes": "Hack the Fork 2026 organiser resource list",
+      "accessed": "2026-10-24 (organiser resource list)"
     }
   ]
 }

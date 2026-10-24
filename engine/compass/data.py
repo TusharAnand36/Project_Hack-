@@ -593,6 +593,28 @@ def _priority(ref: ParamRef) -> int:
     return 3
 
 
+def _where_to_look(ref: ParamRef) -> tuple[str, str]:
+    """(best source to check, owner) per the source plan §19 DATA_TODO template."""
+    p = ref.path
+    if ref.file == "safety_gates":
+        return "FSSAI regulation; EU Reg. 1881/2006 as amended; Codex", "Data lead"
+    if ref.file == "lab_tests":
+        return "NABL lab quotes, NIFTEM", "Story lead"
+    if "price_inr_per_kg" in p:
+        return "AGMARKNET / data.gov.in mandi prices", "Data lead"
+    if ref.file == "costs" and p.startswith("pea"):
+        return "Importer quotes, customs data", "Story lead"
+    if ref.file == "costs" or ".resources." in p:
+        return "Process-engineering papers, supplier quotes", "Engine lead"
+    if ".composition." in p:
+        return "IFCT 2017 / USDA FoodData Central / literature", "Data lead"
+    if ".flavour_baseline." in p or ".side_effects[" in p:
+        return "Sensory papers; FooDB / FlavorDB; later own panel", "Data lead"
+    if ref.file == "compounds" or ".compounds." in p:
+        return "IFCT 2017 / FooDB / papers cited in the review", "Data lead"
+    return "Papers cited in the team review", "Data lead"
+
+
 def _is_config(p: Param) -> bool:
     """Engine settings and unit definitions are decisions, not data to source."""
     return bool(p.notes) and p.notes.startswith(("config:", "definitional:"))
@@ -632,15 +654,25 @@ def render_todo(ds: Dataset) -> str:
         f"**{sum(r[4].startswith('missing') for r in rows)} missing, "
         f"{sum(r[4].startswith('assumed') for r in rows)} assumed, "
         f"{sum(r[4].endswith('verify') for r in rows)} to verify.** "
-        "Candidate values found by desk research are in `data/_staging/` (not used by the engine).",
+        "Candidate rows awaiting human review are in `data/_staging/` (not used by the engine).",
         "",
     ]
     for pid in ds.presets:
         gaps = [r for r in preset_inputs(ds, pid) if is_missing(r.param)]
         out.append(f"- Preset `{pid}`: {len(gaps)} required inputs still missing.")
-    out += ["", "| Priority | File | Cell | Unit | Status | Notes |", "|---|---|---|---|---|---|"]
+    out += [
+        "",
+        "| Priority | Cell | Needed value | Status | Best source to check | Owner | Notes |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    refs = {(r.file, r.path): r for r in iter_params(ds)}
     for pr, f, path, unit, status, notes in rows:
-        out.append(f"| {pr} | {f}.json | `{path}` | {unit} | {status} | {notes.replace('|', '/')} |")
+        where, owner = _where_to_look(refs[(f, path)])
+        needed = "distribution or value" if status.startswith("missing") else "sourced replacement"
+        out.append(
+            f"| {pr} | `{f}.json:{path}` | {needed} ({unit}) | {status} | {where} | {owner} "
+            f"| {notes.replace('|', '/')} |"
+        )
     return "\n".join(out) + "\n"
 
 
